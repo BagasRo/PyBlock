@@ -1,0 +1,541 @@
+:root {
+    --bg-dark: #1a1a2e;
+    --bg-panel: #16213e;
+    --primary: #e94560;
+    --secondary: #0f3460;
+    --text: #ffffff;
+    --accent: #00d4ff;
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header */
+.header {
+    height: 60px;
+    background-color: var(--bg-panel);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 28px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    font-weight: 800;
+    font-size: 1.2rem;
+    line-height: 1.2;
+}
+
+.version {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+/* Buttons */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary { background-color: var(--accent); color: #000; }
+.btn-secondary { background-color: rgba(255,255,255,0.1); color: #fff; }
+.btn-danger { background-color: var(--primary); color: #fff; }
+.btn-small { padding: 4px 10px; font-size: 0.8rem; }
+
+/* Main Layout */
+.container {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 60px);
+    padding: 15px;
+    gap: 15px;
+}
+
+.panel {
+    background-color: var(--bg-panel);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.blockly-panel {
+    flex: 2; /* Mengembalikan rasio menjadi 60% */
+    min-width: 350px;
+    min-height: auto;
+}
+
+.code-panel {
+    flex: 2; /* Mengembalikan rasio menjadi 40% */
+    min-width: 350px;
+}
+
+.panel-header {
+    padding: 12px 20px;
+    background-color: rgba(0,0,0,0.2);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.workspace-controls {
+    margin-left: auto;
+    display: flex;
+    gap: 5px;
+}
+
+.icon-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Blockly Container */
+.panel-content {
+    flex: 1;
+    position: relative;
+    background-color: #1a1a2e;
+    overflow: hidden;
+}
+
+#blocklyDiv {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Code Area */
+.code-area {
+    flex: 1;
+    background-color: #1e1e1e;
+    overflow: hidden;
+    padding: 0;
+    font-family: 'Fira Code', monospace;
+    position: relative;
+    display: flex;
+}
+
+.line-numbers {
+    padding: 15px 10px;
+    color: rgba(255,255,255,0.2);
+    text-align: right;
+    user-select: none;
+    background-color: #252526;
+    font-size: 14px;
+    line-height: 1.5;
+    min-width: 40px;
+}
+
+.code-content {
+    flex: 1;
+    color: #d4d4d4;
+    white-space: pre;
+    overflow: auto;
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.code-status {
+    margin-left: auto;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    background: rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Output Panel */
+.output-panel {
+    height: 35%; /* Diperbesar agar area konsol lebih luas */
+    min-height: 150px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background-color: #111;
+}
+
+.output-header {
+    padding: 8px 15px;
+    background-color: #1e1e1e;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.output-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.output-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+}
+
+.output-line {
+    margin-bottom: 6px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.output-line.info { color: #81a1c1; }
+.output-line.success { color: #a3be8c; }
+.output-line.error { color: #bf616a; }
+.output-line.warning { color: #ebcb8b; }
+
+.timestamp {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8em;
+    margin-right: 8px;
+}
+
+/* Syntax Highlighting */
+.keyword { color: #c678dd; font-weight: bold; }
+.function { color: #61afef; }
+.string { color: #98c379; }
+.number { color: #d19a66; }
+.comment { color: #5c6370; font-style: italic; }
+.operator { color: #56b6c2; }
+.variable { color: #e06c75; }
+
+/* Modals */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: var(--bg-panel);
+    width: 700px;
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: 16px;
+    padding: 25px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-btn:hover { color: var(--primary); }
+
+.example-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.example-item {
+    background: rgba(255,255,255,0.03);
+    padding: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    gap: 15px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.example-item:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+.example-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 10px;
+}
+
+.example-info h3 { margin-bottom: 5px; color: #fff; font-size: 1.1rem; }
+.example-info p { color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-bottom: 10px; }
+
+.tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(123, 44, 191, 0.2);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: #b388ff;
+    border: 1px solid rgba(123, 44, 191, 0.3);
+}
+
+/* Export Modal */
+.export-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#exportCode {
+    width: 100%;
+    height: 350px;
+    background: #1e1e1e;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    color: #d4d4d4;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    resize: none;
+}
+
+.export-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Loading Overlay */
+.loading {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
+.loading.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Particles */
+.particles {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    animation: float-up linear infinite;
+    bottom: -10px;
+}
+
+@keyframes float-up {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+}
+
+/* === Blockly Toolbox Customization === */
+/* Mengecilkan menu kategori Blockly agar workspace lebih luas */
+
+.blocklyToolboxDiv {
+    background-color: var(--bg-panel) !important;
+    min-width: 0 !important; /* Mengizinkan toolbox menjadi lebih ramping */
+}
+
+.blocklyTreeLabel {
+    font-size: 13px !important; /* Diperbesar agar tulisan jelas dan tidak pecah */
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 500 !important;
+    text-align: left !important; /* Memastikan teks rata kiri */
+}
+
+.blocklyTreeRow {
+    height: 32px !important; /* Dilonggarkan sedikit agar terlihat rapi */
+    line-height: 32px !important;
+    padding-left: 5px !important; /* Mengurangi padding agar lebih rapat ke kiri */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        /* Memungkinkan scroll vertikal di perangkat mobile */
+        height: auto;
+        overflow-y: auto;
+    }
+
+    .header {
+        padding: 0 15px;
+    }
+
+    .container { 
+        /* Mengubah layout utama menjadi vertikal (tumpukan) */
+        flex-direction: column; 
+        height: auto; 
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .blockly-panel, .code-panel {
+        /* Memberikan tinggi yang lebih besar pada perangkat mobile yang cenderung tinggi (seperti 390x844) */
+        height: 85vh;
+        min-height: 550px;
+    }
+
+    .output-panel {
+        /* Membagi ruang pada panel kanan (Code & Console) secara lebih seimbang */
+        height: 45%;
+        min-height: 200px;
+    }
+
+    /* Menyembunyikan teks pada tombol untuk menghemat ruang */
+    .btn-text { display: none; }
+    .btn { padding: 10px; }
+
+    /* Menyesuaikan ukuran logo */
+    .logo-text small { display: none; }
+    .logo-text span { font-size: 1.1rem; }
+}
+
+/* Penyesuaian tambahan untuk layar yang sangat kecil (misal: smartphone potrait) */
+@media (max-width: 480px) {
+    .logo-text span { font-size: 1rem; }
+    .panel-header { font-size: 0.9rem; }
+    .btn { padding: 8px; }
+}

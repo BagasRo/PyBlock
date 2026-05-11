@@ -1,0 +1,372 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "variables_set",
+        "id": "var_set_angka1",
+        "x": 50,
+        "y": 30,
+        "fields": {
+          "VAR": {
+            "id": "var_id_angka1"
+          }
+        },
+        "inputs": {
+          "VALUE": {
+            "block": {
+              "type": "text_prompt_ext",
+              "id": "prompt_angka1",
+              "fields": {
+                "TYPE": "NUMBER"
+              },
+              "inputs": {
+                "TEXT": {
+                  "shadow": {
+                    "type": "text",
+                    "fields": {
+                      "TEXT": "Masukkan angka pertama:"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "next": {
+          "block": {
+            "type": "variables_set",
+            "id": "var_set_angka2",
+            "fields": {
+              "VAR": {
+                "id": "var_id_angka2"
+              }
+            },
+            "inputs": {
+              "VALUE": {
+                "block": {
+                  "type": "text_prompt_ext",
+                  "id": "prompt_angka2",
+                  "fields": {
+                    "TYPE": "NUMBER"
+                  },
+                  "inputs": {
+                    "TEXT": {
+                      "shadow": {
+                        "type": "text",
+                        "fields": {
+                          "TEXT": "Masukkan angka kedua:"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "next": {
+              "block": {
+                "type": "variables_set",
+                "id": "var_set_hasil_jumlah",
+                "fields": {
+                  "VAR": {
+                    "id": "var_id_hasil_jumlah"
+                  }
+                },
+                "inputs": {
+                  "VALUE": {
+                    "block": {
+                      "type": "math_arithmetic",
+                      "id": "op_add",
+                      "fields": {
+                        "OP": "ADD"
+                      },
+                      "inputs": {
+                        "A": {
+                          "block": {
+                            "type": "variables_get",
+                            "id": "get_angka1_add",
+                            "fields": {
+                              "VAR": {
+                                "id": "var_id_angka1"
+                              }
+                            }
+                          }
+                        },
+                        "B": {
+                          "block": {
+                            "type": "variables_get",
+                            "id": "get_angka2_add",
+                            "fields": {
+                              "VAR": {
+                                "id": "var_id_angka2"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "variables_set",
+                    "id": "var_set_hasil_kali",
+                    "fields": {
+                      "VAR": {
+                        "id": "var_id_hasil_kali"
+                      }
+                    },
+                    "inputs": {
+                      "VALUE": {
+                        "block": {
+                          "type": "math_arithmetic",
+                          "id": "op_multiply",
+                          "fields": {
+                            "OP": "MULTIPLY"
+                          },
+                          "inputs": {
+                            "A": {
+                              "block": {
+                                "type": "variables_get",
+                                "id": "get_angka1_mul",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "var_id_angka1"
+                                  }
+                                }
+                              }
+                            },
+                            "B": {
+                              "block": {
+                                "type": "variables_get",
+                                "id": "get_angka2_mul",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "var_id_angka2"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "text_print",
+                        "id": "print_jumlah",
+                        "inputs": {
+                          "TEXT": {
+                            "block": {
+                              "type": "text_join",
+                              "id": "join_jumlah",
+                              "extraState": {
+                                "itemCount": 2
+                              },
+                              "inputs": {
+                                "ADD0": {
+                                  "block": {
+                                    "type": "text",
+                                    "id": "text_jumlah",
+                                    "fields": {
+                                      "TEXT": "Hasil Penjumlahan: "
+                                    }
+                                  }
+                                },
+                                "ADD1": {
+                                  "block": {
+                                    "type": "variables_get",
+                                    "id": "get_hasil_jumlah",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "var_id_hasil_jumlah"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "next": {
+                          "block": {
+                            "type": "text_print",
+                            "id": "print_kali",
+                            "inputs": {
+                              "TEXT": {
+                                "block": {
+                                  "type": "text_join",
+                                  "id": "join_kali",
+                                  "extraState": {
+                                    "itemCount": 2
+                                  },
+                                  "inputs": {
+                                    "ADD0": {
+                                      "block": {
+                                        "type": "text",
+                                        "id": "text_kali",
+                                        "fields": {
+                                          "TEXT": "Hasil Perkalian: "
+                                        }
+                                      }
+                                    },
+                                    "ADD1": {
+                                      "block": {
+                                        "type": "variables_get",
+                                        "id": "get_hasil_kali",
+                                        "fields": {
+                                          "VAR": {
+                                            "id": "var_id_hasil_kali"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "controls_if",
+                                "id": "if_positive_negative",
+                                "extraState": {
+                                  "elseIfCount": 1,
+                                  "hasElse": true
+                                },
+                                "inputs": {
+                                  "IF0": {
+                                    "block": {
+                                      "type": "logic_compare",
+                                      "id": "compare_gt_zero",
+                                      "fields": {
+                                        "OP": "GT"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variables_get",
+                                            "id": "get_hasil_jumlah_check1",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "var_id_hasil_jumlah"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "shadow": {
+                                            "type": "math_number",
+                                            "id": "num_zero1",
+                                            "fields": {
+                                              "NUM": 0
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "DO0": {
+                                    "block": {
+                                      "type": "text_print",
+                                      "id": "print_positive",
+                                      "inputs": {
+                                        "TEXT": {
+                                          "shadow": {
+                                            "type": "text",
+                                            "id": "text_positive",
+                                            "fields": {
+                                              "TEXT": "Hasil penjumlahan adalah bilangan positif."
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "IF1": {
+                                    "block": {
+                                      "type": "logic_compare",
+                                      "id": "compare_lt_zero",
+                                      "fields": {
+                                        "OP": "LT"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variables_get",
+                                            "id": "get_hasil_jumlah_check2",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "var_id_hasil_jumlah"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "shadow": {
+                                            "type": "math_number",
+                                            "id": "num_zero2",
+                                            "fields": {
+                                              "NUM": 0
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "DO1": {
+                                    "block": {
+                                      "type": "text_print",
+                                      "id": "print_negative",
+                                      "inputs": {
+                                        "TEXT": {
+                                          "shadow": {
+                                            "type": "text",
+                                            "id": "text_negative",
+                                            "fields": {
+                                              "TEXT": "Hasil penjumlahan adalah bilangan negatif."
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "ELSE": {
+                                    "block": {
+                                      "type": "text_print",
+                                      "id": "print_zero",
+                                      "inputs": {
+                                        "TEXT": {
+                                          "shadow": {
+                                            "type": "text",
+                                            "id": "text_zero",
+                                            "fields": {
+                                              "TEXT": "Hasil penjumlahan adalah nol."
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "variables": [
+    { "name": "angka1", "id": "var_id_angka1" },
+    { "name": "angka2", "id": "var_id_angka2" },
+    { "name": "hasil_jumlah", "id": "var_id_hasil_jumlah" },
+    { "name": "hasil_kali", "id": "var_id_hasil_kali" }
+  ]
+}

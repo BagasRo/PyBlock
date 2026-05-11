@@ -1,0 +1,359 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "variables": [
+      { "name": "pilihan", "id": "var_pilihan" },
+      { "name": "sisi", "id": "var_sisi" },
+      { "name": "r", "id": "var_r" },
+      { "name": "jawaban", "id": "var_jawaban" }
+    ],
+    "blocks": [
+      {
+        "type": "procedures_defnoreturn",
+        "id": "def_menu_utama",
+        "x": 20,
+        "y": 20,
+        "extraState": {
+          "customContextMenu": true
+        },
+        "fields": {
+          "NAME": "menu_utama"
+        },
+        "inputs": {
+          "STACK": {
+            "block": {
+              "type": "text_print",
+              "id": "print_1",
+              "inputs": {
+                "TEXT": { "shadow": { "type": "text", "id": "text_1", "fields": { "TEXT": "=== Program Sederhana ===" } } }
+              },
+              "next": {
+                "block": {
+                  "type": "text_print",
+                  "id": "print_2",
+                  "inputs": {
+                    "TEXT": { "shadow": { "type": "text", "id": "text_2", "fields": { "TEXT": "1. Hitung luas persegi" } } }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "text_print",
+                      "id": "print_3",
+                      "inputs": {
+                        "TEXT": { "shadow": { "type": "text", "id": "text_3", "fields": { "TEXT": "2. Hitung luas lingkaran" } } }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "text_print",
+                          "id": "print_4",
+                          "inputs": {
+                            "TEXT": { "shadow": { "type": "text", "id": "text_4", "fields": { "TEXT": "3. Keluar" } } }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "variables_set",
+                              "id": "set_pilihan",
+                              "fields": { "VAR": { "id": "var_pilihan" } },
+                              "inputs": {
+                                "VALUE": {
+                                  "block": {
+                                    "type": "python_input",
+                                    "id": "input_pilihan",
+                                    "inputs": {
+                                      "TEXT": { "shadow": { "type": "text", "id": "prompt_1", "fields": { "TEXT": "Pilih menu (1/2/3): " } } }
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "controls_if",
+                                  "id": "if_pilihan",
+                                  "extraState": {
+                                    "elseIfCount": 2,
+                                    "hasElse": true
+                                  },
+                                  "inputs": {
+                                    "IF0": {
+                                      "block": {
+                                        "type": "logic_compare",
+                                        "id": "cmp_1",
+                                        "fields": { "OP": "EQ" },
+                                        "inputs": {
+                                          "A": { "block": { "type": "variables_get", "id": "get_pil_1", "fields": { "VAR": { "id": "var_pilihan" } } } },
+                                          "B": { "block": { "type": "text", "id": "text_cmp_1", "fields": { "TEXT": "1" } } }
+                                        }
+                                      }
+                                    },
+                                    "DO0": {
+                                      "block": {
+                                        "type": "variables_set",
+                                        "id": "set_sisi",
+                                        "fields": { "VAR": { "id": "var_sisi" } },
+                                        "inputs": {
+                                          "VALUE": {
+                                            "block": {
+                                              "type": "read_float",
+                                              "id": "input_sisi",
+                                              "inputs": {
+                                                "PROMPT": { "shadow": { "type": "text", "id": "prompt_sisi", "fields": { "TEXT": "Masukkan panjang sisi: " } } }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "next": {
+                                          "block": {
+                                            "type": "text_print",
+                                            "id": "print_luas_1",
+                                            "inputs": {
+                                              "TEXT": {
+                                                "block": {
+                                                  "type": "text_join",
+                                                  "id": "join_1",
+                                                  "extraState": { "itemCount": 2 },
+                                                  "inputs": {
+                                                    "ADD0": { "block": { "type": "text", "id": "text_luas_1", "fields": { "TEXT": "Luas persegi = " } } },
+                                                    "ADD1": {
+                                                      "block": {
+                                                        "type": "convert_to_string",
+                                                        "id": "conv_1",
+                                                        "inputs": {
+                                                          "VALUE": {
+                                                            "block": {
+                                                              "type": "math_arithmetic",
+                                                              "id": "math_1",
+                                                              "fields": { "OP": "MULTIPLY" },
+                                                              "inputs": {
+                                                                "A": { "block": { "type": "variables_get", "id": "get_sisi_1", "fields": { "VAR": { "id": "var_sisi" } } } },
+                                                                "B": { "block": { "type": "variables_get", "id": "get_sisi_2", "fields": { "VAR": { "id": "var_sisi" } } } }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "next": {
+                                              "block": {
+                                                "type": "procedures_callnoreturn",
+                                                "id": "call_lanjut_1",
+                                                "extraState": { "name": "lanjut" }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "IF1": {
+                                      "block": {
+                                        "type": "logic_compare",
+                                        "id": "cmp_2",
+                                        "fields": { "OP": "EQ" },
+                                        "inputs": {
+                                          "A": { "block": { "type": "variables_get", "id": "get_pil_2", "fields": { "VAR": { "id": "var_pilihan" } } } },
+                                          "B": { "block": { "type": "text", "id": "text_cmp_2", "fields": { "TEXT": "2" } } }
+                                        }
+                                      }
+                                    },
+                                    "DO1": {
+                                      "block": {
+                                        "type": "variables_set",
+                                        "id": "set_r",
+                                        "fields": { "VAR": { "id": "var_r" } },
+                                        "inputs": {
+                                          "VALUE": {
+                                            "block": {
+                                              "type": "read_float",
+                                              "id": "input_r",
+                                              "inputs": {
+                                                "PROMPT": { "shadow": { "type": "text", "id": "prompt_r", "fields": { "TEXT": "Masukkan jari-jari: " } } }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "next": {
+                                          "block": {
+                                            "type": "text_print",
+                                            "id": "print_luas_2",
+                                            "inputs": {
+                                              "TEXT": {
+                                                "block": {
+                                                  "type": "text_join",
+                                                  "id": "join_2",
+                                                  "extraState": { "itemCount": 2 },
+                                                  "inputs": {
+                                                    "ADD0": { "block": { "type": "text", "id": "text_luas_2", "fields": { "TEXT": "Luas lingkaran = " } } },
+                                                    "ADD1": {
+                                                      "block": {
+                                                        "type": "convert_to_string",
+                                                        "id": "conv_2",
+                                                        "inputs": {
+                                                          "VALUE": {
+                                                            "block": {
+                                                              "type": "math_arithmetic",
+                                                              "id": "math_2",
+                                                              "fields": { "OP": "MULTIPLY" },
+                                                              "inputs": {
+                                                                "A": {
+                                                                  "block": {
+                                                                    "type": "math_arithmetic",
+                                                                    "id": "math_3",
+                                                                    "fields": { "OP": "MULTIPLY" },
+                                                                    "inputs": {
+                                                                      "A": { "shadow": { "type": "math_number", "id": "pi", "fields": { "NUM": 3.14 } } },
+                                                                      "B": { "block": { "type": "variables_get", "id": "get_r_1", "fields": { "VAR": { "id": "var_r" } } } }
+                                                                    }
+                                                                  }
+                                                                },
+                                                                "B": { "block": { "type": "variables_get", "id": "get_r_2", "fields": { "VAR": { "id": "var_r" } } } }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "next": {
+                                              "block": {
+                                                "type": "procedures_callnoreturn",
+                                                "id": "call_lanjut_2",
+                                                "extraState": { "name": "lanjut" }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "IF2": {
+                                      "block": {
+                                        "type": "logic_compare",
+                                        "id": "cmp_3",
+                                        "fields": { "OP": "EQ" },
+                                        "inputs": {
+                                          "A": { "block": { "type": "variables_get", "id": "get_pil_3", "fields": { "VAR": { "id": "var_pilihan" } } } },
+                                          "B": { "block": { "type": "text", "id": "text_cmp_3", "fields": { "TEXT": "3" } } }
+                                        }
+                                      }
+                                    },
+                                    "DO2": {
+                                      "block": {
+                                        "type": "text_print",
+                                        "id": "print_selesai",
+                                        "inputs": {
+                                          "TEXT": { "shadow": { "type": "text", "id": "text_selesai", "fields": { "TEXT": "Program selesai." } } }
+                                        }
+                                      }
+                                    },
+                                    "ELSE": {
+                                      "block": {
+                                        "type": "text_print",
+                                        "id": "print_invalid",
+                                        "inputs": {
+                                          "TEXT": { "shadow": { "type": "text", "id": "text_invalid", "fields": { "TEXT": "Pilihan tidak valid." } } }
+                                        },
+                                        "next": {
+                                          "block": {
+                                            "type": "procedures_callnoreturn",
+                                            "id": "call_menu_utama_1",
+                                            "extraState": { "name": "menu_utama" }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "procedures_defnoreturn",
+        "id": "def_lanjut",
+        "x": 650,
+        "y": 20,
+        "extraState": {
+          "customContextMenu": true
+        },
+        "fields": {
+          "NAME": "lanjut"
+        },
+        "inputs": {
+          "STACK": {
+            "block": {
+              "type": "variables_set",
+              "id": "set_jawaban",
+              "fields": { "VAR": { "id": "var_jawaban" } },
+              "inputs": {
+                "VALUE": {
+                  "block": {
+                    "type": "python_input",
+                    "id": "input_jawaban",
+                    "inputs": {
+                      "TEXT": { "shadow": { "type": "text", "id": "prompt_jawaban", "fields": { "TEXT": "Apakah ingin kembali ke menu utama? (y/n): " } } }
+                    }
+                  }
+                }
+              },
+              "next": {
+                "block": {
+                  "type": "controls_ifelse",
+                  "id": "if_jawaban",
+                  "inputs": {
+                    "IF0": {
+                      "block": {
+                        "type": "logic_compare",
+                        "id": "cmp_jawaban",
+                        "fields": { "OP": "EQ" },
+                        "inputs": {
+                          "A": { "block": { "type": "variables_get", "id": "get_jawaban_1", "fields": { "VAR": { "id": "var_jawaban" } } } },
+                          "B": { "block": { "type": "text", "id": "text_cmp_y", "fields": { "TEXT": "y" } } }
+                        }
+                      }
+                    },
+                    "DO0": {
+                      "block": {
+                        "type": "procedures_callnoreturn",
+                        "id": "call_menu_utama_2",
+                        "extraState": { "name": "menu_utama" }
+                      }
+                    },
+                    "ELSE": {
+                      "block": {
+                        "type": "text_print",
+                        "id": "print_terima_kasih",
+                        "inputs": {
+                          "TEXT": { "shadow": { "type": "text", "id": "text_terima_kasih", "fields": { "TEXT": "Terima kasih sudah menggunakan program." } } }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "procedures_callnoreturn",
+        "id": "call_menu_utama_main",
+        "x": 20,
+        "y": 800,
+        "extraState": { "name": "menu_utama" }
+      }
+    ]
+  }
+}
