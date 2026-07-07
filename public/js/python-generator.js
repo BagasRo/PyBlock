@@ -33,17 +33,15 @@ const PythonCodeHandler = {
     postProcess: function(code) {
         if (!code) return '';
         
+        // Hapus deklarasi variabel otomatis dari Blockly (contoh: skor = None)
+        // karena Python tidak membutuhkan deklarasi awal seperti ini
+        code = code.replace(/^[a-zA-Z0-9_]+\s*=\s*None\r?\n/gm, '');
+
         // Remove excessive blank lines
         code = code.replace(/\n{3,}/g, '\n\n');
         
         // Trim whitespace
         code = code.trim();
-        
-        // Add header if code exists
-        if (code) {
-            const header = '# Dihasilkan oleh Python Blockly Simulator\n# Menggunakan Blockly v10+ dari NPM\n\n';
-            code = header + code;
-        }
         
         return code;
     },
@@ -73,7 +71,7 @@ const PythonCodeHandler = {
         };
 
         // 2. Strings (Proses duluan agar keyword di dalam string tidak kena)
-        text = text.replace(/((?:f|r|u|fr|rf)?["'])(.*?)\1/g, match => saveToken(match, 'string'));
+        text = text.replace(/((?:f|r|u|fr|rf)?["'])((?:[^\\]|\\.)*?)\1/g, match => saveToken(match, 'string'));
         
         // 3. Comments
         text = text.replace(/(#.*$)/gm, match => saveToken(match, 'comment'));

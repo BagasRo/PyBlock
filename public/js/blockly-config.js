@@ -6,7 +6,7 @@ const BlocklyConfig = {
     workspace: null,
 
     // Inisialisasi workspace
-    init: function() {
+    init: function(level = 1) {
         // Bersihkan container dan workspace lama jika ada untuk mencegah duplikasi
         const container = document.getElementById('blocklyDiv');
         if (container) {
@@ -17,7 +17,7 @@ const BlocklyConfig = {
             this.workspace = null;
         }
 
-        const toolbox = this.getToolbox();
+        const toolbox = this.getToolboxForLevel(level);
         
         this.workspace = Blockly.inject('blocklyDiv', {
             toolbox: toolbox,
@@ -52,163 +52,205 @@ const BlocklyConfig = {
         return this.workspace;
     },
 
-    // Definisi Toolbox lengkap
-    getToolbox: function() {
-        // Toolbox yang dirancang ulang sesuai permintaan
-        return {
-            "kind": "categoryToolbox",
+    // Definisi Toolbox sesuai tingkatan level
+    getToolboxForLevel: function(level) {
+        // 1. KONTROL ALUR
+        const controlCategory = {
+            "kind": "category",
+            "name": "Control",
+            "categorystyle": "logic_category",
             "contents": [
-                // 1. KONTROL ALUR
+                { "kind": "block", "type": "controls_if" },
+                { "kind": "block", "type": "controls_ifelse" },
+                { "kind": "block", "type": "controls_flow_statements" }
+            ]
+        };
+        // 2. PERULANGAN
+        const loopsCategory = {
+            "kind": "category",
+            "name": "Loops",
+            "categorystyle": "loop_category",
+            "contents": [
                 {
-                    "kind": "category",
-                    "name": "Control",
-                    "categorystyle": "logic_category",
-                    "contents": [
-                        { "kind": "block", "type": "controls_if" },
-                        { "kind": "block", "type": "controls_ifelse" },
-                        { "kind": "block", "type": "controls_flow_statements" }
-                    ]
+                    "kind": "block",
+                    "type": "controls_repeat_ext",
+                    "inputs": {
+                        "TIMES": { "shadow": { "type": "math_number", "fields": { "NUM": 5 } } }
+                    }
                 },
-                // 2. PERULANGAN
+                { "kind": "block", "type": "controls_whileUntil", "fields": { "MODE": "WHILE" } },
                 {
-                    "kind": "category",
-                    "name": "Loops",
-                    "categorystyle": "loop_category",
-                    "contents": [
-                        {
-                            "kind": "block",
-                            "type": "controls_repeat_ext",
-                            "inputs": {
-                                "TIMES": { "shadow": { "type": "math_number", "fields": { "NUM": 5 } } }
-                            }
-                        },
-                        { "kind": "block", "type": "controls_whileUntil", "fields": { "MODE": "WHILE" } },
-                        {
-                            "kind": "block",
-                            "type": "controls_for",
-                            "fields": { "VAR": "i" },
-                            "inputs": {
-                                "FROM": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } },
-                                "TO": { "shadow": { "type": "math_number", "fields": { "NUM": 5 } } },
-                                "BY": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } }
-                            }
-                        },
-                        { "kind": "block", "type": "controls_forEach", "fields": { "VAR": "item" } }
-                    ]
+                    "kind": "block",
+                    "type": "controls_for",
+                    "fields": { "VAR": "i" },
+                    "inputs": {
+                        "FROM": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } },
+                        "TO": { "shadow": { "type": "math_number", "fields": { "NUM": 5 } } },
+                        "BY": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } }
+                    }
                 },
-                // 3. LOGIKA
-                {
-                    "kind": "category",
-                    "name": "Logic",
-                    "categorystyle": "logic_category",
-                    "contents": [
-                        { "kind": "block", "type": "logic_compare" },
-                        { "kind": "block", "type": "logic_operation" },
-                        { "kind": "block", "type": "logic_negate" },
-                        { "kind": "block", "type": "logic_boolean" }
-                    ]
+                { "kind": "block", "type": "controls_forEach", "fields": { "VAR": "item" } }
+            ]
+        };
+        // 2b. LISTS
+        const listsCategory = {
+            "kind": "category",
+            "name": "Lists",
+            "categorystyle": "list_category",
+            "contents": [
+                { "kind": "block", "type": "lists_create_with" },
+                { "kind": "block", "type": "lists_create_with", "extraState": { "itemCount": 0 } },
+                { "kind": "block", "type": "lists_repeat",
+                    "inputs": {
+                        "NUM": { "shadow": { "type": "math_number", "fields": { "NUM": 5 } } }
+                    }
                 },
-                // 4. MATEMATIKA
-                {
-                    "kind": "category",
-                    "name": "Math",
-                    "categorystyle": "math_category",
-                    "contents": [
-                        { "kind": "block", "type": "math_number", "fields": { "NUM": 123 } },
-                        {
-                            "kind": "block",
-                            "type": "math_arithmetic",
-                            "inputs": {
-                                "A": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } },
-                                "B": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } }
-                            }
-                        },
-                        {
-                            "kind": "block",
-                            "type": "math_modulo",
-                            "inputs": {
-                                "DIVIDEND": { "shadow": { "type": "math_number", "fields": { "NUM": 64 } } },
-                                "DIVISOR": { "shadow": { "type": "math_number", "fields": { "NUM": 10 } } }
-                            }
-                        }
-                    ]
+                { "kind": "block", "type": "lists_length" },
+                { "kind": "block", "type": "lists_isEmpty" },
+                { "kind": "block", "type": "lists_indexOf",
+                    "inputs": {
+                        "VALUE": { "block": { "type": "variables_get" } }
+                    }
                 },
-                // 5. TEKS
-                {
-                    "kind": "category",
-                    "name": "Text",
-                    "categorystyle": "text_category",
-                    "contents": [
-                        { "kind": "block", "type": "text", "fields": { "TEXT": "abc" } },
-                        { "kind": "block", "type": "text_join" },
-                        {
-                            "kind": "block",
-                            "type": "convert_to_string",
-                            "inputs": {
-                                "VALUE": { "shadow": { "type": "math_number", "fields": { "NUM": 123 } } }
-                            }
-                        }
-                    ]
+                { "kind": "block", "type": "lists_getIndex",
+                    "inputs": {
+                        "VALUE": { "block": { "type": "variables_get" } }
+                    }
                 },
-                // 6. INPUT/OUTPUT
-                {
-                    "kind": "category",
-                    "name": "I/O",
-                    "categorystyle": "io_category",
-                    "contents": [
-                        {
-                            "kind": "block",
-                            "type": "text_print",
-                            "inputs": {
-                                "TEXT": { "shadow": { "type": "text", "fields": { "TEXT": "Halo Dunia" } } }
-                            }
-                        },
-                        {
-                            "kind": "block",
-                            "type": "python_input",
-                            "inputs": {
-                                "TEXT": { "shadow": { "type": "text", "fields": { "TEXT": "Masukkan nama:" } } }
-                            }
-                        },
-                        {
-                            "kind": "block",
-                            "type": "read_number",
-                            "inputs": {
-                                "PROMPT": { "shadow": { "type": "text", "fields": { "TEXT": "Masukkan angka:" } } }
-                            }
-                        },
-                        {
-                            "kind": "block",
-                            "type": "read_float",
-                            "inputs": {
-                                "PROMPT": { "shadow": { "type": "text", "fields": { "TEXT": "Masukkan desimal:" } } }
-                            }
-                        }
-                    ]
-                },
-                // 7. UTILITAS
-                {
-                    "kind": "category",
-                    "name": "Utils",
-                    "categorystyle": "utility_category",
-                    "contents": [
-                        { "kind": "block", "type": "python_comment", "fields": { "COMMENT": "tulis komentar di sini" } },
-                        {
-                            "kind": "category",
-                            "name": "Variables",
-                            "categorystyle": "variable_category",
-                            "custom": "VARIABLE"
-                        },
-                        {
-                            "kind": "category",
-                            "name": "Functions",
-                            "categorystyle": "procedure_category",
-                            "custom": "PROCEDURE"
-                        }
-                    ]
+                { "kind": "block", "type": "lists_setIndex",
+                    "inputs": {
+                        "LIST": { "block": { "type": "variables_get" } }
+                    }
                 }
             ]
         };
+        // 3. LOGIKA
+        const logicCategory = {
+            "kind": "category",
+            "name": "Logic",
+            "categorystyle": "logic_category",
+            "contents": [
+                { "kind": "block", "type": "logic_compare" },
+                { "kind": "block", "type": "logic_operation" },
+                { "kind": "block", "type": "logic_negate" },
+                { "kind": "block", "type": "logic_boolean" }
+            ]
+        };
+        // 4. MATEMATIKA
+        const mathCategory = {
+            "kind": "category",
+            "name": "Math",
+            "categorystyle": "math_category",
+            "contents": [
+                { "kind": "block", "type": "math_number", "fields": { "NUM": 123 } },
+                {
+                    "kind": "block",
+                    "type": "math_arithmetic",
+                    "inputs": {
+                        "A": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } },
+                        "B": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } }
+                    }
+                },
+                {
+                    "kind": "block",
+                    "type": "math_modulo",
+                    "inputs": {
+                        "DIVIDEND": { "shadow": { "type": "math_number", "fields": { "NUM": 64 } } },
+                        "DIVISOR": { "shadow": { "type": "math_number", "fields": { "NUM": 10 } } }
+                    }
+                }
+            ]
+        };
+        // 5. TEKS
+        const textCategory = {
+            "kind": "category",
+            "name": "Text",
+            "categorystyle": "text_category",
+            "contents": [
+                { "kind": "block", "type": "python_comment", "fields": { "COMMENT": "tulis komentar di sini" } },
+                { "kind": "block", "type": "text", "fields": { "TEXT": "abc" } },
+                { "kind": "block", "type": "text_join" },
+                {
+                    "kind": "block",
+                    "type": "convert_to_string",
+                    "inputs": {
+                        "VALUE": { "shadow": { "type": "math_number", "fields": { "NUM": 123 } } }
+                    }
+                }
+            ]
+        };
+        // 6. INPUT/OUTPUT
+        const ioCategory = {
+            "kind": "category",
+            "name": "I/O",
+            "categorystyle": "io_category",
+            "contents": [
+                {
+                    "kind": "block",
+                    "type": "text_print",
+                    "inputs": {
+                        "TEXT": { "shadow": { "type": "text", "fields": { "TEXT": "Halo Dunia" } } }
+                    }
+                },
+                {
+                    "kind": "block",
+                    "type": "python_input",
+                    "inputs": {
+                        "TEXT": { "shadow": { "type": "text", "fields": { "TEXT": "Masukkan nama:" } } }
+                    }
+                },
+                {
+                    "kind": "block",
+                    "type": "read_number",
+                    "inputs": {
+                        "PROMPT": { "shadow": { "type": "text", "fields": { "TEXT": "Masukkan angka:" } } }
+                    }
+                },
+                {
+                    "kind": "block",
+                    "type": "read_float",
+                    "inputs": {
+                        "PROMPT": { "shadow": { "type": "text", "fields": { "TEXT": "Masukkan desimal:" } } }
+                    }
+                }
+            ]
+        };
+
+        const contents = [];
+        
+        // Menentukan kategori yang muncul sesuai level
+        contents.push(textCategory);
+        contents.push(mathCategory);
+        contents.push(ioCategory);
+        
+        if (level >= 2) {
+            contents.push({
+                "kind": "category",
+                "name": "Variables",
+                "categorystyle": "variable_category",
+                "custom": "VARIABLE"
+            });
+        }
+        
+        if (level >= 3) {
+            contents.push(controlCategory);
+            contents.push(logicCategory);
+        }
+        
+        if (level >= 4) {
+            contents.push(loopsCategory);
+            contents.push(listsCategory);
+        }
+
+        return {
+            "kind": "categoryToolbox",
+            "contents": contents
+        };
+    },
+
+    // Toolbox lengkap untuk mode Sandbox (semua kategori)
+    getFullToolbox: function() {
+        return this.getToolboxForLevel(4);
     },
 
     // Tema kustom
@@ -274,7 +316,8 @@ const BlocklyConfig = {
                 'io_category': { 'colour': '#49a39f' },
                 'utility_category': { 'colour': '#74879d' },
                 'variable_category': { 'colour': '#FF8C1A' },
-                'procedure_category': { 'colour': '#9A5CA6' }
+                'procedure_category': { 'colour': '#9A5CA6' },
+                'list_category': { 'colour': '#4A90E2' }
             },
             'componentStyles': {
                 'workspaceBackgroundColour': '#1a1a2e',
@@ -321,9 +364,10 @@ const BlocklyConfig = {
                 this.setHelpUrl('');
             }
         };
-        generator['python_input'] = function(block) {
-            var text = Blockly.Python.valueToCode(block, 'TEXT', Blockly.Python.ORDER_ATOMIC) || "''";
-            return [`input(${text})`, Blockly.Python.ORDER_FUNCTION_CALL];
+        generator['python_input'] = function(block, gen) {
+            const g = gen || Blockly.Python;
+            var text = g.valueToCode(block, 'TEXT', g.ORDER_ATOMIC) || "''";
+            return [`input(${text})`, g.ORDER_FUNCTION_CALL];
         };
 
         // Block untuk int(input()) -> number
@@ -338,9 +382,10 @@ const BlocklyConfig = {
                 this.setHelpUrl('');
             }
         };
-        generator['read_number'] = function(block) {
-            var prompt = Blockly.Python.valueToCode(block, 'PROMPT', Blockly.Python.ORDER_ATOMIC) || "''";
-            return [`int(input(${prompt}))`, Blockly.Python.ORDER_FUNCTION_CALL];
+        generator['read_number'] = function(block, gen) {
+            const g = gen || Blockly.Python;
+            var prompt = g.valueToCode(block, 'PROMPT', g.ORDER_ATOMIC) || "''";
+            return [`int(input(${prompt}))`, g.ORDER_FUNCTION_CALL];
         };
 
         // Block untuk float(input()) -> number
@@ -355,9 +400,10 @@ const BlocklyConfig = {
                 this.setHelpUrl('');
             }
         };
-        generator['read_float'] = function(block) {
-            var prompt = Blockly.Python.valueToCode(block, 'PROMPT', Blockly.Python.ORDER_ATOMIC) || "''";
-            return [`float(input(${prompt}))`, Blockly.Python.ORDER_FUNCTION_CALL];
+        generator['read_float'] = function(block, gen) {
+            const g = gen || Blockly.Python;
+            var prompt = g.valueToCode(block, 'PROMPT', g.ORDER_ATOMIC) || "''";
+            return [`float(input(${prompt}))`, g.ORDER_FUNCTION_CALL];
         };
 
         // Block untuk str(value)
@@ -371,9 +417,10 @@ const BlocklyConfig = {
                 this.setHelpUrl('');
             }
         };
-        generator['convert_to_string'] = function(block) {
-            var value = Blockly.Python.valueToCode(block, 'VALUE', Blockly.Python.ORDER_NONE) || "''";
-            return [`str(${value})`, Blockly.Python.ORDER_FUNCTION_CALL];
+        generator['convert_to_string'] = function(block, gen) {
+            const g = gen || Blockly.Python;
+            var value = g.valueToCode(block, 'VALUE', g.ORDER_NONE) || "''";
+            return [`str(${value})`, g.ORDER_FUNCTION_CALL];
         };
 
         // Block untuk komentar

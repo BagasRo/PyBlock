@@ -9,6 +9,30 @@ const PythonSimulator = {
     pyodide: null,
     isRunning: false,
     executionSpeed: 20, // ms between lines (Dipercepat)
+    streamBuffer: "",
+    lastStdout: "",
+
+    addOutputFromPython: function(text, isError = false) {
+        this.streamBuffer += text;
+        if (this.streamBuffer.includes('\n')) {
+            const lines = this.streamBuffer.split('\n');
+            for (let i = 0; i < lines.length - 1; i++) {
+                this.addOutput(lines[i], isError ? 'error' : 'stdout');
+                if (!isError) {
+                    this.lastStdout += lines[i] + '\n';
+                }
+            }
+            this.streamBuffer = lines[lines.length - 1];
+        }
+    },
+
+    flushStreamBuffer: function() {
+        if (this.streamBuffer) {
+            this.addOutput(this.streamBuffer, 'stdout');
+            this.lastStdout += this.streamBuffer;
+            this.streamBuffer = "";
+        }
+    },
 
     /**
      * Reset simulator state
@@ -16,15 +40,17 @@ const PythonSimulator = {
     reset: function() {
         this.variables = {};
         this.output = [];
-        // Jangan reset pyodide instance, cukup state eksekusi
         this.isRunning = false;
+        this.streamBuffer = "";
+        this.lastStdout = "";
         console.log('🔄 Simulator reset');
     },
 
     /**
      * Main execution function
      */
-     run: async function(code) {
+     run: async function(code, isSubmit = false) {
+        this.isSubmit = isSubmit;
         if (this.isRunning) {
             this.stop();
             // Beri jeda singkat untuk memastikan proses stop selesai sebelum memulai lagi
@@ -50,33 +76,46 @@ const PythonSimulator = {
             // Clear previous output buffer in Python
             this.pyodide.globals.set("output_buffer", "");
 
-            // Redirect stdout/stderr to capture output
+            // Redirect stdout/stderr to capture output real-time & setup infinite loop guard
             this.pyodide.runPython(`
 import sys
-from io import StringIO
-sys.stdout = StringIO()
-sys.stderr = StringIO()
+from js import window
+
+class JSStdout:
+    def __init__(self, is_error=False):
+        self.is_error = is_error
+    def write(self, text):
+        window.PythonSimulator.addOutputFromPython(text, self.is_error)
+    def flush(self):
+        pass
+
+sys.stdout = JSStdout(False)
+sys.stderr = JSStdout(True)
+
+# Guard trace untuk mencegah infinite loop
+def trace_limit(frame, event, arg):
+    global execution_counter
+    if event == 'line':
+        execution_counter += 1
+        if execution_counter > 50000:
+            raise RuntimeError("Batas maksimum instruksi terlampaui (kemungkinan infinite loop)")
+    return trace_limit
+
+execution_counter = 0
+sys.settrace(trace_limit)
 `);
 
             // Execute user code
             await this.pyodide.runPythonAsync(code);
 
-            // Retrieve output
-            const stdout = this.pyodide.runPython("sys.stdout.getvalue()");
-            let stderr = this.pyodide.runPython("sys.stderr.getvalue()");
-
-            if (stdout) {
-                // Split stdout into individual lines to respect newlines from Python's print().
-                const outputLines = stdout.split('\n');
-                // The last element is often an empty string if the output ends with a newline, so pop it.
-                if (outputLines.length > 1 && outputLines[outputLines.length - 1] === '') {
-                    outputLines.pop();
-                }
-                outputLines.forEach(lineText => this.addOutput(lineText, 'stdout'));
-            }
-            if (stderr) this.addOutput(stderr, 'error');
+            // Clean up trace
+            this.pyodide.runPython("sys.settrace(None)");
+            this.flushStreamBuffer();
 
         } catch (error) {
+            // Clean up trace on error
+            try { this.pyodide.runPython("sys.settrace(None)"); } catch(e){}
+            this.flushStreamBuffer();
             this.addOutput(`❌ Error Pyodide: ${error.message}`, 'error');
             console.error("Pyodide Error:", error);
         } finally {
@@ -168,6 +207,14 @@ __builtins__.input = prompt
         this.isRunning = false;
         
         this.addOutput('✨ Simulasi selesai!', 'info');
+
+        // Panggil evaluasi level jika levelManager tersedia dan mode submit aktif
+        if (this.isSubmit && window.levelManager && this.lastStdout !== undefined) {
+            window.levelManager.evaluate(this.lastStdout);
+            this.lastStdout = undefined;
+        } else if (!this.isSubmit && this.lastStdout !== undefined) {
+            this.lastStdout = undefined; // Reset for next run
+        }
     },
 
     /**
@@ -181,6 +228,63 @@ __builtins__.input = prompt
     },
 
     /**
+     * Run code silently with mocked inputs for automated validation
+     */
+    runSilentTest: async function(code, inputsArray) {
+        if (!this.pyodide) {
+            await this.loadPyodide();
+        }
+
+        let testOutput = "";
+
+        // Simpan fungsi stdout asli
+        const originalStdoutWrite = window.PythonSimulator.addOutputFromPython;
+        
+        try {
+            // Override stdout ke variabel testOutput
+            window.PythonSimulator.addOutputFromPython = function(text, isError) {
+                if (!isError) {
+                    testOutput += text;
+                }
+            };
+
+            // Terekspos ke Pyodide via object js
+            window.mockInputsArray = inputsArray;
+            window.mockInputIndex = 0;
+            
+            // Timpa fungsi input bawaan Python
+            this.pyodide.runPython(`
+from js import window
+def mock_input(prompt_text=""):
+    if window.mockInputIndex < len(window.mockInputsArray):
+        val = str(window.mockInputsArray[window.mockInputIndex])
+        window.mockInputIndex += 1
+        return val
+    return ""
+__builtins__.input = mock_input
+            `);
+
+            // Jalankan kode
+            await this.pyodide.runPythonAsync(code);
+
+        } catch (error) {
+            // Abaikan error dalam test atau rekam jika perlu
+            testOutput += "\\n[Test Error: " + error.message.split('\\n').pop() + "]";
+        } finally {
+            // Kembalikan stdout aslinya
+            window.PythonSimulator.addOutputFromPython = originalStdoutWrite;
+            
+            // Kembalikan input aslinya ke prompt browser
+            this.pyodide.runPython(`
+from js import prompt
+__builtins__.input = prompt
+            `);
+        }
+
+        return testOutput;
+    },
+
+    /**
      * Clear output console
      */
     clear: function() {
@@ -191,3 +295,5 @@ __builtins__.input = prompt
         this.output = [];
     }
 };
+
+window.PythonSimulator = PythonSimulator;

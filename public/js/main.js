@@ -20,9 +20,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!Blockly.serialization) console.warn('⚠️ Blockly.serialization tidak ditemukan (versi lama?). Fitur save/load mungkin terbatas.');
         if (!Blockly.Msg['CONTROLS_IF_MSG_IF']) console.warn('⚠️ File bahasa Blockly tidak dimuat dengan benar. Teks blok mungkin error.');
 
-        workspace = BlocklyConfig.init();
+        const levelNum = window.CURRENT_LEVEL || 1;
+        workspace = BlocklyConfig.init(levelNum);
         console.log('✅ Blockly initialized successfully from node_modules');
         showLoading(false);
+
+        if (window.SANDBOX_MODE) {
+            // Mode Sandbox: tidak ada LevelManager / soal
+            console.log('🧪 Sandbox mode — LevelManager dinonaktifkan');
+            const btnSubmit = document.getElementById('btnSubmit');
+            if (btnSubmit) btnSubmit.style.display = 'none';
+        } else if (window.levelManager) {
+            window.levelManager.init(workspace, levelNum);
+        }
 
         // Load Pyodide (Pre-load agar siap saat tombol Run ditekan)
         PythonSimulator.loadPyodide();
@@ -52,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const elements = {
         btnClear: getCleanElement('btnClear'),
         btnRun: getCleanElement('btnRun'),
+        btnSubmit: getCleanElement('btnSubmit'),
         btnClearOutput: getCleanElement('btnClearOutput'),
         btnExport: getCleanElement('btnExport'),
         btnSave: getCleanElement('btnSave'),
@@ -71,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event Listeners
     elements.btnClear?.addEventListener('click', () => clearWorkspace(workspace));
     elements.btnRun?.addEventListener('click', () => runCode(workspace));
+    elements.btnSubmit?.addEventListener('click', () => submitCode(workspace));
     elements.btnClearOutput?.addEventListener('click', () => PythonSimulator.clear());
     elements.btnExport?.addEventListener('click', () => openExportModal(workspace));
     elements.btnSave?.addEventListener('click', () => saveWorkspace(workspace));
@@ -171,7 +183,16 @@ document.addEventListener('DOMContentLoaded', function() {
             PythonSimulator.addOutput('⚠️ Tidak ada kode untuk dijalankan!', 'warning');
             return;
         }
-        PythonSimulator.run(code);
+        PythonSimulator.run(code, false); // Run without evaluation
+    }
+
+    function submitCode(workspace) {
+        const code = generateCode(workspace);
+        if (!code.trim() || code.includes('Kode Python akan muncul')) {
+            PythonSimulator.addOutput('⚠️ Tidak ada kode untuk dikumpulkan!', 'warning');
+            return;
+        }
+        PythonSimulator.run(code, true); // Run WITH evaluation
     }
 
     function clearWorkspace(workspace) {

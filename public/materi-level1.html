@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1: Output, Teks, Angka & Input - Materi Python Blockly</title>
+    <meta name="description" content="Pelajari konsep output print, blok teks dan angka, operator aritmatika, serta blok input di Python Blockly Simulator.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="materi-page-wrapper">
+        <!-- Top Navigation -->
+        <div class="materi-top-nav">
+            <a href="index.html">🏠 Beranda</a>
+            <a href="materi.html">📚 Daftar Materi</a>
+        </div>
+
+        <!-- Page Header -->
+        <div class="materi-page-header">
+            <span class="materi-card-badge badge-l1">Level 1</span>
+            <h1>🖨️ Output, Teks, Angka & Input</h1>
+            <p>Belajar mencetak ke layar, mengenal tipe data dasar, operator aritmatika, dan menerima masukan dari pengguna.</p>
+        </div>
+
+        <!-- Section 1: Print / Output -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🖨️</span> Mencetak ke Layar dengan print
+            </h2>
+            <p>
+                Perintah paling dasar dalam pemrograman adalah <strong>menampilkan sesuatu ke layar</strong>. Di Python, kita menggunakan fungsi <code style="background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #fbbf24;">print()</code> untuk melakukan hal ini.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Di Blockly, blok <strong>"print"</strong> ada di kategori <em>Output</em>. Kamu cukup menyambungkan blok yang ingin dicetak ke dalam lubang blok print, dan hasilnya akan muncul di Console.
+            </p>
+            <div class="concept-box">
+                <div class="concept-icon">💡</div>
+                <div class="concept-text">
+                    <strong>Mengapa print penting?</strong>
+                    <p>Print adalah cara utama kita "berkomunikasi" dengan pengguna. Tanpa print, program kamu berjalan tapi tidak menampilkan apa-apa — seperti berbicara tanpa suara!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Blok Teks dan Angka -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🔤</span> Blok Teks (String) dan Blok Angka
+            </h2>
+            <p>
+                Dalam pemrograman, data memiliki <strong>tipe</strong>. Dua tipe paling dasar yang akan kamu temui:
+            </p>
+            <ul>
+                <li>
+                    <strong>Teks (String)</strong> — Deretan karakter yang diapit tanda kutip. Contoh: <code style="background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #98c379;">"Halo"</code>, <code style="background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #98c379;">"Python itu seru"</code>
+                </li>
+                <li>
+                    <strong>Angka (Number)</strong> — Nilai numerik yang bisa dihitung. Contoh: <code style="background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #d19a66;">42</code>, <code style="background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #d19a66;">3.14</code>
+                </li>
+            </ul>
+            <p style="margin-top: 0.75rem;">
+                Di Blockly, blok teks berwarna <strong style="color: #5ba58c;">hijau toska</strong> dan blok angka berwarna <strong style="color: #5b67a5;">biru keunguan</strong>. Perbedaan warna ini membantu kamu membedakan tipe data secara visual.
+            </p>
+            <div class="concept-box warning">
+                <div class="concept-icon">⚠️</div>
+                <div class="concept-text">
+                    <strong>Hati-hati!</strong>
+                    <p>Teks <code style="font-family: 'Fira Code', monospace; color: #98c379;">"10"</code> dan angka <code style="font-family: 'Fira Code', monospace; color: #d19a66;">10</code> itu berbeda! Teks "10" tidak bisa dihitung, sedangkan angka 10 bisa. Pastikan kamu menggunakan tipe yang tepat sesuai kebutuhan.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Operator Aritmatika -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🔢</span> Enam Operator Aritmatika
+            </h2>
+            <p>
+                Operator aritmatika digunakan untuk melakukan perhitungan matematika pada angka. Di Blockly, blok operasi matematika tersedia di kategori <em>Math</em>:
+            </p>
+
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Nama</th>
+                        <th>Contoh</th>
+                        <th>Hasil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>+</code></td>
+                        <td>Penjumlahan</td>
+                        <td><code>5 + 3</code></td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td><code>-</code></td>
+                        <td>Pengurangan</td>
+                        <td><code>10 - 4</code></td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td><code>*</code></td>
+                        <td>Perkalian</td>
+                        <td><code>6 * 7</code></td>
+                        <td>42</td>
+                    </tr>
+                    <tr>
+                        <td><code>/</code></td>
+                        <td>Pembagian</td>
+                        <td><code>15 / 4</code></td>
+                        <td>3.75</td>
+                    </tr>
+                    <tr>
+                        <td><code>^</code></td>
+                        <td>Pangkat</td>
+                        <td><code>2 ^ 3</code></td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td><code>%</code></td>
+                        <td>Modulo (sisa bagi)</td>
+                        <td><code>10 % 3</code></td>
+                        <td>1</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box">
+                <div class="concept-icon">📌</div>
+                <div class="concept-text">
+                    <strong>Apa itu Modulo?</strong>
+                    <p>Modulo (<code style="font-family: 'Fira Code', monospace; color: #fbbf24;">%</code>) mengembalikan <strong>sisa pembagian</strong>. Contoh: 10 ÷ 3 = 3 sisa <strong>1</strong>, jadi <code style="font-family: 'Fira Code', monospace;">10 % 3 = 1</code>. Sangat berguna untuk mengecek bilangan genap/ganjil!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Blok Input -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">⌨️</span> Tiga Blok Input
+            </h2>
+            <p>
+                Input memungkinkan program <strong>menerima masukan dari pengguna</strong>. Di Blockly, ada tiga jenis blok input yang berbeda tergantung tipe data yang ingin diterima:
+            </p>
+
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Blok Input</th>
+                        <th>Fungsi</th>
+                        <th>Kapan Dipakai</th>
+                        <th>Contoh Masukan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>read text</code></td>
+                        <td>Membaca input sebagai teks (string)</td>
+                        <td>Saat meminta nama, alamat, kata</td>
+                        <td>"Budi"</td>
+                    </tr>
+                    <tr>
+                        <td><code>read int</code></td>
+                        <td>Membaca input sebagai bilangan bulat</td>
+                        <td>Saat meminta umur, jumlah, kuantitas</td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td><code>read float</code></td>
+                        <td>Membaca input sebagai bilangan desimal</td>
+                        <td>Saat meminta harga, berat, suhu</td>
+                        <td>3.14</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box warning">
+                <div class="concept-icon">⚠️</div>
+                <div class="concept-text">
+                    <strong>Pemilihan Blok Input yang Tepat</strong>
+                    <p>Jika soal meminta pengguna memasukkan <strong>angka untuk dihitung</strong>, gunakan <code style="font-family: 'Fira Code', monospace;">read int</code> atau <code style="font-family: 'Fira Code', monospace;">read float</code>. Jangan gunakan <code style="font-family: 'Fira Code', monospace;">read text</code> karena teks tidak bisa dioperasikan secara matematis!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Contoh Berdampingan -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">👀</span> Contoh: Blockly ↔ Python
+            </h2>
+            <p>
+                Berikut contoh sederhana program yang <strong>meminta pengguna memasukkan dua angka, lalu mencetak hasil penjumlahannya</strong>:
+            </p>
+
+            <div class="code-comparison">
+                <!-- Blockly Side -->
+                <div class="code-comparison-panel panel-blockly">
+                    <div class="code-comparison-label">🧩 Blok Blockly</div>
+                    <div class="block-stack">
+                        <div class="block-mock block-output">print <span class="block-field">"Masukkan angka pertama:"</span></div>
+                        <div class="block-mock block-var">set <span class="block-field">a</span> to <span class="block-mock block-input" style="margin:0;">read int</span></div>
+                        <div class="block-mock block-output">print <span class="block-field">"Masukkan angka kedua:"</span></div>
+                        <div class="block-mock block-var">set <span class="block-field">b</span> to <span class="block-mock block-input" style="margin:0;">read int</span></div>
+                        <div class="block-mock block-output">print <span class="block-mock block-math" style="margin:0;"><span class="block-field">a</span> + <span class="block-field">b</span></span></div>
+                    </div>
+                </div>
+                <!-- Python Side -->
+                <div class="code-comparison-panel panel-python">
+                    <div class="code-comparison-label">🐍 Kode Python</div>
+<pre><span class="keyword">print</span>(<span class="string">"Masukkan angka pertama:"</span>)
+<span class="variable">a</span> = <span class="function">int</span>(<span class="function">input</span>())
+<span class="keyword">print</span>(<span class="string">"Masukkan angka kedua:"</span>)
+<span class="variable">b</span> = <span class="function">int</span>(<span class="function">input</span>())
+<span class="keyword">print</span>(<span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>)</pre>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-icon">🎓</div>
+                <div class="concept-text">
+                    <strong>Perhatikan!</strong>
+                    <p>Setiap blok di sisi kiri menghasilkan satu baris kode di sisi kanan. Dengan memahami hubungan ini, kamu akan mulai bisa membaca dan menulis kode Python secara mandiri!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="materi-bottom-nav">
+            <a href="materi-pengantar.html" class="materi-nav-btn nav-prev">
+                <span class="nav-arrow">←</span>
+                <div>
+                    <div class="nav-direction">Materi Sebelumnya</div>
+                    <div class="nav-title">Pengantar</div>
+                </div>
+            </a>
+            <a href="materi-level2.html" class="materi-nav-btn nav-next">
+                <div>
+                    <div class="nav-direction">Materi Selanjutnya</div>
+                    <div class="nav-title">Level 2: Variabel & Data</div>
+                </div>
+                <span class="nav-arrow">→</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            if(particlesContainer) {
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particle.style.animationDelay = (Math.random() * 5) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

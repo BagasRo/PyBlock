@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 4: Perulangan (Loops) - Materi Python Blockly</title>
+    <meta name="description" content="Pelajari konsep perulangan, tiga jenis loop (repeat, for, while), serta break dan continue di Python Blockly Simulator.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="materi-page-wrapper">
+        <!-- Top Navigation -->
+        <div class="materi-top-nav">
+            <a href="index.html">🏠 Beranda</a>
+            <a href="materi.html">📚 Daftar Materi</a>
+        </div>
+
+        <!-- Page Header -->
+        <div class="materi-page-header">
+            <span class="materi-card-badge badge-l4">Level 4</span>
+            <h1>🔁 Perulangan (Loops)</h1>
+            <p>Memahami konsep loop, tiga jenis perulangan yang tersedia, serta cara menghentikan atau melewati putaran dengan break dan continue.</p>
+        </div>
+
+        <!-- Section 1: Konsep Perulangan -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🔁</span> Mengapa Perlu Perulangan?
+            </h2>
+            <p>
+                Bayangkan kamu ingin mencetak "Halo!" sebanyak <strong>100 kali</strong>. Tanpa perulangan, kamu harus membuat 100 blok print — sangat tidak efisien! Dengan <strong>perulangan (loop)</strong>, kamu cukup menulis satu blok print dan memberi tahu komputer untuk mengulanginya.
+            </p>
+            <div class="concept-box">
+                <div class="concept-icon">🎯</div>
+                <div class="concept-text">
+                    <strong>Analogi Sederhana</strong>
+                    <p>Perulangan itu seperti perintah: <em>"Ulangi langkah berikut 10 kali: lompat ke depan."</em> — Kamu tidak perlu menulis "lompat" sepuluh kali, cukup beri instruksi satu kali dengan jumlah pengulangan.</p>
+                </div>
+            </div>
+            <p style="margin-top: 0.75rem;">
+                <strong>Keuntungan menggunakan loop:</strong>
+            </p>
+            <ul>
+                <li>Kode menjadi <strong>lebih pendek dan rapi</strong></li>
+                <li><strong>Mudah diubah</strong> — cukup ganti angka pengulangannya</li>
+                <li><strong>Mengurangi kesalahan</strong> — tidak perlu copy-paste blok berulang kali</li>
+                <li>Bisa menangani <strong>data dalam jumlah besar</strong> secara otomatis</li>
+            </ul>
+        </div>
+
+        <!-- Section 2: Tiga Jenis Loop -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🔄</span> Tiga Jenis Perulangan
+            </h2>
+            <p>
+                Di Blockly, ada tiga jenis blok perulangan yang masing-masing cocok untuk situasi yang berbeda:
+            </p>
+
+            <!-- Loop 1: Repeat -->
+            <div style="margin-top: 1.5rem;">
+                <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">1️⃣ Repeat ... Times</h3>
+                <p>
+                    Mengulangi blok di dalamnya sejumlah <strong>kali tertentu yang sudah diketahui</strong>. Ini adalah jenis loop paling sederhana.
+                </p>
+                <div class="concept-box" style="margin-top: 0.75rem;">
+                    <div class="concept-icon">📌</div>
+                    <div class="concept-text">
+                        <strong>Kapan dipakai?</strong>
+                        <p>Ketika kamu tahu <strong>pasti berapa kali</strong> ingin mengulangi sesuatu. Contoh: "Cetak bintang 5 kali", "Lakukan operasi ini 3 kali".</p>
+                    </div>
+                </div>
+
+                <div class="code-comparison" style="margin-top: 0.75rem;">
+                    <div class="code-comparison-panel panel-blockly">
+                        <div class="code-comparison-label">🧩 Blockly</div>
+                        <div class="block-stack">
+                            <div class="block-mock block-loop">repeat <span class="block-field">5</span> times</div>
+                            <div class="block-mock block-output block-indent">print <span class="block-field">"⭐"</span></div>
+                        </div>
+                    </div>
+                    <div class="code-comparison-panel panel-python">
+                        <div class="code-comparison-label">🐍 Python</div>
+<pre><span class="keyword">for</span> <span class="variable">count</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>):
+    <span class="keyword">print</span>(<span class="string">"⭐"</span>)</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loop 2: Count With / For -->
+            <div style="margin-top: 2rem;">
+                <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">2️⃣ Count With / For (Rentang Angka)</h3>
+                <p>
+                    Mengulangi blok dengan sebuah <strong>variabel penghitung</strong> yang bergerak dari angka awal ke angka akhir. Kamu bisa menggunakan variabel penghitung ini di dalam blok.
+                </p>
+                <div class="concept-box" style="margin-top: 0.75rem;">
+                    <div class="concept-icon">📌</div>
+                    <div class="concept-text">
+                        <strong>Kapan dipakai?</strong>
+                        <p>Ketika kamu butuh <strong>nomor urut</strong> atau ingin melakukan sesuatu pada <strong>rentang angka tertentu</strong>. Contoh: "Cetak angka 1 sampai 10", "Hitung mundur dari 10 ke 1".</p>
+                    </div>
+                </div>
+
+                <div class="code-comparison" style="margin-top: 0.75rem;">
+                    <div class="code-comparison-panel panel-blockly">
+                        <div class="code-comparison-label">🧩 Blockly</div>
+                        <div class="block-stack">
+                            <div class="block-mock block-loop">count with <span class="block-field">i</span> from <span class="block-field">1</span> to <span class="block-field">5</span></div>
+                            <div class="block-mock block-output block-indent">print <span class="block-field">i</span></div>
+                        </div>
+                    </div>
+                    <div class="code-comparison-panel panel-python">
+                        <div class="code-comparison-label">🐍 Python</div>
+<pre><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">6</span>):
+    <span class="keyword">print</span>(<span class="variable">i</span>)
+<span class="comment"># Output: 1, 2, 3, 4, 5</span></pre>
+                    </div>
+                </div>
+
+                <div class="concept-box warning" style="margin-top: 0.75rem;">
+                    <div class="concept-icon">⚠️</div>
+                    <div class="concept-text">
+                        <strong>Perhatikan range() di Python!</strong>
+                        <p>Di Python, <code style="font-family: 'Fira Code', monospace;">range(1, 6)</code> menghasilkan angka 1 sampai 5 (bukan 6!). Angka terakhir <strong>tidak termasuk</strong>. Blockly menangani konversi ini secara otomatis untukmu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loop 3: While -->
+            <div style="margin-top: 2rem;">
+                <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">3️⃣ While (Selama Kondisi Benar)</h3>
+                <p>
+                    Mengulangi blok <strong>selama kondisi tertentu masih bernilai True</strong>. Loop akan berhenti saat kondisi menjadi False.
+                </p>
+                <div class="concept-box" style="margin-top: 0.75rem;">
+                    <div class="concept-icon">📌</div>
+                    <div class="concept-text">
+                        <strong>Kapan dipakai?</strong>
+                        <p>Ketika kamu <strong>tidak tahu pasti berapa kali</strong> harus mengulang, tapi tahu <strong>kapan harus berhenti</strong>. Contoh: "Terus minta input sampai pengguna mengetik 'quit'", "Ulangi sampai skor mencapai 100".</p>
+                    </div>
+                </div>
+
+                <div class="code-comparison" style="margin-top: 0.75rem;">
+                    <div class="code-comparison-panel panel-blockly">
+                        <div class="code-comparison-label">🧩 Blockly</div>
+                        <div class="block-stack">
+                            <div class="block-mock block-var">set <span class="block-field">angka</span> to <span class="block-field">1</span></div>
+                            <div class="block-mock block-loop">while <span class="block-mock block-compare" style="margin:0;"><span class="block-field">angka</span> ≤ <span class="block-field">5</span></span></div>
+                            <div class="block-mock block-output block-indent">print <span class="block-field">angka</span></div>
+                            <div class="block-mock block-var block-indent">set <span class="block-field">angka</span> to <span class="block-field">angka + 1</span></div>
+                        </div>
+                    </div>
+                    <div class="code-comparison-panel panel-python">
+                        <div class="code-comparison-label">🐍 Python</div>
+<pre><span class="variable">angka</span> = <span class="number">1</span>
+<span class="keyword">while</span> <span class="variable">angka</span> <span class="operator">&lt;=</span> <span class="number">5</span>:
+    <span class="keyword">print</span>(<span class="variable">angka</span>)
+    <span class="variable">angka</span> = <span class="variable">angka</span> <span class="operator">+</span> <span class="number">1</span>
+<span class="comment"># Output: 1, 2, 3, 4, 5</span></pre>
+                    </div>
+                </div>
+
+                <div class="concept-box warning" style="margin-top: 0.75rem;">
+                    <div class="concept-icon">⚠️</div>
+                    <div class="concept-text">
+                        <strong>Hati-hati: Infinite Loop!</strong>
+                        <p>Jika kondisi while <strong>tidak pernah menjadi False</strong>, loop akan berjalan selamanya (infinite loop) dan program akan macet! Pastikan ada mekanisme yang membuat kondisi berubah menjadi False.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Break & Continue -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">⏹️</span> Break dan Continue
+            </h2>
+            <p>
+                Kadang kamu butuh kontrol lebih dalam perulangan — bisa menghentikannya lebih awal atau melewati putaran tertentu. Ada dua perintah khusus untuk ini:
+            </p>
+
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Perintah</th>
+                        <th>Fungsi</th>
+                        <th>Analogi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>break</code></td>
+                        <td><strong>Menghentikan seluruh perulangan</strong> secara langsung, keluar dari loop</td>
+                        <td>Seperti menekan tombol "STOP" — perulangan langsung selesai, lompat ke kode setelah loop</td>
+                    </tr>
+                    <tr>
+                        <td><code>continue</code></td>
+                        <td><strong>Melewati satu putaran</strong> saat ini, lanjut ke putaran berikutnya</td>
+                        <td>Seperti "skip" — lewati putaran ini, tapi lanjutkan looping</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem;"><strong>Contoh penggunaan break:</strong> Mencari angka tertentu dalam rentang, dan berhenti begitu menemukannya.</p>
+            <p><strong>Contoh penggunaan continue:</strong> Mencetak semua angka kecuali angka tertentu (lewati angka yang tidak diinginkan).</p>
+        </div>
+
+        <!-- Section 4: Contoh Berdampingan -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">👀</span> Contoh: Blockly ↔ Python
+            </h2>
+            <p>
+                Berikut contoh program yang <strong>mencetak angka 1 sampai 10, tapi melewati angka 5 dan berhenti di angka 8</strong>:
+            </p>
+
+            <div class="code-comparison">
+                <!-- Blockly Side -->
+                <div class="code-comparison-panel panel-blockly">
+                    <div class="code-comparison-label">🧩 Blok Blockly</div>
+                    <div class="block-stack">
+                        <div class="block-mock block-loop">count with <span class="block-field">i</span> from <span class="block-field">1</span> to <span class="block-field">10</span></div>
+                        <div class="block-mock block-logic block-indent">if <span class="block-mock block-compare" style="margin:0;"><span class="block-field">i</span> = <span class="block-field">5</span></span></div>
+                        <div class="block-mock block-control block-indent" style="margin-left: 40px;">continue</div>
+                        <div class="block-mock block-logic block-indent">if <span class="block-mock block-compare" style="margin:0;"><span class="block-field">i</span> = <span class="block-field">8</span></span></div>
+                        <div class="block-mock block-control block-indent" style="margin-left: 40px;">break</div>
+                        <div class="block-mock block-output block-indent">print <span class="block-field">i</span></div>
+                    </div>
+                </div>
+                <!-- Python Side -->
+                <div class="code-comparison-panel panel-python">
+                    <div class="code-comparison-label">🐍 Kode Python</div>
+<pre><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">11</span>):
+    <span class="keyword">if</span> <span class="variable">i</span> <span class="operator">==</span> <span class="number">5</span>:
+        <span class="keyword">continue</span>
+    <span class="keyword">if</span> <span class="variable">i</span> <span class="operator">==</span> <span class="number">8</span>:
+        <span class="keyword">break</span>
+    <span class="keyword">print</span>(<span class="variable">i</span>)
+
+<span class="comment"># Output: 1, 2, 3, 4, 6, 7</span>
+<span class="comment"># (5 dilewati, berhenti di 8)</span></pre>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-icon">🎓</div>
+                <div class="concept-text">
+                    <strong>Perhatikan!</strong>
+                    <p>Angka <strong>5 tidak tercetak</strong> karena <code style="font-family: 'Fira Code', monospace; color: #fbbf24;">continue</code> melewatinya. Angka <strong>8, 9, 10 tidak tercetak</strong> karena <code style="font-family: 'Fira Code', monospace; color: #fbbf24;">break</code> menghentikan seluruh loop saat <code style="font-family: 'Fira Code', monospace;">i = 8</code>. Urutan pengecekan if sangat penting!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="materi-bottom-nav">
+            <a href="materi-level3.html" class="materi-nav-btn nav-prev">
+                <span class="nav-arrow">←</span>
+                <div>
+                    <div class="nav-direction">Materi Sebelumnya</div>
+                    <div class="nav-title">Level 3: Boolean & Percabangan</div>
+                </div>
+            </a>
+            <a href="materi.html" class="materi-nav-btn nav-next">
+                <div>
+                    <div class="nav-direction">Kembali ke</div>
+                    <div class="nav-title">📚 Daftar Semua Materi</div>
+                </div>
+                <span class="nav-arrow">→</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            if(particlesContainer) {
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particle.style.animationDelay = (Math.random() * 5) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

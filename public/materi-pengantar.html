@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengantar - Materi Python Blockly Simulator</title>
+    <meta name="description" content="Mengenal pemrograman Python menggunakan Blockly. Pelajari pengertian pemrograman, algoritma, tipe data, sejarah Python, cara kerja antarmuka, dan sistem tingkat kesulitan.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="materi-page-wrapper">
+        <!-- Top Navigation -->
+        <div class="materi-top-nav">
+            <a href="index.html">🏠 Beranda</a>
+            <a href="materi.html">📚 Daftar Materi</a>
+        </div>
+
+        <!-- Page Header -->
+        <div class="materi-page-header">
+            <span class="materi-card-badge badge-intro">Pengantar</span>
+            <h1>📖 Mengenal Pemrograman Python dengan Blockly</h1>
+            <p>Landasan awal untuk memahami apa itu pemrograman, mengapa Python, dan bagaimana Blockly membantumu belajar.</p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- A. APA ITU PEMROGRAMAN?                      -->
+        <!-- ============================================ -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">💡</span> A. Apa Itu Pemrograman?
+            </h2>
+
+            <!-- 1. Definisi Pemrograman -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">1. Definisi Pemrograman</h3>
+            <p>
+                <strong>Pemrograman</strong> adalah proses menulis serangkaian instruksi yang dapat dimengerti dan dijalankan oleh komputer. Kumpulan instruksi tersebut disebut <strong>program</strong> atau <strong>kode</strong>, dan bahasa yang digunakan untuk menulisnya disebut <strong>bahasa pemrograman</strong>.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Komputer sendiri sebenarnya adalah mesin yang sangat cepat namun tidak bisa berpikir atau mengambil keputusan sendiri. Ia hanya akan melakukan <em>persis</em> apa yang kita perintahkan — tidak lebih, tidak kurang. Itulah mengapa instruksi yang kita tulis harus jelas, tepat, dan tidak ambigu.
+            </p>
+
+            <!-- 2. Analogi Sehari-hari -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">2. Analogi Sehari-hari</h3>
+            <p>
+                Bayangkan kamu sedang memberi petunjuk arah kepada seseorang yang sama sekali tidak tahu jalan:
+            </p>
+            <div class="concept-box" style="margin-top: 0.75rem;">
+                <div class="concept-icon">🗺️</div>
+                <div class="concept-text">
+                    <p><em>"Dari sini, jalan lurus 200 meter. Setelah lampu merah, belok kiri. Jalan terus sampai ada minimarket di sebelah kanan. Berhenti di sana."</em></p>
+                </div>
+            </div>
+            <p style="margin-top: 0.75rem;">
+                Petunjuk itu harus urut, jelas, dan tidak ada langkah yang terlewat. Kalau langkah kedua kamu lupa sebutkan, orang tersebut akan terus lurus dan tidak akan sampai ke tujuan.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Program komputer bekerja dengan cara yang <strong>persis sama</strong>. Komputer membaca dan menjalankan instruksi dari atas ke bawah, satu per satu, secara berurutan. Jika ada instruksi yang keliru atau terlewat, hasilnya tidak akan sesuai harapan.
+            </p>
+
+            <!-- 3. Apa Itu Algoritma? -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">3. Apa Itu Algoritma?</h3>
+            <p>
+                Sebelum menulis program, seorang programmer biasanya memikirkan dulu <strong>algoritma</strong> — yaitu rencana atau urutan langkah logis untuk menyelesaikan suatu masalah, sebelum dituangkan ke dalam kode.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Contoh sederhana algoritma untuk menghitung total belanja:
+            </p>
+            <ol>
+                <li>Tanyakan harga barang kepada pengguna</li>
+                <li>Tanyakan jumlah barang yang dibeli</li>
+                <li>Kalikan harga dengan jumlah</li>
+                <li>Tampilkan hasilnya ke layar</li>
+            </ol>
+            <p style="margin-top: 0.75rem;">
+                Algoritma tidak harus ditulis dalam bahasa pemrograman tertentu — ia lebih seperti <strong>"kerangka berpikir"</strong> yang kemudian baru kita terjemahkan menjadi kode nyata.
+            </p>
+
+            <!-- 4. Tipe Data Dasar -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">4. Tipe Data Dasar dalam Pemrograman</h3>
+            <p>
+                Setiap nilai yang diproses oleh program memiliki <strong>tipe data</strong> — yaitu jenis atau kategori dari nilai tersebut. Memahami tipe data penting karena operasi yang bisa dilakukan berbeda-beda tergantung jenisnya.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Berikut empat tipe data dasar yang akan kamu temui di simulasi ini, beserta representasinya dalam blok Blockly:
+            </p>
+
+            <table class="operator-table" style="margin-top: 0.75rem;">
+                <thead>
+                    <tr>
+                        <th>Tipe Data</th>
+                        <th>Penjelasan</th>
+                        <th>Contoh Nilai</th>
+                        <th>Blok Blockly</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Integer</strong><br><small style="color: rgba(255,255,255,0.5);">(Bilangan Bulat)</small></td>
+                        <td>Angka tanpa koma</td>
+                        <td><code>5</code>, <code>100</code>, <code>-3</code></td>
+                        <td>Blok angka (123) dan <code>read int</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Float</strong><br><small style="color: rgba(255,255,255,0.5);">(Bilangan Desimal)</small></td>
+                        <td>Angka dengan koma</td>
+                        <td><code>3.14</code>, <code>1.5</code>, <code>-0.75</code></td>
+                        <td>Blok angka dan <code>read float</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>String</strong><br><small style="color: rgba(255,255,255,0.5);">(Teks)</small></td>
+                        <td>Kumpulan karakter dalam tanda kutip</td>
+                        <td><code>"Halo"</code>, <code>"SMK"</code>, <code>"123"</code></td>
+                        <td>Blok teks <code>" "</code> dan <code>read text</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Boolean</strong></td>
+                        <td>Nilai logika, hanya dua kemungkinan</td>
+                        <td><code>True</code> atau <code>False</code></td>
+                        <td>Blok <code>true</code> / <code>false</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box warning" style="margin-top: 1rem;">
+                <div class="concept-icon">⚠️</div>
+                <div class="concept-text">
+                    <strong>Catatan Penting</strong>
+                    <p>Angka <code style="font-family: 'Fira Code', monospace; color: #d19a66;">123</code> dan teks <code style="font-family: 'Fira Code', monospace; color: #98c379;">"123"</code> adalah dua hal yang berbeda di dalam komputer. Angka bisa dihitung secara matematika, sedangkan teks tidak bisa. Itulah mengapa di Blockly tersedia blok <strong>to str</strong> — untuk mengubah angka menjadi teks ketika keduanya ingin digabungkan.</p>
+                </div>
+            </div>
+
+            <!-- Poin Utama Section A -->
+            <div class="concept-box" style="margin-top: 1rem;">
+                <div class="concept-icon">📌</div>
+                <div class="concept-text">
+                    <strong>Poin Utama:</strong>
+                    <ul style="margin-top: 0.25rem; padding-left: 1.2rem; margin-bottom: 0;">
+                        <li>Pemrograman adalah cara memberikan instruksi yang jelas dan berurutan kepada komputer.</li>
+                        <li>Algoritma adalah kerangka berpikir sebelum menulis kode.</li>
+                        <li>Setiap nilai dalam program memiliki tipe data yang menentukan apa yang bisa dilakukan terhadap nilai tersebut.</li>
+                        <li>Empat tipe data yang akan dipakai di simulasi ini adalah <strong>Integer, Float, String, dan Boolean</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- B. MENGENAL PYTHON                           -->
+        <!-- ============================================ -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🐍</span> B. Mengenal Python
+            </h2>
+
+            <!-- 1. Sejarah Singkat Python -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">1. Sejarah Singkat Python</h3>
+            <p>
+                Python pertama kali dikembangkan oleh seorang programmer Belanda bernama <strong>Guido van Rossum</strong> pada akhir tahun 1980-an, dan dirilis secara resmi pertama kali pada tahun <strong>1991</strong>. Nama "Python" sendiri terinspirasi dari acara komedi Inggris yang digemari Van Rossum, yaitu <em>Monty Python's Flying Circus</em> — bukan dari ular python seperti yang sering disangka.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Sejak awal, Python dirancang dengan satu tujuan utama: <strong>mudah dibaca dan mudah dipelajari</strong>. Van Rossum ingin menciptakan bahasa yang kodenya bisa dipahami seperti membaca kalimat bahasa Inggris biasa, tanpa simbol-simbol yang membingungkan.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Saat ini Python sudah memasuki <strong>versi 3 (Python 3)</strong> yang merupakan versi modern dan aktif dikembangkan, serta yang paling banyak digunakan di seluruh dunia.
+            </p>
+
+            <!-- 2. Mengapa Python Populer? -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">2. Mengapa Python Populer?</h3>
+            <p>
+                Berdasarkan survei pengembang global (Stack Overflow Developer Survey), Python secara konsisten masuk dalam daftar bahasa pemrograman <strong>paling populer dan paling diinginkan</strong> oleh programmer di seluruh dunia. Beberapa alasan kepopulerannya:
+            </p>
+
+            <p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>📝 Sintaks yang bersih dan mudah dibaca</strong></p>
+            <p>
+                Dibandingkan bahasa lain, kode Python terlihat lebih rapi dan mendekati bahasa manusia. Tidak ada banyak simbol kurung kurawal <code style="font-family: 'Fira Code', monospace;">{}</code> atau tanda titik koma <code style="font-family: 'Fira Code', monospace;">;</code> yang harus dihafal.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Contoh perbandingan mencetak teks di beberapa bahasa:
+            </p>
+
+            <div class="code-comparison" style="margin-top: 0.5rem;">
+                <div class="code-comparison-panel panel-blockly">
+                    <div class="code-comparison-label">☕ Java & C++</div>
+<pre style="margin:0; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.7; color: #d4d4d4; white-space: pre; overflow-x: auto;"><span class="comment">// Java</span>
+System.out.println(<span class="string">"Halo Dunia"</span>);
+
+<span class="comment">// C++</span>
+cout <span class="operator">&lt;&lt;</span> <span class="string">"Halo Dunia"</span> <span class="operator">&lt;&lt;</span> endl;</pre>
+                </div>
+                <div class="code-comparison-panel panel-python">
+                    <div class="code-comparison-label">🐍 Python</div>
+<pre><span class="comment"># Python</span>
+<span class="keyword">print</span>(<span class="string">"Halo Dunia"</span>)</pre>
+                </div>
+            </div>
+
+            <p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>🌍 Digunakan di banyak bidang</strong></p>
+            <p>
+                Python bukan hanya untuk satu jenis pekerjaan. Bahasa ini dipakai di berbagai bidang, antara lain:
+            </p>
+            <ul>
+                <li>Pengembangan aplikasi web (Instagram, Pinterest dibangun dengan Python)</li>
+                <li>Analisis data dan kecerdasan buatan (machine learning, data science)</li>
+                <li>Otomatisasi tugas-tugas berulang (scripting)</li>
+                <li>Pengembangan game dan animasi</li>
+                <li>Keamanan siber dan riset</li>
+            </ul>
+
+            <p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>🤝 Komunitas yang besar</strong></p>
+            <p>
+                Python memiliki komunitas pengguna yang sangat besar di seluruh dunia. Artinya, tersedia banyak sekali tutorial, panduan, dan sumber belajar gratis yang bisa diakses kapan saja.
+            </p>
+
+            <!-- 3. Karakteristik Utama Python -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">3. Karakteristik Utama Python</h3>
+            <p>
+                Untuk memahami Python lebih dalam, ada beberapa karakteristik penting yang membedakannya dari bahasa pemrograman lain:
+            </p>
+            <ul>
+                <li><strong>Indentation (Lekukan) sebagai Aturan:</strong> Di bahasa lain, blok kode biasanya ditandai dengan kurung kurawal <code style="font-family: 'Fira Code', monospace;">{}</code>. Di Python, blok kode ditentukan semata-mata oleh spasi atau tab (indentasi) di awal baris. Hal ini memaksa programmer untuk selalu menulis kode yang rapi.</li>
+                <li><strong>Case Sensitive:</strong> Python membedakan huruf besar dan huruf kecil. Variabel <code style="font-family: 'Fira Code', monospace;">Nama</code> dan <code style="font-family: 'Fira Code', monospace;">nama</code> dianggap sebagai dua hal yang sepenuhnya berbeda.</li>
+                <li><strong>Dynamic Typing:</strong> Kamu tidak perlu mendeklarasikan tipe data (seperti <em>integer</em> atau <em>string</em>) secara eksplisit saat membuat variabel. Python cukup pintar untuk menebak tipe data secara otomatis berdasarkan nilai yang diberikan.</li>
+                <li><strong>Batteries Included:</strong> Python memiliki filosofi "batteries included", artinya bahasa ini datang membawa banyak sekali modul standar bawaan (seperti fungsi matematika tingkat lanjut, pengolahan teks, dan format tanggal) sehingga programmer bisa langsung bekerja tanpa banyak mengunduh komponen luar.</li>
+            </ul>
+
+            <!-- 4. Python di Simulasi Ini -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">4. Python di Simulasi Ini</h3>
+            <p>
+                Dalam simulasi ini, kamu tidak akan mengetik kode Python secara langsung. Setiap blok Blockly yang kamu susun akan secara otomatis menghasilkan <strong>kode Python yang nyata</strong> dan bisa kamu lihat di panel kode di sebelah area kerja.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Tujuannya adalah agar kamu memahami <strong>logika dan struktur pemrograman Python</strong> terlebih dahulu melalui cara yang visual, sebelum nantinya menulis kode Python secara langsung di jenjang belajar berikutnya.
+            </p>
+
+            <!-- Poin Utama Section B -->
+            <div class="concept-box" style="margin-top: 1rem;">
+                <div class="concept-icon">📌</div>
+                <div class="concept-text">
+                    <strong>Poin Utama:</strong>
+                    <ul style="margin-top: 0.25rem; padding-left: 1.2rem; margin-bottom: 0;">
+                        <li>Python diciptakan tahun 1991 dengan tujuan utama: mudah dibaca dan dipelajari.</li>
+                        <li>Python adalah salah satu bahasa paling populer di dunia dan digunakan di banyak bidang industri.</li>
+                        <li>Aturan penulisan (sintaks) Python mewajibkan penggunaan indentasi (spasi/tab) untuk menjaga kerapian kode.</li>
+                        <li>Python bersifat <em>case sensitive</em> dan dapat mengenali tipe data secara dinamis tanpa perlu deklarasi manual.</li>
+                        <li>Blok Blockly yang disusun menghasilkan kode Python nyata yang bisa dilihat langsung di panel kode.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- C. APA ITU BLOCKLY DAN MENGAPA DIPAKAI?      -->
+        <!-- ============================================ -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🧩</span> C. Apa Itu Blockly dan Mengapa Dipakai?
+            </h2>
+            <p>
+                <strong>Blockly</strong> adalah alat pemrograman visual yang memungkinkan kita menulis program dengan cara menyusun blok-blok seperti potongan puzzle, tanpa harus mengetik kode secara langsung.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Setiap blok yang disusun di area kerja akan secara otomatis diterjemahkan menjadi <strong>kode Python yang nyata</strong>. Ini berarti kamu sedang belajar logika pemrograman Python yang sesungguhnya, hanya saja dengan cara yang lebih mudah dipahami secara visual.
+            </p>
+
+            <p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>Perbandingan cara kerja:</strong></p>
+
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Blockly (Visual)</th>
+                        <th>Python (Kode)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Blok <code>print</code> dengan teks "Halo Dunia"</td>
+                        <td><code>print("Halo Dunia")</code></td>
+                    </tr>
+                    <tr>
+                        <td>Blok angka <code>5</code> dikalikan angka <code>3</code></td>
+                        <td><code>5 * 3</code></td>
+                    </tr>
+                    <tr>
+                        <td>Blok <code>if</code> dengan kondisi perbandingan</td>
+                        <td><code>if nilai >= 75:</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box" style="margin-top: 1rem;">
+                <div class="concept-icon">📌</div>
+                <div class="concept-text">
+                    <strong>Poin Utama:</strong>
+                    <ul style="margin-top: 0.25rem; padding-left: 1.2rem; margin-bottom: 0;">
+                        <li>Kamu tidak mengetik kode — kamu menyusun blok, dan kode Python-nya terbentuk otomatis.</li>
+                        <li>Memahami logika di balik blok sama artinya dengan memahami logika Python itu sendiri.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- D. CARA KERJA ANTARMUKA APLIKASI             -->
+        <!-- ============================================ -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🖥️</span> D. Cara Kerja Antarmuka Aplikasi
+            </h2>
+            <p>
+                Ketika kamu membuka halaman simulasi latihan, kamu akan melihat antarmuka yang terbagi menjadi beberapa bagian utama:
+            </p>
+
+            <div class="interface-diagram">
+                <!-- Row 1: Header -->
+                <div class="diagram-row">
+                    <div class="diagram-box" style="flex: 1;">
+                        <div class="diagram-icon">📋</div>
+                        <div class="diagram-label">Panel Tugas</div>
+                        <div class="diagram-desc">Menampilkan soal/instruksi yang harus kamu selesaikan beserta petunjuk</div>
+                    </div>
+                </div>
+                <!-- Row 2: Main workspace -->
+                <div class="diagram-row">
+                    <div class="diagram-box" style="flex: 3;">
+                        <div class="diagram-icon">🧩</div>
+                        <div class="diagram-label">Blockly Workspace</div>
+                        <div class="diagram-desc">Area utama tempat kamu menyusun blok-blok visual. Drag & drop blok dari toolbox di sebelah kiri ke area kerja ini.</div>
+                    </div>
+                    <div class="diagram-box" style="flex: 2;">
+                        <div class="diagram-icon">🐍</div>
+                        <div class="diagram-label">Kode Python</div>
+                        <div class="diagram-desc">Kode Python yang dihasilkan otomatis dari blok-blok yang kamu susun. Berubah secara real-time!</div>
+                    </div>
+                </div>
+                <!-- Row 3: Output -->
+                <div class="diagram-row">
+                    <div class="diagram-box" style="flex: 1;">
+                        <div class="diagram-icon">📤</div>
+                        <div class="diagram-label">Output / Console</div>
+                        <div class="diagram-desc">Tempat hasil eksekusi program ditampilkan. Kamu bisa melihat output print, error, dan pesan sistem di sini.</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 1rem;">
+                <strong>Alur kerja sederhananya:</strong>
+            </p>
+            <ol>
+                <li><strong>Baca tugas</strong> di panel tugas bagian atas</li>
+                <li><strong>Susun blok</strong> di Blockly Workspace sesuai logika yang dibutuhkan</li>
+                <li>Lihat <strong>kode Python</strong> yang dihasilkan di panel kanan</li>
+                <li>Tekan tombol <strong>▶️ Jalankan</strong> untuk menguji coba program</li>
+                <li>Cek <strong>hasil output</strong> di Console</li>
+                <li>Tekan tombol <strong>✅ Kumpulkan</strong> jika sudah yakin dengan jawabanmu</li>
+            </ol>
+
+            <div class="concept-box warning" style="margin-top: 1rem;">
+                <div class="concept-icon">⚠️</div>
+                <div class="concept-text">
+                    <strong>Prinsip Sekuensial</strong>
+                    <p>Program dieksekusi dari blok paling atas hingga bawah secara berurutan. Pastikan susunan alur logikamu sudah tepat sebelum dijalankan!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- E. SISTEM TINGKAT KESULITAN                  -->
+        <!-- ============================================ -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">⚡</span> E. Sistem Tingkat Kesulitan
+            </h2>
+            <p>
+                Sebelum memulai simulasi, kamu akan diminta memilih <strong>tingkat kesulitan</strong>. Tingkat ini menentukan seberapa banyak bantuan yang kamu dapatkan saat mengerjakan soal:
+            </p>
+
+            <div class="difficulty-cards">
+                <div class="diff-card easy">
+                    <div class="diff-emoji">🟢</div>
+                    <h4>Mudah</h4>
+                    <p>Petunjuk langsung dimunculkan di awal sebelum kamu mulai mengerjakan. Cocok untuk pemula yang baru pertama kali belajar agar memiliki panduan terarah saat belajar pemrograman.</p>
+                </div>
+                <div class="diff-card medium">
+                    <div class="diff-emoji">🟡</div>
+                    <h4>Sedang</h4>
+                    <p>Petunjuk diberikan secara bertahap satu per satu setiap kali kamu gagal menjawab. Cocok untuk menguji pemahaman dengan mencoba sendiri terlebih dahulu sebelum dibantu.</p>
+                </div>
+                <div class="diff-card hard">
+                    <div class="diff-emoji">🔴</div>
+                    <h4>Sulit</h4>
+                    <p>Mode ujian mandiri tanpa petunjuk sistem sama sekali. Kamu harus mengandalkan pemahaman sendiri. Cocok untuk yang ingin benar-benar menguji kemampuannya.</p>
+                </div>
+            </div>
+
+            <div class="concept-box" style="margin-top: 1rem;">
+                <div class="concept-icon">💡</div>
+                <div class="concept-text">
+                    <strong>Tips Memilih Kesulitan</strong>
+                    <p>Jika kamu baru pertama kali belajar pemrograman, mulailah dari tingkat <strong>Mudah</strong>. Setelah merasa percaya diri, naikkan ke Sedang, lalu Sulit. Tidak ada yang salah dengan memulai dari awal!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="materi-bottom-nav">
+            <div></div>
+            <a href="materi-level1.html" class="materi-nav-btn nav-next">
+                <div>
+                    <div class="nav-direction">Materi Selanjutnya</div>
+                    <div class="nav-title">Level 1: Output, Teks & Input</div>
+                </div>
+                <span class="nav-arrow">→</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            if(particlesContainer) {
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particle.style.animationDelay = (Math.random() * 5) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

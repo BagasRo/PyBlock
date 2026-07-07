@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 3: Boolean, Perbandingan & Percabangan - Materi Python Blockly</title>
+    <meta name="description" content="Pelajari konsep boolean, operator perbandingan, struktur if/else, dan operator logika AND, OR, NOT di Python Blockly.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="materi-page-wrapper">
+        <!-- Top Navigation -->
+        <div class="materi-top-nav">
+            <a href="index.html">🏠 Beranda</a>
+            <a href="materi.html">📚 Daftar Materi</a>
+        </div>
+
+        <!-- Page Header -->
+        <div class="materi-page-header">
+            <span class="materi-card-badge badge-l3">Level 3</span>
+            <h1>🔀 Boolean, Perbandingan & Percabangan</h1>
+            <p>Memahami nilai boolean, operator perbandingan, struktur pengambilan keputusan if/else, dan operator logika.</p>
+        </div>
+
+        <!-- Section 1: Boolean -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🔲</span> Konsep Nilai Boolean
+            </h2>
+            <p>
+                <strong>Boolean</strong> adalah tipe data yang hanya memiliki <strong>dua kemungkinan nilai</strong>:
+            </p>
+            <ul>
+                <li><code style="background: rgba(34,197,94,0.2); padding: 2px 10px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #4ade80;">True</code> — artinya <strong>benar</strong> atau <strong>ya</strong></li>
+                <li><code style="background: rgba(239,68,68,0.2); padding: 2px 10px; border-radius: 4px; font-family: 'Fira Code', monospace; color: #f87171;">False</code> — artinya <strong>salah</strong> atau <strong>tidak</strong></li>
+            </ul>
+            <p style="margin-top: 0.75rem;">
+                Boolean adalah dasar dari semua <strong>pengambilan keputusan</strong> dalam pemrograman. Setiap kali program harus memilih jalur yang berbeda (misalnya: "apakah nilai lulus atau tidak?"), ia menggunakan boolean untuk menentukan jawabannya.
+            </p>
+            <div class="concept-box">
+                <div class="concept-icon">🎯</div>
+                <div class="concept-text">
+                    <strong>Analogi Sederhana</strong>
+                    <p>Boolean itu seperti <strong>saklar lampu</strong> — hanya bisa ON (True) atau OFF (False). Tidak ada posisi tengah! Dalam pemrograman, kondisi hanya bisa benar atau salah.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Operator Perbandingan -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">⚖️</span> Enam Operator Perbandingan
+            </h2>
+            <p>
+                Operator perbandingan digunakan untuk <strong>membandingkan dua nilai</strong> dan menghasilkan boolean (True atau False). Di Blockly, blok perbandingan ada di kategori <em>Logic</em>:
+            </p>
+
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Arti</th>
+                        <th>Contoh</th>
+                        <th>Hasil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>=</code></td>
+                        <td>Sama dengan</td>
+                        <td><code>5 = 5</code></td>
+                        <td style="color: #4ade80;">True</td>
+                    </tr>
+                    <tr>
+                        <td><code>≠</code></td>
+                        <td>Tidak sama dengan</td>
+                        <td><code>5 ≠ 3</code></td>
+                        <td style="color: #4ade80;">True</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;</code></td>
+                        <td>Kurang dari</td>
+                        <td><code>3 &lt; 7</code></td>
+                        <td style="color: #4ade80;">True</td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td>Lebih dari</td>
+                        <td><code>3 &gt; 7</code></td>
+                        <td style="color: #f87171;">False</td>
+                    </tr>
+                    <tr>
+                        <td><code>≤</code></td>
+                        <td>Kurang dari atau sama dengan</td>
+                        <td><code>5 ≤ 5</code></td>
+                        <td style="color: #4ade80;">True</td>
+                    </tr>
+                    <tr>
+                        <td><code>≥</code></td>
+                        <td>Lebih dari atau sama dengan</td>
+                        <td><code>3 ≥ 5</code></td>
+                        <td style="color: #f87171;">False</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box">
+                <div class="concept-icon">📌</div>
+                <div class="concept-text">
+                    <strong>Di Python</strong>
+                    <p>Operator "sama dengan" di Python ditulis <code style="font-family: 'Fira Code', monospace; color: #fbbf24;">==</code> (dua tanda sama), bukan satu. Tanda <code style="font-family: 'Fira Code', monospace;">=</code> tunggal dipakai untuk <em>mengisi variabel</em>, sedangkan <code style="font-family: 'Fira Code', monospace;">==</code> dipakai untuk <em>membandingkan</em>. "Tidak sama" ditulis <code style="font-family: 'Fira Code', monospace; color: #fbbf24;">!=</code>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: If / If-Else -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🔀</span> Struktur If dan If/Else
+            </h2>
+            <p>
+                Struktur <strong>if</strong> adalah cara program mengambil keputusan. Program akan memeriksa sebuah <em>kondisi</em> (yang bernilai True atau False), lalu menjalankan kode tertentu hanya jika kondisi tersebut terpenuhi.
+            </p>
+
+            <p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>1. Struktur <code style="font-family: 'Fira Code', monospace; color: #c678dd;">if</code> saja:</strong></p>
+            <p>Jika kondisi <strong>True</strong>, jalankan blok di dalamnya. Jika <strong>False</strong>, lewati saja.</p>
+
+            <p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>2. Struktur <code style="font-family: 'Fira Code', monospace; color: #c678dd;">if/else</code>:</strong></p>
+            <p>Jika kondisi <strong>True</strong>, jalankan blok pertama. Jika <strong>False</strong>, jalankan blok alternatif (<code style="font-family: 'Fira Code', monospace; color: #c678dd;">else</code>).</p>
+
+            <div class="concept-box">
+                <div class="concept-icon">🎯</div>
+                <div class="concept-text">
+                    <strong>Analogi Sederhana</strong>
+                    <p>Struktur if/else itu seperti <strong>persimpangan jalan</strong>. "Jika hujan → bawa payung, Jika tidak hujan → pakai kacamata hitam." Program memilih satu jalur berdasarkan kondisi saat itu.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Operator Logika -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">🧠</span> Operator Logika: AND, OR, NOT
+            </h2>
+            <p>
+                Operator logika digunakan untuk <strong>menggabungkan atau membalik syarat (kondisi boolean)</strong>. Dengan operator logika, kamu bisa membuat kondisi yang lebih kompleks:
+            </p>
+
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Arti</th>
+                        <th>Penjelasan</th>
+                        <th>Contoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>AND</code></td>
+                        <td>DAN</td>
+                        <td>True hanya jika <strong>kedua</strong> syarat benar</td>
+                        <td><code>umur &gt; 17 AND punya_sim</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>OR</code></td>
+                        <td>ATAU</td>
+                        <td>True jika <strong>salah satu</strong> (atau kedua) syarat benar</td>
+                        <td><code>nilai &gt; 90 OR bonus</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>NOT</code></td>
+                        <td>BUKAN / KEBALIKAN</td>
+                        <td><strong>Membalik</strong> nilai boolean (True → False, False → True)</td>
+                        <td><code>NOT hujan</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem;">
+                <strong>Kapan masing-masing dipakai?</strong>
+            </p>
+            <ul>
+                <li><strong>AND</strong> — Ketika <em>semua syarat harus terpenuhi</em>. Contoh: "Boleh masuk jika umur ≥ 17 <strong>DAN</strong> punya tiket."</li>
+                <li><strong>OR</strong> — Ketika <em>cukup salah satu syarat terpenuhi</em>. Contoh: "Dapat diskon jika member <strong>ATAU</strong> beli lebih dari 3 item."</li>
+                <li><strong>NOT</strong> — Ketika ingin <em>membalik kondisi</em>. Contoh: "Jika <strong>BUKAN</strong> hari libur, maka sekolah."</li>
+            </ul>
+        </div>
+
+        <!-- Section 5: Contoh Berdampingan -->
+        <div class="materi-section">
+            <h2 class="materi-section-title">
+                <span class="section-icon">👀</span> Contoh: Blockly ↔ Python
+            </h2>
+            <p>
+                Berikut contoh program yang <strong>meminta nilai ujian pengguna, lalu menentukan apakah lulus atau tidak</strong>:
+            </p>
+
+            <div class="code-comparison">
+                <!-- Blockly Side -->
+                <div class="code-comparison-panel panel-blockly">
+                    <div class="code-comparison-label">🧩 Blok Blockly</div>
+                    <div class="block-stack">
+                        <div class="block-mock block-output">print <span class="block-field">"Masukkan nilai:"</span></div>
+                        <div class="block-mock block-var">set <span class="block-field">nilai</span> to <span class="block-mock block-input" style="margin:0;">read int</span></div>
+                        <div class="block-mock block-logic">if <span class="block-mock block-compare" style="margin:0;"><span class="block-field">nilai</span> ≥ <span class="block-field">75</span></span></div>
+                        <div class="block-mock block-output block-indent">print <span class="block-field">"Selamat, kamu lulus!"</span></div>
+                        <div class="block-mock block-logic">else</div>
+                        <div class="block-mock block-output block-indent">print <span class="block-field">"Maaf, coba lagi."</span></div>
+                    </div>
+                </div>
+                <!-- Python Side -->
+                <div class="code-comparison-panel panel-python">
+                    <div class="code-comparison-label">🐍 Kode Python</div>
+<pre><span class="keyword">print</span>(<span class="string">"Masukkan nilai:"</span>)
+<span class="variable">nilai</span> = <span class="function">int</span>(<span class="function">input</span>())
+<span class="keyword">if</span> <span class="variable">nilai</span> <span class="operator">>=</span> <span class="number">75</span>:
+    <span class="keyword">print</span>(<span class="string">"Selamat, kamu lulus!"</span>)
+<span class="keyword">else</span>:
+    <span class="keyword">print</span>(<span class="string">"Maaf, coba lagi."</span>)</pre>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-icon">🎓</div>
+                <div class="concept-text">
+                    <strong>Perhatikan Indentasi!</strong>
+                    <p>Di Python, kode yang berada <em>di dalam</em> blok if atau else harus <strong>menjorok ke kanan</strong> (indentasi). Ini menunjukkan bahwa kode tersebut adalah bagian dari percabangan. Blockly menangani indentasi ini secara otomatis untukmu.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="materi-bottom-nav">
+            <a href="materi-level2.html" class="materi-nav-btn nav-prev">
+                <span class="nav-arrow">←</span>
+                <div>
+                    <div class="nav-direction">Materi Sebelumnya</div>
+                    <div class="nav-title">Level 2: Variabel & Data</div>
+                </div>
+            </a>
+            <a href="materi-level4.html" class="materi-nav-btn nav-next">
+                <div>
+                    <div class="nav-direction">Materi Selanjutnya</div>
+                    <div class="nav-title">Level 4: Perulangan</div>
+                </div>
+                <span class="nav-arrow">→</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            if(particlesContainer) {
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particle.style.animationDelay = (Math.random() * 5) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

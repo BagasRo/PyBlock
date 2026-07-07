@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator - Python Blockly Simulator</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        /* Top Left Navigation */
+        .top-nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Main Card Layout */
+        .simulator-container {
+            z-index: 10;
+            padding: 3rem;
+            max-width: 700px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.5s ease-out;
+            margin: 2rem 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sim-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .sim-title span {
+            color: var(--accent);
+        }
+
+        .sim-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 2.5rem;
+            text-align: left;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        /* Mode Selection */
+        .mode-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .mode-cards {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-card {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--border);
+            padding: 1.5rem 1rem;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .mode-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .mode-card.active.mode-latihan {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+        }
+
+        .mode-card.active.mode-sandbox {
+            border-color: #a78bfa;
+            background: rgba(167, 139, 250, 0.1);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
+        }
+
+        .mode-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .mode-card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--text);
+        }
+
+        .mode-card.active.mode-latihan .mode-card-title { color: var(--accent); }
+        .mode-card.active.mode-sandbox .mode-card-title { color: #a78bfa; }
+
+        .mode-card-desc {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.55);
+            line-height: 1.4;
+        }
+
+        /* Difficulty section */
+        .diff-section {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .diff-section.hidden {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+            pointer-events: none;
+        }
+
+        .diff-section.visible {
+            max-height: 500px;
+            opacity: 1;
+            margin-bottom: 1rem;
+        }
+
+        .diff-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .difficulty-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .diff-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .diff-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .diff-option input[type="radio"] {
+            display: none;
+        }
+
+        .diff-icon {
+            font-size: 1.5rem;
+        }
+
+        .diff-text {
+            flex: 1;
+        }
+
+        .diff-text h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .diff-text p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .radio-custom {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        /* Active State */
+        .diff-option.active.mudah { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+        .diff-option.active.sedang { border-color: #eab308; background: rgba(234, 179, 8, 0.1); }
+        .diff-option.active.sulit { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        
+        .diff-option.active.mudah .diff-text h3 { color: #4ade80; }
+        .diff-option.active.sedang .diff-text h3 { color: #fde047; }
+        .diff-option.active.sulit .diff-text h3 { color: #f87171; }
+
+        .diff-option.active.mudah .radio-custom { border-color: #22c55e; }
+        .diff-option.active.sedang .radio-custom { border-color: #eab308; }
+        .diff-option.active.sulit .radio-custom { border-color: #ef4444; }
+
+        .diff-option.active.mudah .radio-custom::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #22c55e; }
+        .diff-option.active.sedang .radio-custom::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #eab308; }
+        .diff-option.active.sulit .radio-custom::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #ef4444; }
+
+        /* Sandbox info */
+        .sandbox-info {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sandbox-info.hidden {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+            pointer-events: none;
+        }
+
+        .sandbox-info.visible {
+            max-height: 200px;
+            opacity: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .sandbox-info-box {
+            background: rgba(167, 139, 250, 0.1);
+            border-left: 4px solid #a78bfa;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+            background: #26e0ff;
+        }
+
+        .btn-start.sandbox-mode {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            color: #fff;
+        }
+
+        .btn-start.sandbox-mode:hover {
+            box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="top-nav">
+        <a href="index.html" class="back-btn">
+            🏠 Beranda
+        </a>
+    </div>
+
+    <div class="simulator-container">
+        <h1 class="sim-title">Persiapan <span>Simulasi Python</span></h1>
+        <p class="sim-subtitle">Uji pemahaman logikamu menggunakan susunan blok visual Python interaktif.</p>
+        
+        <div class="info-box">
+            <div class="info-icon">💡</div>
+            <div>
+                <strong>Penting: Prinsip Sekuensial</strong><br>
+                Program akan dieksekusi dari blok paling atas hingga bawah secara berurutan. Pastikan susunan alur logikamu sudah tepat sebelum dijalankan!
+            </div>
+        </div>
+
+        <!-- Mode Selection -->
+        <h2 class="mode-section-title">Pilih Mode:</h2>
+        <div class="mode-cards">
+            <div class="mode-card mode-latihan active" data-mode="latihan" id="modeLatihan">
+                <div class="mode-card-icon">📝</div>
+                <div class="mode-card-title">Latihan Soal</div>
+                <div class="mode-card-desc">Kerjakan soal berjenjang per level dengan evaluasi otomatis.</div>
+            </div>
+            <div class="mode-card mode-sandbox" data-mode="sandbox" id="modeSandbox">
+                <div class="mode-card-icon">🧪</div>
+                <div class="mode-card-title">Sandbox</div>
+                <div class="mode-card-desc">Bereksperimen bebas tanpa soal. Semua blok tersedia.</div>
+            </div>
+        </div>
+
+        <!-- Difficulty (shown only in latihan mode) -->
+        <div class="diff-section visible" id="diffSection">
+            <h2 class="diff-section-title">Pilih Tingkat Kesulitan:</h2>
+            
+            <div class="difficulty-options">
+                <label class="diff-option mudah active" data-diff="mudah">
+                    <input type="radio" name="difficulty" value="mudah" checked>
+                    <div class="diff-icon">🟢</div>
+                    <div class="diff-text">
+                        <h3>Mudah</h3>
+                        <p>Petunjuk langsung muncul di awal. Cocok untuk pemula sebagai panduan.</p>
+                    </div>
+                    <div class="radio-custom"></div>
+                </label>
+                
+                <label class="diff-option sedang" data-diff="sedang">
+                    <input type="radio" name="difficulty" value="sedang">
+                    <div class="diff-icon">🟡</div>
+                    <div class="diff-text">
+                        <h3>Sedang</h3>
+                        <p>Petunjuk muncul satu per satu saat gagal menjawab tugas.</p>
+                    </div>
+                    <div class="radio-custom"></div>
+                </label>
+
+                <label class="diff-option sulit" data-diff="sulit">
+                    <input type="radio" name="difficulty" value="sulit">
+                    <div class="diff-icon">🔴</div>
+                    <div class="diff-text">
+                        <h3>Sulit</h3>
+                        <p>Mode ujian mandiri tanpa petunjuk sistem, untuk yang mahir.</p>
+                    </div>
+                    <div class="radio-custom"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Sandbox info (shown only in sandbox mode) -->
+        <div class="sandbox-info hidden" id="sandboxInfo">
+            <div class="sandbox-info-box">
+                <div class="info-icon">🧪</div>
+                <div>
+                    <strong>Mode Sandbox</strong><br>
+                    Kamu akan masuk ke workspace bebas dengan semua kategori blok tersedia. Tidak ada soal yang perlu dijawab — cukup eksplorasi, bereksperimen, dan belajar sesukamu!
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-start" id="btnStartSim">
+            Mulai Simulasi 🚀
+        </button>
+    </div>
+
+    <script>
+        // Particles initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            if(particlesContainer) {
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particle.style.animationDelay = (Math.random() * 5) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+        });
+
+        let selectedMode = 'latihan';
+        const diffSection = document.getElementById('diffSection');
+        const sandboxInfo = document.getElementById('sandboxInfo');
+        const btnStart = document.getElementById('btnStartSim');
+
+        // Mode selection logic
+        const modeCards = document.querySelectorAll('.mode-card');
+        modeCards.forEach(card => {
+            card.addEventListener('click', () => {
+                modeCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                selectedMode = card.dataset.mode;
+
+                if (selectedMode === 'sandbox') {
+                    diffSection.classList.remove('visible');
+                    diffSection.classList.add('hidden');
+                    sandboxInfo.classList.remove('hidden');
+                    sandboxInfo.classList.add('visible');
+                    btnStart.textContent = '';
+                    btnStart.innerHTML = 'Buka Sandbox 🧪';
+                    btnStart.classList.add('sandbox-mode');
+                } else {
+                    diffSection.classList.remove('hidden');
+                    diffSection.classList.add('visible');
+                    sandboxInfo.classList.remove('visible');
+                    sandboxInfo.classList.add('hidden');
+                    btnStart.innerHTML = 'Mulai Simulasi 🚀';
+                    btnStart.classList.remove('sandbox-mode');
+                }
+            });
+        });
+
+        // Difficulty selection logic
+        const options = document.querySelectorAll('.diff-option');
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                options.forEach(o => {
+                    o.classList.remove('active');
+                });
+                opt.classList.add('active');
+            });
+        });
+
+        // Start button logic
+        btnStart.addEventListener('click', () => {
+            if (selectedMode === 'sandbox') {
+                window.location.href = 'sandbox.html';
+            } else {
+                const selected = document.querySelector('input[name="difficulty"]:checked').value;
+                window.location.href = `level1.html?difficulty=${selected}`;
+            }
+        });
+    </script>
+</body>
+</html>

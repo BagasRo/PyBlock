@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pembelajaran - Python Blockly Simulator</title>
+    <meta name="description" content="Pilih materi pembelajaran pemrograman Python dengan Blockly. Dari pengantar hingga perulangan, pelajari konsep dasar secara visual dan interaktif.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="top-nav">
+        <a href="index.html" class="back-btn">🏠 Beranda</a>
+    </div>
+
+    <div class="materi-hub-container">
+        <h1 class="materi-hub-title">📚 Materi <span>Pembelajaran</span></h1>
+        <p class="materi-hub-subtitle">Pilih salah satu materi di bawah untuk mulai belajar pemrograman Python dengan Blockly.</p>
+
+        <div class="materi-cards-grid">
+            <!-- Card: Pengantar -->
+            <a href="materi-pengantar.html" class="materi-card" id="card-pengantar">
+                <div class="materi-card-header">
+                    <div class="materi-card-icon">📖</div>
+                    <span class="materi-card-badge badge-intro">Pengantar</span>
+                </div>
+                <div class="materi-card-title">Mengenal Pemrograman Python dengan Blockly</div>
+                <div class="materi-card-desc">Pengertian pemrograman, kenapa Python, cara kerja Blockly, antarmuka aplikasi, dan sistem tingkat kesulitan.</div>
+                <div class="materi-card-arrow">→</div>
+            </a>
+
+            <!-- Card: Level 1 -->
+            <a href="materi-level1.html" class="materi-card" id="card-level1">
+                <div class="materi-card-header">
+                    <div class="materi-card-icon">🖨️</div>
+                    <span class="materi-card-badge badge-l1">Level 1</span>
+                </div>
+                <div class="materi-card-title">Output, Teks, Angka & Input</div>
+                <div class="materi-card-desc">Mencetak ke layar dengan print, blok teks & angka, operator aritmatika, serta blok input dari pengguna.</div>
+                <div class="materi-card-arrow">→</div>
+            </a>
+
+            <!-- Card: Level 2 -->
+            <a href="materi-level2.html" class="materi-card" id="card-level2">
+                <div class="materi-card-header">
+                    <div class="materi-card-icon">📦</div>
+                    <span class="materi-card-badge badge-l2">Level 2</span>
+                </div>
+                <div class="materi-card-title">Variabel & Pengelolaan Data</div>
+                <div class="materi-card-desc">Konsep variabel, membuat & mengisi nilai, memperbarui data, serta menggabungkan angka dengan teks.</div>
+                <div class="materi-card-arrow">→</div>
+            </a>
+
+            <!-- Card: Level 3 -->
+            <a href="materi-level3.html" class="materi-card" id="card-level3">
+                <div class="materi-card-header">
+                    <div class="materi-card-icon">🔀</div>
+                    <span class="materi-card-badge badge-l3">Level 3</span>
+                </div>
+                <div class="materi-card-title">Boolean, Perbandingan & Percabangan</div>
+                <div class="materi-card-desc">Nilai boolean, operator perbandingan, struktur if/else, serta operator logika AND, OR, NOT.</div>
+                <div class="materi-card-arrow">→</div>
+            </a>
+
+            <!-- Card: Level 4 -->
+            <a href="materi-level4.html" class="materi-card" id="card-level4">
+                <div class="materi-card-header">
+                    <div class="materi-card-icon">🔁</div>
+                    <span class="materi-card-badge badge-l4">Level 4</span>
+                </div>
+                <div class="materi-card-title">Perulangan (Loops)</div>
+                <div class="materi-card-desc">Konsep loop, tiga jenis perulangan (repeat, for, while), serta break dan continue.</div>
+                <div class="materi-card-arrow">→</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            if(particlesContainer) {
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particle.style.animationDelay = (Math.random() * 5) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -18,10 +18,11 @@ body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-dark);
     color: var(--text);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* Header */
@@ -99,7 +100,8 @@ body {
 .container {
     display: flex;
     flex: 1;
-    height: calc(100vh - 60px);
+    min-height: calc(100vh - 60px);
+    height: auto;
     padding: 15px;
     gap: 15px;
 }
@@ -224,8 +226,8 @@ body {
 
 /* Output Panel */
 .output-panel {
-    height: 35%; /* Diperbesar agar area konsol lebih luas */
-    min-height: 150px;
+    flex: 1;
+    min-height: 250px;
     border-top: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -492,6 +494,552 @@ body {
     padding-left: 5px !important; /* Mengurangi padding agar lebih rapat ke kiri */
 }
 
+/* ==========================================
+   MATERI (Learning Material) Pages Styles
+   ========================================== */
+
+/* --- Hub Page: Materi Selection Cards --- */
+.materi-hub-container {
+    z-index: 10;
+    padding: 2rem;
+    max-width: 1100px;
+    width: 100%;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.materi-hub-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    text-align: center;
+}
+
+.materi-hub-title span { color: var(--accent); }
+
+.materi-hub-subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+}
+
+.materi-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.materi-card {
+    background: rgba(30, 41, 59, 0.75);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.materi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.materi-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 212, 255, 0.15);
+}
+
+.materi-card:hover::before { opacity: 1; }
+
+.materi-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.materi-card-icon {
+    font-size: 2.2rem;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.materi-card-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.badge-intro { background: rgba(99,102,241,0.2); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+.badge-l1 { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+.badge-l2 { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+.badge-l3 { background: rgba(234,179,8,0.2); color: #fde047; border: 1px solid rgba(234,179,8,0.3); }
+.badge-l4 { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+
+.materi-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.materi-card-desc {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+}
+
+.materi-card-arrow {
+    margin-top: auto;
+    text-align: right;
+    color: rgba(255,255,255,0.25);
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.materi-card:hover .materi-card-arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+}
+
+/* --- Individual Materi Page Layout --- */
+.materi-page-wrapper {
+    z-index: 10;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.materi-top-nav {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.materi-top-nav a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+}
+
+.materi-top-nav a:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+.materi-page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
+
+.materi-page-header .materi-card-badge {
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 4px 14px;
+}
+
+.materi-page-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.materi-page-header p {
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+}
+
+/* --- Content Sections --- */
+.materi-section {
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(8px);
+}
+
+.materi-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--accent);
+}
+
+.materi-section-title .section-icon {
+    font-size: 1.4rem;
+}
+
+.materi-section p,
+.materi-section li {
+    color: rgba(255,255,255,0.82);
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.materi-section ul,
+.materi-section ol {
+    padding-left: 1.5rem;
+    margin: 0.75rem 0;
+}
+
+.materi-section li {
+    margin-bottom: 0.4rem;
+}
+
+/* --- Concept Box --- */
+.concept-box {
+    background: rgba(0, 212, 255, 0.08);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 1.25rem;
+    margin: 1rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.concept-box .concept-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.concept-box .concept-text {
+    flex: 1;
+}
+
+.concept-box .concept-text strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--accent);
+}
+
+.concept-box .concept-text p,
+.concept-box .concept-text span {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.concept-box.warning {
+    background: rgba(234, 179, 8, 0.08);
+    border-left-color: #eab308;
+}
+
+.concept-box.warning .concept-text strong { color: #fde047; }
+
+/* --- Code Comparison (Blockly ↔ Python side-by-side) --- */
+.code-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 1.25rem 0;
+}
+
+.code-comparison-panel {
+    padding: 1.25rem;
+    min-height: 120px;
+}
+
+.code-comparison-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.panel-blockly {
+    background: rgba(20, 20, 40, 0.9);
+    border-right: 1px solid var(--border);
+}
+
+.panel-blockly .code-comparison-label { color: #fbbf24; }
+
+.panel-python {
+    background: #1e1e1e;
+}
+
+.panel-python .code-comparison-label { color: #4ade80; }
+
+.panel-python pre {
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #d4d4d4;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+/* --- Blockly Mock Blocks (CSS only) --- */
+.block-mock {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    margin: 3px 2px;
+    border: 1px solid rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    white-space: nowrap;
+}
+
+.block-mock .block-field {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 0 4px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+}
+
+.block-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.block-stack .block-indent {
+    margin-left: 20px;
+}
+
+/* Block color schemes */
+.block-output   { background: #5b80a5; color: #fff; }
+.block-text     { background: #5ba58c; color: #fff; }
+.block-math     { background: #5b67a5; color: #fff; }
+.block-input    { background: #a55b80; color: #fff; }
+.block-var      { background: #a5845b; color: #fff; }
+.block-logic    { background: #5ba55b; color: #fff; }
+.block-loop     { background: #5ba55b; color: #fff; }
+.block-control  { background: #c88330; color: #fff; }
+.block-compare  { background: #5ba55b; color: #fff; }
+.block-bool     { background: #6b5ba5; color: #fff; }
+
+/* --- Operator Table --- */
+.operator-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.operator-table thead th {
+    background: rgba(0,0,0,0.35);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.operator-table tbody td {
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.operator-table tbody tr:hover {
+    background: rgba(255,255,255,0.03);
+}
+
+.operator-table code {
+    background: rgba(0,0,0,0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: #fbbf24;
+}
+
+/* --- Bottom Navigation (Prev / Next) --- */
+.materi-bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.materi-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 1.5rem;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    max-width: 48%;
+}
+
+.materi-nav-btn:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 212, 255, 0.1);
+}
+
+.materi-nav-btn .nav-direction {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.materi-nav-btn .nav-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.materi-nav-btn.nav-prev { text-align: left; }
+.materi-nav-btn.nav-next { text-align: right; margin-left: auto; }
+
+.materi-nav-btn .nav-arrow {
+    font-size: 1.3rem;
+    color: var(--accent);
+}
+
+/* --- Difficulty Explanation Cards (for Pengantar) --- */
+.difficulty-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.diff-card {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.diff-card .diff-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+.diff-card h4 { margin-bottom: 0.35rem; font-size: 1rem; }
+.diff-card p { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+.diff-card.easy { border-color: rgba(34,197,94,0.3); }
+.diff-card.easy h4 { color: #4ade80; }
+.diff-card.medium { border-color: rgba(234,179,8,0.3); }
+.diff-card.medium h4 { color: #fde047; }
+.diff-card.hard { border-color: rgba(239,68,68,0.3); }
+.diff-card.hard h4 { color: #f87171; }
+
+/* --- Interface Diagram (for Pengantar) --- */
+.interface-diagram {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.interface-diagram .diagram-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.interface-diagram .diagram-row:last-child { margin-bottom: 0; }
+
+.diagram-box {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+}
+
+.diagram-box .diagram-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.diagram-box .diagram-desc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.6);
+}
+
+.diagram-box .diagram-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     body {
@@ -531,6 +1079,17 @@ body {
     /* Menyesuaikan ukuran logo */
     .logo-text small { display: none; }
     .logo-text span { font-size: 1.1rem; }
+
+    /* Materi responsive */
+    .materi-cards-grid { grid-template-columns: 1fr; }
+    .code-comparison { grid-template-columns: 1fr; }
+    .panel-blockly { border-right: none; border-bottom: 1px solid var(--border); }
+    .difficulty-cards { grid-template-columns: 1fr; }
+    .interface-diagram .diagram-row { flex-direction: column; }
+    .materi-hub-title { font-size: 1.8rem; }
+    .materi-page-header h1 { font-size: 1.5rem; }
+    .materi-bottom-nav { flex-direction: column; }
+    .materi-nav-btn { max-width: 100%; width: 100%; }
 }
 
 /* Penyesuaian tambahan untuk layar yang sangat kecil (misal: smartphone potrait) */
