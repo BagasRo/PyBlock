@@ -23,20 +23,21 @@ class LevelManager {
         try {
             // Menggunakan modul JS dinamis alih-alih file statis JSON
             const module = await import(`/js/problems/level${this.currentLevel}.js?v=${new Date().getTime()}`);
-            this.problems = module.default();
-            // Hanya acak jika ada lebih dari 1 soal
-            if (this.problems.length > 1) {
-                this.shuffleArray(this.problems);
-            }
-            // Batasi hanya 1 soal per level
-            this.problems = this.problems.slice(0, 1);
+            const questionSlots = module.default(); // Array of slots, each slot = array of variants
+
+            // Pilih 1 slot secara acak, lalu pilih 1 varian acak dari slot tersebut
+            const randomSlotIndex = Math.floor(Math.random() * questionSlots.length);
+            const variants = questionSlots[randomSlotIndex];
+            const selectedVariant = variants[Math.floor(Math.random() * variants.length)];
+
+            this.problems = [selectedVariant];
             this.updateLevelUI();
             this.loadProblem();
         } catch (error) {
             console.error("Gagal mengambil bank soal:", error);
             const taskText = document.getElementById('taskText');
             if (taskText) {
-                taskText.innerHTML = `<span style="color:red">Gagal memuat soal Level ${this.currentLevel}. Pastikan file JSON tersedia.</span>`;
+                taskText.innerHTML = `<span style="color:red">Gagal memuat soal Level ${this.currentLevel}. Pastikan file JS tersedia.</span>`;
             }
         }
     }

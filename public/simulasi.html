@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 3 - Python Blockly Simulator</title>
+    <title>Simulasi - Python Blockly Simulator</title>
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
@@ -23,43 +23,55 @@
     <script src="/blockly/msg/en.js"></script>
     
     <script>
-        window.CURRENT_LEVEL = 3;
+        window.CURRENT_LEVEL = 4; // Mulai dengan toolbox lengkap, akan di-update per soal
+        window.SIMULATION_MODE = true;
     </script>
     
     <!-- Modul Aplikasi (deferred) -->
     <script src="/js/blockly-config.js" defer></script>
     <script src="/js/python-generator.js" defer></script>
-    <script src="/js/level-manager.js" defer></script>
-    <script src="/js/simulator.js?v=5.0" defer></script>
-    <script src="/js/main.js" defer></script>
+    <script src="/js/simulation-manager.js" defer></script>
+    <script src="/js/simulator.js?v=6.0" defer></script>
+    <script src="/js/main.js?v=2.0" defer></script>
 </head>
 <body>
     <!-- Particles Background -->
     <div class="particles" id="particles"></div>
     
+    <!-- Simulation Progress Bar -->
+    <div class="sim-progress-bar" id="simProgressBar">
+        <div class="sim-progress-info">
+            <span class="sim-progress-text" id="simProgressText">Soal 1 dari 10</span>
+            <div class="sim-timer-container" id="simTimerContainer">
+                <span class="sim-timer-icon">⏱️</span>
+                <span class="sim-timer" id="simTimer">05:00</span>
+            </div>
+        </div>
+        <div class="sim-progress-track">
+            <div class="sim-progress-fill" id="simProgressFill" style="width: 0%"></div>
+        </div>
+        <div class="sim-timer-track">
+            <div class="sim-timer-fill" id="simTimerFill" style="width: 100%"></div>
+        </div>
+        <div class="sim-progress-dots" id="simProgressDots"></div>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <div class="logo">
             <div class="logo-icon">🐍</div>
             <div class="logo-text">
                 <span>Blockly Python Simulator</span>
-                <small class="version">v1.0.0</small>
+                <small class="version">Mode Simulasi</small>
             </div>
         </div>
         <div class="controls">
-            <a href="index.html" class="btn btn-secondary" title="Kembali ke Beranda" style="text-decoration:none; display:flex; align-items:center;">
-                <span>🏠</span> <span class="btn-text">Beranda</span>
-            </a>
             <button class="btn btn-secondary" id="btnClear" title="Bersihkan Workspace">
                 <span>🗑️</span> <span class="btn-text">Bersihkan</span>
             </button>
-            <button class="btn btn-secondary" id="btnSave" title="Simpan Proyek">
-                <span>💾</span> <span class="btn-text">Simpan</span>
+            <button class="btn btn-secondary" id="btnSkip" title="Lewati Soal" style="margin-left: 0.5rem; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none;">
+                <span>⏭️</span> <span class="btn-text">Skip</span>
             </button>
-            <button class="btn btn-secondary" id="btnLoadTrigger" title="Muat Proyek">
-                <span>📂</span> <span class="btn-text">Muat</span>
-            </button>
-            <input type="file" id="btnLoad" accept=".json" style="display: none;">
             <button class="btn" id="btnSubmit" title="Kumpulkan Jawaban" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; margin-left: 0.5rem;">
                 <span>✅</span> <span class="btn-text">Kumpulkan</span>
             </button>
@@ -71,10 +83,10 @@
         <!-- Task Panel -->
         <div class="panel task-panel" style="margin-bottom: 1rem; width: 100%;">
             <div class="panel-header" style="background: var(--surface-hover);">
-                <span>🎯</span> <span id="levelTitle">Memuat Level...</span>
+                <span>🎯</span> <span id="levelTitle">Memuat Soal...</span>
                 <div id="nextLevelContainer" style="display: none; margin-left: auto;">
                     <button id="btnNextLevel" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 6px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(16,185,129,0.4); white-space: nowrap;">
-                        🚀 Lanjut ke Level Berikutnya
+                        ➡️ Lanjut ke Soal Berikutnya
                     </button>
                 </div>
             </div>
@@ -83,11 +95,11 @@
                     <div id="taskText" style="flex: 1;">Tugas akan muncul di sini.</div>
                     <div id="taskStatus" style="margin-left: 1rem; white-space: nowrap;"></div>
                 </div>
-                <div id="taskHints" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;"></div>
+                <div id="taskHints" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; display: none;"></div>
             </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; width: 100%; min-height: 600px; flex: 1;">
+        <div class="workspace-wrapper">
             <!-- Blockly Panel -->
             <div class="panel blockly-panel">
                 <div class="panel-header">
@@ -124,14 +136,12 @@
                         </div>
                         <div class="output-controls">
                             <button class="btn btn-secondary btn-small" id="btnClearOutput" title="Clear Console">Clear</button>
-                            <button class="btn btn-secondary btn-small" id="btnExport" title="Export Python">📥 Export</button>
                         </div>
                     </div>
                     <div class="output-content" id="outputContent">
                         <div class="output-line info">
                             <span class="timestamp">[System]</span> 
-                            🚀 Python Blockly Simulator v1.0.0 siap!
-                            <br><span class="hint">💡 Tips: Drag & drop block dari toolbox untuk memulai</span>
+                            🚀 Mode Simulasi — siap memuat soal!
                         </div>
                     </div>
                 </div>
@@ -139,26 +149,9 @@
         </div>
     </div>
 
-    <!-- Export Modal -->
-    <div class="modal" id="exportModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📥 Export Kode Python</h2>
-                <button class="close-btn" id="closeExportModal">&times;</button>
-            </div>
-            <div class="export-content">
-                <textarea id="exportCode" readonly></textarea>
-                <div class="export-actions">
-                    <button class="btn btn-primary" id="btnCopyCode">📋 Copy</button>
-                    <button class="btn btn-secondary" id="btnDownloadCode">💾 Download .py</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Evaluation Modal -->
+    <!-- Evaluation Modal (reused for correct/wrong/timeout feedback) -->
     <div class="modal" id="evaluationModal">
-        <div class="modal-content" style="text-align: center; max-width: 400px;">
+        <div class="modal-content" style="text-align: center; max-width: 500px;">
             <div class="modal-header" style="justify-content: center; border-bottom: none;">
                 <h2 id="evalTitle">Evaluasi</h2>
             </div>
@@ -169,10 +162,33 @@
         </div>
     </div>
 
-    <!-- Loading Spinner -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Loading Blockly...</p>
+    <!-- Asset Preloading Screen -->
+    <div class="loading active" id="loading">
+        <div class="preload-container">
+            <div class="preload-icon">🐍</div>
+            <h2 class="preload-title">Mempersiapkan Simulasi</h2>
+            <p class="preload-subtitle">Memuat semua komponen yang diperlukan...</p>
+            
+            <div class="preload-progress-track">
+                <div class="preload-progress-fill" id="preloadProgressFill" style="width: 0%"></div>
+            </div>
+            <p class="preload-status" id="preloadStatus">Menginisialisasi...</p>
+
+            <div class="preload-steps" id="preloadSteps">
+                <div class="preload-step" id="stepBlockly">
+                    <span class="step-icon">⏳</span>
+                    <span class="step-text">Blockly Workspace</span>
+                </div>
+                <div class="preload-step" id="stepPyodide">
+                    <span class="step-icon">⏳</span>
+                    <span class="step-text">Python Engine (Pyodide)</span>
+                </div>
+                <div class="preload-step" id="stepSoal">
+                    <span class="step-icon">⏳</span>
+                    <span class="step-text">Soal & Konfigurasi</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

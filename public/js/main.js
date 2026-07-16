@@ -3,50 +3,118 @@
  * Menggunakan Blockly dari NPM (node_modules)
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Initializing Python Blockly Simulator (NPM Version)...');
     
     // Initialize particles background
     createParticles();
+
+    // === Preloading UI Helpers ===
+    const preloadFill = document.getElementById('preloadProgressFill');
+    const preloadStatus = document.getElementById('preloadStatus');
+    const stepBlockly = document.getElementById('stepBlockly');
+    const stepPyodide = document.getElementById('stepPyodide');
+    const stepSoal = document.getElementById('stepSoal');
+
+    function updatePreload(percent, statusText) {
+        if (preloadFill) preloadFill.style.width = percent + '%';
+        if (preloadStatus) preloadStatus.textContent = statusText;
+    }
+
+    function markStep(stepEl, state) {
+        if (!stepEl) return;
+        stepEl.classList.remove('active', 'done', 'error');
+        const icon = stepEl.querySelector('.step-icon');
+        if (state === 'active') {
+            stepEl.classList.add('active');
+            if (icon) icon.textContent = '⏳';
+        } else if (state === 'done') {
+            stepEl.classList.add('done');
+            if (icon) icon.textContent = '✅';
+        } else if (state === 'error') {
+            stepEl.classList.add('error');
+            if (icon) icon.textContent = '❌';
+        }
+    }
     
-    // Show loading
+    // Show loading (it starts active from HTML)
     showLoading(true);
     
-    // Initialize Blockly workspace
+    // === STEP 1: Initialize Blockly ===
     let workspace;
     try {
-        // Cek dependensi penting sebelum init
-        if (typeof Blockly === 'undefined') throw new Error('Library Blockly tidak ditemukan. Cek koneksi internet atau node_modules.');
-        if (!Blockly.serialization) console.warn('⚠️ Blockly.serialization tidak ditemukan (versi lama?). Fitur save/load mungkin terbatas.');
-        if (!Blockly.Msg['CONTROLS_IF_MSG_IF']) console.warn('⚠️ File bahasa Blockly tidak dimuat dengan benar. Teks blok mungkin error.');
+        markStep(stepBlockly, 'active');
+        updatePreload(10, 'Memuat Blockly workspace...');
+
+        if (typeof Blockly === 'undefined') throw new Error('Library Blockly tidak ditemukan.');
+        if (!Blockly.serialization) console.warn('⚠️ Blockly.serialization tidak ditemukan.');
+        if (!Blockly.Msg['CONTROLS_IF_MSG_IF']) console.warn('⚠️ File bahasa Blockly tidak dimuat.');
 
         const levelNum = window.CURRENT_LEVEL || 1;
         workspace = BlocklyConfig.init(levelNum);
-        console.log('✅ Blockly initialized successfully from node_modules');
-        showLoading(false);
+        console.log('✅ Blockly initialized successfully');
+        
+        markStep(stepBlockly, 'done');
+        updatePreload(30, 'Blockly siap! Memuat Python engine...');
+    } catch (error) {
+        console.error('❌ Error initializing Blockly:', error);
+        markStep(stepBlockly, 'error');
+        updatePreload(30, 'Gagal memuat Blockly!');
+        showError('Gagal menginisialisasi Blockly. Pastikan server berjalan dan library terinstall.');
+        return;
+    }
+
+    // === STEP 2: Load Pyodide (heaviest asset) ===
+    try {
+        markStep(stepPyodide, 'active');
+        updatePreload(40, 'Memuat Python engine (Pyodide)... Ini mungkin perlu beberapa detik.');
+
+        await PythonSimulator.loadPyodide();
+        
+        markStep(stepPyodide, 'done');
+        updatePreload(75, 'Python engine siap! Menyiapkan lingkungan...');
+    } catch (error) {
+        console.error('❌ Error loading Pyodide:', error);
+        markStep(stepPyodide, 'error');
+        updatePreload(75, 'Gagal memuat Pyodide! Simulasi tetap dimulai...');
+        // Don't return — allow workspace to still be used
+    }
+
+    // === STEP 3: Initialize Simulation/Sandbox ===
+    try {
+        markStep(stepSoal, 'active');
+        updatePreload(85, 'Menyiapkan soal & konfigurasi...');
 
         if (window.SANDBOX_MODE) {
-            // Mode Sandbox: tidak ada LevelManager / soal
             console.log('🧪 Sandbox mode — LevelManager dinonaktifkan');
             const btnSubmit = document.getElementById('btnSubmit');
             if (btnSubmit) btnSubmit.style.display = 'none';
+        } else if (window.SIMULATION_MODE) {
+            console.log('📝 Simulation mode — SimulationManager diaktifkan');
+            const simManager = new SimulationManager();
+            window.simulationManager = simManager;
+            simManager.init(workspace);
         } else if (window.levelManager) {
+            const levelNum = window.CURRENT_LEVEL || 1;
             window.levelManager.init(workspace, levelNum);
         }
 
-        // Load Pyodide (Pre-load agar siap saat tombol Run ditekan)
-        PythonSimulator.loadPyodide();
-        
-        // Handle window resize agar toolbox tidak error tampilannya
-        window.addEventListener('resize', function() {
-            Blockly.svgResize(workspace);
-        }, false);
+        markStep(stepSoal, 'done');
+        updatePreload(100, 'Semua siap! Memulai...');
     } catch (error) {
-        console.error('❌ Error initializing Blockly:', error);
-        showLoading(false);
-        showError('Gagal menginisialisasi Blockly. Pastikan server berjalan dan library terinstall.');
-        return; // Hentikan eksekusi jika inisialisasi gagal
+        console.error('❌ Error setting up mode:', error);
+        markStep(stepSoal, 'error');
+        updatePreload(100, 'Gagal menyiapkan mode.');
     }
+
+    // === Small delay for visual feedback then hide loading ===
+    await new Promise(resolve => setTimeout(resolve, 600));
+    showLoading(false);
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        Blockly.svgResize(workspace);
+    }, false);
 
     // Helper: Dapatkan elemen bersih (hapus event listener lama dengan cloning)
     // Ini memperbaiki masalah tombol tertekan 2x jika script dimuat ulang
@@ -61,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const elements = {
         btnClear: getCleanElement('btnClear'),
+        btnSkip: getCleanElement('btnSkip'),
         btnRun: getCleanElement('btnRun'),
         btnSubmit: getCleanElement('btnSubmit'),
         btnClearOutput: getCleanElement('btnClearOutput'),
@@ -81,6 +150,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event Listeners
     elements.btnClear?.addEventListener('click', () => clearWorkspace(workspace));
+    elements.btnSkip?.addEventListener('click', () => {
+        if (window.simulationManager) {
+            window.simulationManager.skipQuestion();
+        }
+    });
     elements.btnRun?.addEventListener('click', () => runCode(workspace));
     elements.btnSubmit?.addEventListener('click', () => submitCode(workspace));
     elements.btnClearOutput?.addEventListener('click', () => PythonSimulator.clear());

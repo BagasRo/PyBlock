@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; width: 100%; min-height: 600px; flex: 1;">
+        <div class="workspace-wrapper">
             <!-- Blockly Panel -->
             <div class="panel blockly-panel">
                 <div class="panel-header">
@@ -161,10 +161,33 @@
         </div>
     </div>
 
-    <!-- Loading Spinner -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Loading Blockly...</p>
+    <!-- Asset Preloading Screen -->
+    <div class="loading active" id="loading">
+        <div class="preload-container">
+            <div class="preload-icon">🧪</div>
+            <h2 class="preload-title">Mempersiapkan Sandbox</h2>
+            <p class="preload-subtitle">Memuat semua komponen yang diperlukan...</p>
+            
+            <div class="preload-progress-track">
+                <div class="preload-progress-fill" id="preloadProgressFill" style="width: 0%"></div>
+            </div>
+            <p class="preload-status" id="preloadStatus">Menginisialisasi...</p>
+
+            <div class="preload-steps" id="preloadSteps">
+                <div class="preload-step" id="stepBlockly">
+                    <span class="step-icon">⏳</span>
+                    <span class="step-text">Blockly Workspace</span>
+                </div>
+                <div class="preload-step" id="stepPyodide">
+                    <span class="step-icon">⏳</span>
+                    <span class="step-text">Python Engine (Pyodide)</span>
+                </div>
+                <div class="preload-step" id="stepSoal">
+                    <span class="step-icon">⏳</span>
+                    <span class="step-text">Environment Setup</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

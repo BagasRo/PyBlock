@@ -1,109 +1,207 @@
 export default function getProblems() {
-    // Soal 1.1: Kedai cetak 3D — penjumlahan
-    const keychain = (Math.floor(Math.random() * 5) + 1) * 5000; // 5k - 25k
-    const plaque = (Math.floor(Math.random() * 5) + 3) * 10000; // 30k - 70k
-    const total1 = keychain + plaque;
-
-    // Soal 1.2: Kabel jumper — perkalian
-    const cableLength = Math.floor(Math.random() * 11) + 10; // 10 - 20 meter
-    const pricePerMeter = (Math.floor(Math.random() * 4) + 2) * 1000; // 2000 - 5000
-    const total2 = cableLength * pricePerMeter;
+    // Level 1: 2 slot soal (Soal 1 & Soal 2)
+    // Setiap slot berisi array varian (A, B, dst.)
+    // Sistem memilih 1 varian secara acak per slot saat simulasi dimuat
 
     return [
-        {
-            id: "1_1",
-            task: `Sebuah kedai cetak 3D di sekolah menjual gantungan kunci seharga Rp ${keychain.toLocaleString('id-ID')} per buah dan plakat penghargaan seharga Rp ${plaque.toLocaleString('id-ID')} per buah. Tanpa menggunakan blok variabel, hitung dan cetak langsung total harga jika seseorang membeli satu gantungan kunci dan satu plakat.`,
-            expectedOutput: total1.toString(),
-            hints: [
-                "Coba pikirkan kembali, operasi matematika apa yang dipakai untuk menggabungkan dua harga menjadi satu total?",
-                "Periksa apakah kamu sudah memasukkan blok angka yang benar ke dalam blok operasi penjumlahan sebelum dihubungkan ke blok print.",
-                "Cek kembali apakah hasil penjumlahan tersebut sudah benar-benar terhubung langsung ke blok print, bukan tertinggal terpisah di area kerja."
-            ],
-            validateCode: function(code, output) {
-                if (code.includes('=')) {
-                    return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel untuk menyelesaikan soal di Level 1!" };
-                }
-                if (output.trim() !== this.expectedOutput) {
-                    return { success: false, message: "" };
-                }
-                return { success: true };
-            }
-        },
-        {
-            id: "1_2",
-            task: `Tim robotik sekolah membeli kabel jumper sepanjang ${cableLength} meter dengan harga Rp ${pricePerMeter.toLocaleString('id-ID')} per meter. Tanpa variabel, hitung dan cetak langsung total biaya kabel jumper tersebut.`,
-            expectedOutput: total2.toString(),
-            hints: [
-                "Ingat kembali, untuk mencari total biaya dari satuan harga per meter, operasi apa yang lebih tepat dibanding penjumlahan?",
-                "Periksa apakah angka panjang kabel dan harga per meter sudah ditempatkan pada slot yang benar di blok perkalian.",
-                "Pastikan blok perkalian yang sudah kamu susun benar-benar tersambung ke blok print, bukan berdiri sendiri terpisah."
-            ],
-            validateCode: function(code, output) {
-                if (code.includes('=')) {
-                    return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel untuk menyelesaikan soal di Level 1!" };
-                }
-                if (output.trim() !== this.expectedOutput) {
-                    return { success: false, message: "" };
-                }
-                return { success: true };
-            }
-        },
-        {
-            id: "1_3",
-            task: `Sebuah warnet sekolah mengenakan biaya sewa komputer Rp 3.000 per jam. Buat program yang membaca jumlah jam sewa menggunakan blok read int, lalu langsung kalikan dengan biaya per jam dan cetak hasilnya tanpa menyimpannya ke variabel.`,
-            expectedOutput: "6000",
-            hints: [
-                "Coba ingat kembali, blok mana yang dipakai untuk membaca masukan angka dari pengguna?",
-                "Periksa apakah hasil dari blok read int sudah langsung dihubungkan ke salah satu slot pada blok perkalian, bukan dibiarkan menggantung.",
-                "Cek kembali urutan kedua nilai pada blok perkalian — apakah hasil masukan pengguna sudah dikalikan dengan harga satuan yang benar?"
-            ],
-            validateCode: async function(code, output, simulator) {
-                if (code.includes('=')) {
-                    return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel di Level 1! Langsung kalikan input dengan angkanya di dalam blok print." };
-                }
-                if (!code.includes('input(')) {
-                    return { success: false, message: "❌ Kamu harus meminta input dari pengguna. Gunakan blok 'read int' dari menu I/O!" };
-                }
+        // =============================================
+        // SOAL 1 — Mudah: Aritmatika langsung + print
+        // =============================================
+        [
+            // --- Varian A ---
+            (function() {
+                const mouseQty = Math.floor(Math.random() * 10) + 5; // 5 - 14
+                const mousePrice = (Math.floor(Math.random() * 6) + 5) * 10000; // 50k - 100k
+                const total = mouseQty * mousePrice;
 
-                const testOutput = await simulator.runSilentTest(code, ["2"]);
-                if (testOutput.trim() !== "6000") {
-                    return { success: false, message: `❌ Logika perhitunganmu salah. Jika diinput angka 2, seharusnya program mencetak 6000, tapi programmu mencetak: ${testOutput}` };
-                }
+                return {
+                    id: "1_1_a",
+                    variant: "A",
+                    task: `Laboratorium komputer jurusan TKJ membeli ${mouseQty} unit mouse wireless dengan harga Rp ${mousePrice.toLocaleString('id-ID')} per unit. Kepala laboratorium perlu mengetahui total anggaran yang dibutuhkan untuk pembelian tersebut sebelum mengajukan nota pembelian ke bendahara sekolah. Rancanglah algoritma yang langsung menghasilkan total anggaran pembelian dan menampilkannya ke layar.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                    expectedOutput: total.toString(),
+                    hints: [
+                        "Pikirkan terlebih dahulu hubungan matematis antara jumlah barang dan harga satuan — operasi apa yang menghasilkan total harga dari keduanya?",
+                        "Semua angka yang diperlukan sudah tersedia langsung dari soal — tidak ada informasi yang perlu diminta dari luar saat program berjalan.",
+                        "Telusuri alur program dari ujung ke ujung: apakah hasil kalkulasi yang kamu susun sudah terhubung ke perintah yang memunculkan angka tersebut di layar?"
+                    ],
+                    validateCode: function(code, output) {
+                        if (code.includes('=')) {
+                            return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel untuk menyelesaikan soal di Level 1!" };
+                        }
+                        if (output.trim() !== this.expectedOutput) {
+                            return { success: false, message: "" };
+                        }
+                        return { success: true };
+                    }
+                };
+            })(),
+            // --- Varian B ---
+            (function() {
+                const resistorQty = Math.floor(Math.random() * 10) + 5; // 5 - 14
+                const resistorPrice = (Math.floor(Math.random() * 5) + 1) * 1000; // 1000 - 5000
+                const total = resistorQty * resistorPrice;
 
-                return { success: true };
-            }
-        },
-        {
-            id: "1_4",
-            task: `Panitia LKS ingin membagi peserta ke dalam kelompok beranggotakan 5 orang. Buat program yang membaca jumlah total peserta menggunakan blok read int, lalu hitung langsung sisa peserta yang tidak mendapat kelompok penuh menggunakan blok modulo (sisa bagi dengan 5). Gunakan blok create text with beserta to str untuk mencetak kalimat "Sisa peserta: " digabung dengan hasil hitungan tersebut.`,
-            expectedOutput: "Sisa peserta: 2",
-            hints: [
-                "Coba ingat kembali, blok matematika mana yang digunakan khusus untuk mencari sisa hasil bagi, bukan hasil bagi itu sendiri?",
-                "Periksa apakah blok modulo yang kamu gunakan sudah membagi jumlah peserta dengan angka 5, bukan sebaliknya.",
-                "Cek kembali apakah hasil dari blok modulo sudah diubah menggunakan blok 'to str' sebelum digabungkan dengan teks menggunakan blok 'create text with'."
-            ],
-            validateCode: async function(code, output, simulator) {
-                if (code.includes('=')) {
-                    return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel di Level 1!" };
-                }
-                if (!code.includes('input(')) {
-                    return { success: false, message: "❌ Program harus membaca input angka dari pengguna menggunakan blok 'read int'." };
-                }
-                if (!code.includes('%')) {
-                    return { success: false, message: "❌ Kamu harus menggunakan blok modulo (sisa bagi) untuk mencari sisa peserta!" };
-                }
-                if (!code.includes('str(')) {
-                    return { success: false, message: "❌ Kamu harus menggunakan blok 'to str' untuk mengubah angka menjadi teks sebelum digabungkan!" };
-                }
+                return {
+                    id: "1_1_b",
+                    variant: "B",
+                    task: `Jurusan Teknik Elektronika Industri sedang mempersiapkan praktik perakitan rangkaian listrik. Setiap siswa membutuhkan ${resistorQty} buah resistor dengan harga Rp ${resistorPrice.toLocaleString('id-ID')} per buah sebagai komponen utama rangkaian. Guru pembimbing perlu menghitung total biaya komponen yang harus disediakan sebelum memulai sesi praktik. Rancanglah algoritma yang langsung menghasilkan total biaya komponen tersebut dan menampilkannya ke layar.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                    expectedOutput: total.toString(),
+                    hints: [
+                        "Pikirkan terlebih dahulu hubungan matematis antara jumlah komponen dan harga satuan — operasi apa yang secara langsung menghasilkan total biaya dari keduanya?",
+                        "Semua angka yang diperlukan sudah tersedia langsung dari soal — tidak ada informasi tambahan yang perlu diminta dari luar saat program berjalan.",
+                        "Telusuri alur program yang kamu susun dari ujung ke ujung: apakah hasil kalkulasi sudah benar-benar terhubung ke perintah yang memunculkannya di layar terminal?"
+                    ],
+                    validateCode: function(code, output) {
+                        if (code.includes('=')) {
+                            return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel untuk menyelesaikan soal di Level 1!" };
+                        }
+                        if (output.trim() !== this.expectedOutput) {
+                            return { success: false, message: "" };
+                        }
+                        return { success: true };
+                    }
+                };
+            })(),
+            // --- Varian C ---
+            (function() {
+                const lembarPerEksemplar = Math.floor(Math.random() * 5) + 2; // 2 - 6
+                const jumlahEksemplar = Math.floor(Math.random() * 50) + 100; // 100 - 149
+                const total = lembarPerEksemplar * jumlahEksemplar;
 
-                const testOutput = await simulator.runSilentTest(code, ["17"]);
-                if (testOutput.trim().toLowerCase() !== "sisa peserta: 2") {
-                    return { success: false, message: `❌ Logika programmu salah. Jika diinput 17 peserta, sisa bagi 5 adalah 2, sehingga harus mencetak "Sisa peserta: 2", tapi programmu mencetak: ${testOutput}` };
-                }
+                return {
+                    id: "1_1_c",
+                    variant: "C",
+                    task: `Jurusan Teknik Grafika sedang mempersiapkan produksi brosur untuk kegiatan pameran sekolah. Mesin cetak membutuhkan ${lembarPerEksemplar} lembar kertas untuk setiap eksemplar brosur, dan panitia memesan sebanyak ${jumlahEksemplar} eksemplar. Operator mesin perlu mengetahui total lembar kertas yang harus disiapkan sebelum proses cetak dimulai. Rancanglah algoritma yang langsung menghasilkan total kebutuhan kertas tersebut dan menampilkannya ke layar.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                    expectedOutput: total.toString(),
+                    hints: [
+                        "Pikirkan terlebih dahulu hubungan matematis antara jumlah lembar per eksemplar dan jumlah eksemplar yang dipesan — operasi apa yang menghasilkan total kebutuhan dari keduanya?",
+                        "Semua angka yang diperlukan sudah tersedia langsung dari soal — tidak ada informasi tambahan yang perlu diminta dari luar saat program berjalan.",
+                        "Telusuri alur program yang kamu susun dari ujung ke ujung: apakah hasil kalkulasi sudah benar-benar terhubung ke perintah yang memunculkannya di layar terminal?"
+                    ],
+                    validateCode: function(code, output) {
+                        if (code.includes('=')) {
+                            return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel untuk menyelesaikan soal di Level 1!" };
+                        }
+                        if (output.trim() !== this.expectedOutput) {
+                            return { success: false, message: "" };
+                        }
+                        return { success: true };
+                    }
+                };
+            })(),
+            // --- Tambahkan Varian D di sini nanti ---
+        ],
 
-                return { success: true };
-            }
-        }
+        // =============================================
+        // SOAL 2 — Sedang: Input + operasi + text join
+        // =============================================
+        [
+            // --- Varian A ---
+            {
+                id: "1_2_a",
+                variant: "A",
+                task: `Koperasi sekolah menjual buku tulis dengan harga Rp 4.500 per buah. Petugas koperasi membutuhkan program yang dapat langsung menghitung total pembayaran berdasarkan jumlah buku yang dibeli oleh siswa, kemudian menampilkan hasilnya dalam format yang informatif. Rancanglah algoritma yang menerima masukan berupa jumlah buku dari petugas, lalu menampilkan informasi dengan format: Total pembayaran: Rp [hasil]\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                expectedOutput: "Total pembayaran: Rp 22500",
+                hints: [
+                    "Bayangkan urutan kerja petugas koperasi: apa yang terjadi pertama kali, apa yang dihitung, dan apa yang ditampilkan ke pelanggan — bagaimana urutan itu menjadi langkah-langkah algoritma?",
+                    "Perhatikan bahwa output yang diminta memuat dua jenis informasi sekaligus: kalimat teks dan angka hasil hitungan — apakah keduanya bisa langsung disatukan begitu saja?",
+                    "Hasil perhitungan matematika dan teks adalah dua jenis data yang berbeda dalam program — pikirkan apa yang perlu dilakukan sebelum keduanya bisa tampil bersama dalam satu baris."
+                ],
+                validateCode: async function(code, output, simulator) {
+                    if (code.includes('=')) {
+                        return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel di Level 1! Langsung kalikan input dengan angkanya di dalam blok print." };
+                    }
+                    if (!code.includes('input(')) {
+                        return { success: false, message: "❌ Kamu harus meminta input dari pengguna. Gunakan blok 'read int' dari menu I/O!" };
+                    }
+                    if (!code.includes('str(')) {
+                        return { success: false, message: "❌ Kamu harus menggunakan blok 'to str' untuk mengubah angka menjadi teks sebelum digabungkan!" };
+                    }
+
+                    const testOutput = await simulator.runSilentTest(code, ["5"]);
+                    if (testOutput.trim() !== "Total pembayaran: Rp 22500") {
+                        return { success: false, message: `❌ Logika programmu salah. Jika diinput angka 5, seharusnya program mencetak "Total pembayaran: Rp 22500", tapi programmu mencetak: ${testOutput}` };
+                    }
+
+                    const testOutput2 = await simulator.runSilentTest(code, ["10"]);
+                    if (testOutput2.trim() !== "Total pembayaran: Rp 45000") {
+                        return { success: false, message: `❌ Logika programmu salah. Jika diinput angka 10, seharusnya program mencetak "Total pembayaran: Rp 45000", tapi programmu mencetak: ${testOutput2}` };
+                    }
+
+                    return { success: true };
+                }
+            },
+            // --- Varian B ---
+            {
+                id: "1_2_b",
+                variant: "B",
+                task: `Kantin sekolah menjual paket nasi bungkus lauk ayam seharga Rp 8.000 per bungkus. Setiap hari kasir kantin perlu menghitung total pemasukan dari penjualan nasi bungkus berdasarkan jumlah yang terjual, lalu mencatatnya dalam laporan harian. Rancanglah algoritma yang menerima masukan berupa jumlah nasi bungkus yang terjual, kemudian menampilkan informasi dengan format: Total pemasukan kantin: Rp [hasil]\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                expectedOutput: "Total pemasukan kantin: Rp 120000",
+                hints: [
+                    "Bayangkan urutan kerja kasir kantin: apa yang pertama kali diterima sebagai informasi, apa yang dihitung, dan apa yang akhirnya dicatat — bagaimana urutan tersebut menjadi langkah-langkah algoritma?",
+                    "Perhatikan bahwa format output memuat dua jenis informasi sekaligus: teks kalimat dan angka hasil hitungan — apakah keduanya bisa langsung disatukan tanpa ada langkah tambahan?",
+                    "Hasil operasi matematika dan teks adalah dua jenis data yang berbeda dalam program — pikirkan apa yang perlu dilakukan agar keduanya bisa tampil bersama dalam satu baris yang rapi."
+                ],
+                validateCode: async function(code, output, simulator) {
+                    if (code.includes('=')) {
+                        return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel di Level 1! Langsung kalikan input dengan angkanya di dalam blok print." };
+                    }
+                    if (!code.includes('input(')) {
+                        return { success: false, message: "❌ Kamu harus meminta input dari pengguna. Gunakan blok 'read int' dari menu I/O!" };
+                    }
+                    if (!code.includes('str(')) {
+                        return { success: false, message: "❌ Kamu harus menggunakan blok 'to str' untuk mengubah angka menjadi teks sebelum digabungkan!" };
+                    }
+
+                    const testOutput = await simulator.runSilentTest(code, ["15"]);
+                    if (testOutput.trim() !== "Total pemasukan kantin: Rp 120000") {
+                        return { success: false, message: `❌ Logika programmu salah. Jika diinput angka 15, seharusnya program mencetak "Total pemasukan kantin: Rp 120000", tapi programmu mencetak: ${testOutput}` };
+                    }
+
+                    const testOutput2 = await simulator.runSilentTest(code, ["10"]);
+                    if (testOutput2.trim() !== "Total pemasukan kantin: Rp 80000") {
+                        return { success: false, message: `❌ Logika programmu salah. Jika diinput angka 10, seharusnya program mencetak "Total pemasukan kantin: Rp 80000", tapi programmu mencetak: ${testOutput2}` };
+                    }
+
+                    return { success: true };
+                }
+            },
+            // --- Varian C ---
+            {
+                id: "1_2_c",
+                variant: "C",
+                task: `Laboratorium bahasa sekolah menyewakan headset untuk kegiatan listening test dengan tarif Rp 5.000 per sesi. Admin laboratorium membutuhkan program yang dapat langsung menghitung total biaya sewa berdasarkan jumlah headset yang dipinjam oleh siswa dalam satu sesi, kemudian menampilkan hasilnya secara informatif. Rancanglah algoritma yang menerima masukan berupa jumlah headset yang disewa, lalu menampilkan informasi dengan format: Total biaya sewa: Rp [hasil]\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                expectedOutput: "Total biaya sewa: Rp 30000",
+                hints: [
+                    "Bayangkan urutan kerja admin laboratorium: apa yang pertama kali diterima sebagai informasi, apa yang dihitung, dan apa yang akhirnya ditampilkan — bagaimana urutan tersebut menjadi langkah-langkah algoritma?",
+                    "Perhatikan bahwa format output memuat dua jenis informasi sekaligus: teks kalimat dan angka hasil hitungan — apakah keduanya bisa langsung disatukan tanpa ada langkah tambahan?",
+                    "Hasil operasi matematika dan teks adalah dua jenis data yang berbeda dalam program — pikirkan apa yang perlu dilakukan agar keduanya bisa tampil bersama dalam satu baris yang rapi."
+                ],
+                validateCode: async function(code, output, simulator) {
+                    if (code.includes('=')) {
+                        return { success: false, message: "❌ Kamu tidak boleh menggunakan variabel di Level 1! Langsung kalikan input dengan angkanya di dalam blok print." };
+                    }
+                    if (!code.includes('input(')) {
+                        return { success: false, message: "❌ Kamu harus meminta input dari pengguna. Gunakan blok 'read int' dari menu I/O!" };
+                    }
+                    if (!code.includes('str(')) {
+                        return { success: false, message: "❌ Kamu harus menggunakan blok 'to str' untuk mengubah angka menjadi teks sebelum digabungkan!" };
+                    }
+
+                    const testOutput = await simulator.runSilentTest(code, ["6"]);
+                    if (testOutput.trim() !== "Total biaya sewa: Rp 30000") {
+                        return { success: false, message: `❌ Logika programmu salah. Jika diinput angka 6, seharusnya program mencetak "Total biaya sewa: Rp 30000", tapi programmu mencetak: ${testOutput}` };
+                    }
+
+                    const testOutput2 = await simulator.runSilentTest(code, ["12"]);
+                    if (testOutput2.trim() !== "Total biaya sewa: Rp 60000") {
+                        return { success: false, message: `❌ Logika programmu salah. Jika diinput angka 12, seharusnya program mencetak "Total biaya sewa: Rp 60000", tapi programmu mencetak: ${testOutput2}` };
+                    }
+
+                    return { success: true };
+                }
+            },
+            // --- Tambahkan Varian D di sini nanti ---
+        ]
     ];
 }
- 

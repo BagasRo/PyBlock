@@ -61,8 +61,7 @@ const BlocklyConfig = {
             "categorystyle": "logic_category",
             "contents": [
                 { "kind": "block", "type": "controls_if" },
-                { "kind": "block", "type": "controls_ifelse" },
-                { "kind": "block", "type": "controls_flow_statements" }
+                { "kind": "block", "type": "controls_ifelse" }
             ]
         };
         // 2. PERULANGAN
@@ -89,7 +88,8 @@ const BlocklyConfig = {
                         "BY": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } }
                     }
                 },
-                { "kind": "block", "type": "controls_forEach", "fields": { "VAR": "item" } }
+                { "kind": "block", "type": "controls_forEach", "fields": { "VAR": "item" } },
+                { "kind": "block", "type": "controls_flow_statements" }
             ]
         };
         // 2b. LISTS

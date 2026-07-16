@@ -208,9 +208,15 @@ __builtins__.input = prompt
         
         this.addOutput('✨ Simulasi selesai!', 'info');
 
-        // Panggil evaluasi level jika levelManager tersedia dan mode submit aktif
-        if (this.isSubmit && window.levelManager && this.lastStdout !== undefined) {
-            window.levelManager.evaluate(this.lastStdout);
+        // Panggil evaluasi jika mode submit aktif
+        if (this.isSubmit && this.lastStdout !== undefined) {
+            if (window.simulationManager) {
+                // Mode Simulasi 10 soal
+                window.simulationManager.evaluate(this.lastStdout);
+            } else if (window.levelManager) {
+                // Mode Level lama
+                window.levelManager.evaluate(this.lastStdout);
+            }
             this.lastStdout = undefined;
         } else if (!this.isSubmit && this.lastStdout !== undefined) {
             this.lastStdout = undefined; // Reset for next run

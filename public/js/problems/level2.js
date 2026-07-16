@@ -1,105 +1,233 @@
 export default function getProblems() {
-    // Soal 2.1: Toko sablon — perkalian dengan variabel
-    const sheets = Math.floor(Math.random() * 21) + 10; // 10 - 30
-    const costPerSheet = (Math.floor(Math.random() * 6) + 5) * 1000; // 5k - 10k
-    const total1 = sheets * costPerSheet;
-
-    // Soal 2.2: Filamen printer 3D — pengurangan dengan variabel
-    const stockFilament = Math.floor(Math.random() * 31) + 50; // 50 - 80
-    const usedFilament = Math.floor(Math.random() * 21) + 10; // 10 - 30
-    const remaining = stockFilament - usedFilament;
+    // Level 2: 2 slot soal (Soal 3 & Soal 4)
+    // Setiap slot berisi array varian (A, B, dst.)
 
     return [
-        {
-            id: "2_1",
-            task: `Toko sablon sekolah mencetak ${sheets} lembar kaos dengan biaya sablon Rp ${costPerSheet.toLocaleString('id-ID')} per lembar. Buat sebuah variabel untuk menyimpan jumlah lembar dan variabel lain untuk biaya per lembar, lalu kalikan kedua variabel tersebut dan cetak hasil totalnya.`,
-            expectedOutput: total1.toString(),
-            hints: [
-                "Coba ingat kembali, langkah apa yang perlu dilakukan terlebih dahulu sebelum sebuah angka bisa disimpan dan dipakai kembali nanti?",
-                "Periksa apakah kamu sudah membuat dua variabel berbeda dan masing-masing sudah diisi dengan nilai yang sesuai menggunakan blok 'set'.",
-                "Cek kembali apakah blok 'get' dari kedua variabel tersebut sudah dipasang dengan benar di kedua slot blok perkalian."
-            ],
-            validateCode: function(code, output) {
-                if (!code.includes('=')) {
-                    return { success: false, message: "❌ Kamu harus menggunakan variabel untuk menyelesaikan soal ini (gunakan menu Variables)!" };
-                }
-                if (output.trim() !== this.expectedOutput) {
-                    return { success: false, message: "" };
-                }
-                return { success: true };
-            }
-        },
-        {
-            id: "2_2",
-            task: `Sebuah mesin print 3D di sekolah punya stok filamen sepanjang ${stockFilament} meter. Setelah mencetak sebuah proyek, filamen yang terpakai sebanyak ${usedFilament} meter. Simpan kedua angka tersebut ke dalam variabel berbeda, kurangi stok awal dengan pemakaian untuk mencari sisa filamen, lalu cetak hasilnya.`,
-            expectedOutput: remaining.toString(),
-            hints: [
-                "Coba ingat kembali, operasi matematika apa yang dipakai untuk mencari sisa dari sebuah jumlah setelah dikurangi pemakaian?",
-                "Periksa apakah nilai stok awal dan nilai pemakaian masing-masing sudah tersimpan di variabel yang berbeda sebelum dikurangkan.",
-                "Cek kembali urutan kedua variabel pada blok pengurangan — pastikan stok awal berada di posisi yang dikurangi, bukan sebaliknya."
-            ],
-            validateCode: function(code, output) {
-                if (!code.includes('=')) {
-                    return { success: false, message: "❌ Kamu harus menggunakan variabel untuk menyelesaikan soal ini!" };
-                }
-                if (output.trim() !== this.expectedOutput) {
-                    return { success: false, message: "" };
-                }
-                return { success: true };
-            }
-        },
-        {
-            id: "2_3",
-            task: `Kantin sekolah menjual es teh Rp 4.000 per gelas. Buat program yang membaca jumlah gelas dibeli menggunakan read int dan simpan ke variabel. Buat variabel kedua untuk menghitung total harga. Gunakan text join dan to str untuk mencetak kalimat "Total bayar: " digabung dengan hasil total tersebut.`,
-            expectedOutput: "Total bayar: 12000",
-            hints: [
-                "Coba ingat kembali, blok apa yang dipakai untuk membaca masukan angka dari pengguna, lalu blok apa yang dipakai untuk menyimpannya?",
-                "Periksa apakah variabel kedua yang menyimpan total harga sudah benar-benar mengalikan variabel jumlah gelas dengan harga satuan.",
-                "Cek kembali apakah kamu sudah menggunakan blok 'to str' untuk mengubah angka total menjadi teks sebelum digabungkan dengan kalimat menggunakan 'create text with'."
-            ],
-            validateCode: async function(code, output, simulator) {
-                if (!code.includes('=')) {
-                    return { success: false, message: "❌ Kamu harus menyimpan input dan hasil perhitungan ke dalam variabel!" };
-                }
-                if (!code.includes('input(')) {
-                    return { success: false, message: "❌ Kamu harus meminta input dari pengguna (gunakan blok 'read int')." };
-                }
-                if (!code.includes('str(')) {
-                    return { success: false, message: "❌ Jangan lupa mengubah angka menjadi teks menggunakan blok 'to str' agar bisa digabungkan dengan kalimat!" };
-                }
+        // =============================================
+        // SOAL 3 — Mudah: Dua variabel + operasi
+        // =============================================
+        [
+            // --- Varian A ---
+            (function() {
+                const amplasPerKendaraan = Math.floor(Math.random() * 5) + 3; // 3 - 7
+                const jumlahKendaraan = Math.floor(Math.random() * 6) + 4; // 4 - 9
+                const total = amplasPerKendaraan * jumlahKendaraan;
 
-                const testOutput = await simulator.runSilentTest(code, ["3"]);
-                if (testOutput.trim() !== "Total bayar: 12000") {
-                    return { success: false, message: `❌ Logika programmu masih salah. Jika diinput angka 3, seharusnya program mencetak "Total bayar: 12000", tapi programmu mencetak: ${testOutput}` };
-                }
+                return {
+                    id: "2_1_a",
+                    variant: "A",
+                    task: `Bengkel jurusan Teknik Kendaraan Ringan sedang menghitung kebutuhan bahan habis pakai. Setiap kendaraan yang masuk servis membutuhkan ${amplasPerKendaraan} lembar amplas, dan hari ini ada ${jumlahKendaraan} kendaraan yang dijadwalkan servis. Kepala bengkel ingin program yang menyimpan kedua data tersebut secara terpisah ke dalam program, kemudian menghasilkan total lembar amplas yang perlu disiapkan hari ini. Rancanglah algoritmanya.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                    expectedOutput: total.toString(),
+                    hints: [
+                        "Kapan sebuah angka perlu disimpan ke dalam \"wadah\" bernama sebelum digunakan, dibanding langsung dipakai sekali dan dilupakan? Apa manfaatnya dalam persoalan ini?",
+                        "Identifikasi berapa data berbeda yang masing-masing perlu disimpan secara terpisah sebelum keduanya bisa dihubungkan dalam satu operasi.",
+                        "Pastikan operasi penghitungan mengambil nilainya dari wadah penyimpanan yang sudah dibuat, bukan menuliskan ulang angka dari soal secara langsung."
+                    ],
+                    validateCode: function(code, output) {
+                        if (!code.includes('=')) {
+                            return { success: false, message: "❌ Kamu harus menggunakan variabel untuk menyelesaikan soal ini (gunakan menu Variables)!" };
+                        }
+                        const assignments = code.match(/^\s*(\w+)\s*=/gm);
+                        if (!assignments || assignments.length < 2) {
+                            return { success: false, message: "❌ Kamu harus membuat minimal 2 variabel berbeda untuk menyimpan kedua data!" };
+                        }
+                        if (output.trim() !== this.expectedOutput) {
+                            return { success: false, message: "" };
+                        }
+                        return { success: true };
+                    }
+                };
+            })(),
+            // --- Varian B ---
+            (function() {
+                const meterPerTitik = Math.floor(Math.random() * 5) + 3; // 3 - 7
+                const jumlahTitik = Math.floor(Math.random() * 6) + 4; // 4 - 9
+                const total = meterPerTitik * jumlahTitik;
 
-                return { success: true };
-            }
-        },
-        {
-            id: "2_4",
-            task: `Timbangan digital di jurusan Tata Boga membaca berat adonan kue dalam kilogram. Buat program yang membaca berat awal adonan menggunakan read float dan simpan ke variabel "berat". Karena ada adonan tambahan, ubah (set ulang) nilai variabel "berat" dengan menambahkan 0.5 kg ke nilai sebelumnya. Cetak nilai akhir variabel tersebut.`,
-            expectedOutput: "3.0",
-            hints: [
-                "Coba ingat kembali, blok apa yang dipakai untuk membaca masukan berupa angka desimal, bukan bilangan bulat?",
-                "Periksa apakah kamu sudah menggunakan blok 'set' pada variabel berat yang sama untuk mengubah nilainya, bukan membuat variabel baru.",
-                "Cek kembali apakah nilai baru pada variabel berat sudah merupakan hasil penjumlahan dari nilai variabel itu sendiri ditambah 0.5, bukan menggantikannya dengan angka 0.5 saja."
-            ],
-            validateCode: async function(code, output, simulator) {
-                if (!code.includes('=')) {
-                    return { success: false, message: "❌ Kamu harus menggunakan variabel untuk menyelesaikan soal ini!" };
-                }
-                if (!code.includes('input(')) {
-                    return { success: false, message: "❌ Program harus membaca input berat dari pengguna menggunakan blok 'read float'." };
-                }
+                return {
+                    id: "2_1_b",
+                    variant: "B",
+                    task: `Jurusan Teknik Instalasi Tenaga Listrik sedang menghitung kebutuhan kabel untuk proyek instalasi di gedung praktik. Setiap titik lampu membutuhkan ${meterPerTitik} meter kabel, dan gedung tersebut memiliki ${jumlahTitik} titik lampu yang perlu dipasang. Ketua proyek ingin program yang menyimpan kedua data tersebut secara terpisah ke dalam program, kemudian menghasilkan total panjang kabel yang perlu disiapkan sebelum pemasangan dimulai. Rancanglah algoritmanya.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                    expectedOutput: total.toString(),
+                    hints: [
+                        "Kapan sebuah angka perlu diberi nama dan disimpan terlebih dahulu sebelum digunakan, dibanding langsung dipakai begitu saja? Apa manfaatnya dalam konteks persoalan ini?",
+                        "Identifikasi berapa data berbeda yang masing-masing perlu disimpan secara terpisah sebelum keduanya bisa dihubungkan dalam satu operasi penghitungan.",
+                        "Pastikan operasi yang menghasilkan total mengambil nilainya dari wadah penyimpanan yang sudah dibuat, bukan menuliskan ulang angka dari soal secara langsung."
+                    ],
+                    validateCode: function(code, output) {
+                        if (!code.includes('=')) {
+                            return { success: false, message: "❌ Kamu harus menggunakan variabel untuk menyelesaikan soal ini (gunakan menu Variables)!" };
+                        }
+                        const assignments = code.match(/^\\s*(\\w+)\\s*=/gm);
+                        if (!assignments || assignments.length < 2) {
+                            return { success: false, message: "❌ Kamu harus membuat minimal 2 variabel berbeda untuk menyimpan kedua data!" };
+                        }
+                        if (output.trim() !== this.expectedOutput) {
+                            return { success: false, message: "" };
+                        }
+                        return { success: true };
+                    }
+                };
+            })(),
+            // --- Varian C ---
+            (function() {
+                const lembarPerRuang = Math.floor(Math.random() * 11) + 20; // 20 - 30
+                const jumlahRuang = Math.floor(Math.random() * 6) + 15; // 15 - 20
+                const total = lembarPerRuang * jumlahRuang;
 
-                const testOutput = await simulator.runSilentTest(code, ["2.5"]);
-                if (testOutput.trim() !== "3.0") {
-                    return { success: false, message: `❌ Logika programmu salah. Jika diinput 2.5 lalu ditambah 0.5, hasilnya harus 3.0, tapi programmu mencetak: ${testOutput}` };
-                }
+                return {
+                    id: "2_1_c",
+                    variant: "C",
+                    task: `Bagian administrasi perkantoran sekolah sedang menghitung kebutuhan kertas untuk keperluan ujian semester. Setiap ruang ujian membutuhkan ${lembarPerRuang} lembar soal, dan tersedia ${jumlahRuang} ruang ujian yang akan digunakan secara bersamaan. Kepala tata usaha ingin program yang menyimpan kedua data tersebut secara terpisah ke dalam program, kemudian menghasilkan total lembar soal yang perlu digandakan sebelum hari ujian. Rancanglah algoritmanya.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                    expectedOutput: total.toString(),
+                    hints: [
+                        "Kapan sebuah angka perlu diberi nama dan disimpan terlebih dahulu sebelum digunakan, dibanding langsung dipakai begitu saja? Apa manfaatnya dalam konteks persoalan ini?",
+                        "Identifikasi berapa data berbeda yang masing-masing perlu disimpan secara terpisah sebelum keduanya bisa dihubungkan dalam satu operasi penghitungan.",
+                        "Pastikan operasi yang menghasilkan total mengambil nilainya dari wadah penyimpanan yang sudah dibuat, bukan menuliskan ulang angka dari soal secara langsung."
+                    ],
+                    validateCode: function(code, output) {
+                        if (!code.includes('=')) {
+                            return { success: false, message: "❌ Kamu harus menggunakan variabel untuk menyelesaikan soal ini (gunakan menu Variables)!" };
+                        }
+                        const assignments = code.match(/^\\s*(\\w+)\\s*=/gm);
+                        if (!assignments || assignments.length < 2) {
+                            return { success: false, message: "❌ Kamu harus membuat minimal 2 variabel berbeda untuk menyimpan kedua data!" };
+                        }
+                        if (output.trim() !== this.expectedOutput) {
+                            return { success: false, message: "" };
+                        }
+                        return { success: true };
+                    }
+                };
+            })(),
+            // --- Tambahkan Varian D di sini nanti ---
+        ],
 
-                return { success: true };
-            }
-        }
+        // =============================================
+        // SOAL 4 — Sedang: Input + variabel + text join
+        // =============================================
+        [
+            // --- Varian A ---
+            {
+                id: "2_2_a",
+                variant: "A",
+                task: `Jurusan Multimedia sedang membuka pendaftaran peserta workshop desain grafis dengan biaya pendaftaran Rp 25.000 per peserta. Panitia membutuhkan program yang menerima jumlah peserta yang mendaftar, menyimpan data tersebut, kemudian menghitung dan menampilkan total pemasukan dengan format: Total pemasukan: Rp [hasil]. Rancanglah algoritmanya.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                expectedOutput: "Total pemasukan: Rp 200000",
+                hints: [
+                    "Ada dua jenis angka dalam persoalan ini: yang sudah diketahui sejak awal dan yang baru diketahui saat program berjalan — bagaimana cara algoritma menangani perbedaan sifat keduanya?",
+                    "Nilai yang diterima dari pengguna perlu disimpan agar bisa digunakan dalam perhitungan selanjutnya — apakah ada manfaatnya juga menyimpan hasil perhitungan ke wadah tersendiri?",
+                    "Perhatikan format output yang diminta: ada berapa komponen yang harus tampil bersama dalam satu baris, dan apakah semua komponen tersebut sudah bertipe data yang kompatibel sebelum digabungkan?"
+                ],
+                validateCode: async function(code, output, simulator) {
+                    if (!code.includes('=')) {
+                        return { success: false, message: "❌ Kamu harus menyimpan input dan hasil perhitungan ke dalam variabel!" };
+                    }
+                    if (!code.includes('input(')) {
+                        return { success: false, message: "❌ Kamu harus meminta input dari pengguna (gunakan blok 'read int')." };
+                    }
+                    if (!code.includes('str(')) {
+                        return { success: false, message: "❌ Jangan lupa mengubah angka menjadi teks menggunakan blok 'to str' agar bisa digabungkan dengan kalimat!" };
+                    }
+
+                    const assignments = code.match(/^\s*(\w+)\s*=/gm);
+                    if (!assignments || assignments.length < 2) {
+                        return { success: false, message: "❌ Kamu harus membuat minimal 2 variabel (satu untuk input, satu untuk hasil perhitungan)!" };
+                    }
+
+                    const testOutput = await simulator.runSilentTest(code, ["8"]);
+                    if (testOutput.trim() !== "Total pemasukan: Rp 200000") {
+                        return { success: false, message: `❌ Logika programmu masih salah. Jika diinput angka 8, seharusnya program mencetak "Total pemasukan: Rp 200000", tapi programmu mencetak: ${testOutput}` };
+                    }
+
+                    const testOutput2 = await simulator.runSilentTest(code, ["12"]);
+                    if (testOutput2.trim() !== "Total pemasukan: Rp 300000") {
+                        return { success: false, message: `❌ Logika programmu masih salah. Jika diinput angka 12, seharusnya program mencetak "Total pemasukan: Rp 300000", tapi programmu mencetak: ${testOutput2}` };
+                    }
+
+                    return { success: true };
+                }
+            },
+            // --- Varian B ---
+            {
+                id: "2_2_b",
+                variant: "B",
+                task: `Ekstrakurikuler Paskibra sekolah membuka pendaftaran anggota baru dengan iuran perdana sebesar Rp 10.000 per anggota untuk keperluan seragam latihan. Pengurus membutuhkan program yang menerima jumlah anggota baru yang mendaftar, menyimpan data tersebut, kemudian menghitung dan menampilkan total iuran yang terkumpul dengan format: Total iuran terkumpul: Rp [hasil]. Rancanglah algoritmanya.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                expectedOutput: "Total iuran terkumpul: Rp 120000",
+                hints: [
+                    "Ada dua jenis angka dalam persoalan ini: yang sudah pasti sejak awal dan yang baru diketahui saat program berjalan — bagaimana cara algoritma membedakan dan menangani keduanya?",
+                    "Nilai yang diterima dari pengguna perlu disimpan agar bisa digunakan dalam perhitungan selanjutnya — apakah ada manfaatnya juga menyimpan hasil perhitungan ke dalam wadah tersendiri sebelum ditampilkan?",
+                    "Perhatikan format output yang diminta: ada berapa komponen berbeda yang harus tampil bersama dalam satu baris, dan apakah semua komponen sudah bertipe data yang kompatibel sebelum digabungkan?"
+                ],
+                validateCode: async function(code, output, simulator) {
+                    if (!code.includes('=')) {
+                        return { success: false, message: "❌ Kamu harus menyimpan input dan hasil perhitungan ke dalam variabel!" };
+                    }
+                    if (!code.includes('input(')) {
+                        return { success: false, message: "❌ Kamu harus meminta input dari pengguna (gunakan blok 'read int')." };
+                    }
+                    if (!code.includes('str(')) {
+                        return { success: false, message: "❌ Jangan lupa mengubah angka menjadi teks menggunakan blok 'to str' agar bisa digabungkan dengan kalimat!" };
+                    }
+
+                    const assignments = code.match(/^\\s*(\\w+)\\s*=/gm);
+                    if (!assignments || assignments.length < 2) {
+                        return { success: false, message: "❌ Kamu harus membuat minimal 2 variabel (satu untuk input, satu untuk hasil perhitungan)!" };
+                    }
+
+                    const testOutput = await simulator.runSilentTest(code, ["12"]);
+                    if (testOutput.trim() !== "Total iuran terkumpul: Rp 120000") {
+                        return { success: false, message: `❌ Logika programmu masih salah. Jika diinput angka 12, seharusnya program mencetak "Total iuran terkumpul: Rp 120000", tapi programmu mencetak: ${testOutput}` };
+                    }
+
+                    const testOutput2 = await simulator.runSilentTest(code, ["20"]);
+                    if (testOutput2.trim() !== "Total iuran terkumpul: Rp 200000") {
+                        return { success: false, message: `❌ Logika programmu masih salah. Jika diinput angka 20, seharusnya program mencetak "Total iuran terkumpul: Rp 200000", tapi programmu mencetak: ${testOutput2}` };
+                    }
+
+                    return { success: true };
+                }
+            },
+            // --- Varian C ---
+            {
+                id: "2_2_c",
+                variant: "C",
+                task: `Unit Kesehatan Sekolah (UKS) sedang mengadakan pelatihan pertolongan pertama untuk anggota PMR dengan biaya pelatihan Rp 18.000 per peserta yang mencakup modul dan perlengkapan praktik. Koordinator PMR membutuhkan program yang menerima jumlah peserta yang mendaftar, menyimpan data tersebut, kemudian menghitung dan menampilkan total biaya pelatihan dengan format: Total biaya pelatihan: Rp [hasil]. Rancanglah algoritmanya.\n\nSusunlah rancangan algoritma menggunakan blok Blockly yang tersedia, dan perhatikan kode Python yang dihasilkan sebagai wujud program dalam bahasa komputer.`,
+                expectedOutput: "Total biaya pelatihan: Rp 162000",
+                hints: [
+                    "Ada dua jenis angka dalam persoalan ini: yang sudah pasti sejak awal dan yang baru diketahui saat program berjalan — bagaimana cara algoritma membedakan dan menangani keduanya?",
+                    "Nilai yang diterima dari pengguna perlu disimpan agar bisa digunakan dalam perhitungan selanjutnya — apakah ada manfaatnya juga menyimpan hasil perhitungan ke dalam wadah tersendiri sebelum ditampilkan?",
+                    "Perhatikan format output yang diminta: ada berapa komponen berbeda yang harus tampil bersama dalam satu baris, dan apakah semua komponen sudah bertipe data yang kompatibel sebelum digabungkan?"
+                ],
+                validateCode: async function(code, output, simulator) {
+                    if (!code.includes('=')) {
+                        return { success: false, message: "❌ Kamu harus menyimpan input dan hasil perhitungan ke dalam variabel!" };
+                    }
+                    if (!code.includes('input(')) {
+                        return { success: false, message: "❌ Kamu harus meminta input dari pengguna (gunakan blok 'read int')." };
+                    }
+                    if (!code.includes('str(')) {
+                        return { success: false, message: "❌ Jangan lupa mengubah angka menjadi teks menggunakan blok 'to str' agar bisa digabungkan dengan kalimat!" };
+                    }
+
+                    const assignments = code.match(/^\\s*(\\w+)\\s*=/gm);
+                    if (!assignments || assignments.length < 2) {
+                        return { success: false, message: "❌ Kamu harus membuat minimal 2 variabel (satu untuk input, satu untuk hasil perhitungan)!" };
+                    }
+
+                    const testOutput = await simulator.runSilentTest(code, ["9"]);
+                    if (testOutput.trim() !== "Total biaya pelatihan: Rp 162000") {
+                        return { success: false, message: `❌ Logika programmu masih salah. Jika diinput angka 9, seharusnya program mencetak "Total biaya pelatihan: Rp 162000", tapi programmu mencetak: ${testOutput}` };
+                    }
+
+                    const testOutput2 = await simulator.runSilentTest(code, ["15"]);
+                    if (testOutput2.trim() !== "Total biaya pelatihan: Rp 270000") {
+                        return { success: false, message: `❌ Logika programmu masih salah. Jika diinput angka 15, seharusnya program mencetak "Total biaya pelatihan: Rp 270000", tapi programmu mencetak: ${testOutput2}` };
+                    }
+
+                    return { success: true };
+                }
+            },
+            // --- Tambahkan Varian D di sini nanti ---
+        ]
     ];
 }

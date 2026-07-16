@@ -11,10 +11,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: flex-start;
+            min-height: 100vh;
             margin: 0;
+            padding: 5rem 1rem 2rem 1rem;
+            box-sizing: border-box;
             overflow-y: auto;
+            overflow-x: hidden;
             text-align: center;
         }
 
@@ -58,7 +61,7 @@
             backdrop-filter: blur(12px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             animation: fadeIn 0.5s ease-out;
-            margin: 2rem 0;
+            margin: auto 0;
         }
 
         @keyframes fadeIn {
@@ -88,7 +91,7 @@
             border-left: 4px solid var(--accent);
             padding: 1rem;
             border-radius: 0 8px 8px 0;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             text-align: left;
             font-size: 0.95rem;
             color: rgba(255, 255, 255, 0.9);
@@ -167,108 +170,144 @@
             line-height: 1.4;
         }
 
-        /* Difficulty section */
-        .diff-section {
+        /* Timer Setting Section */
+        .timer-section {
             transition: all 0.3s ease;
             overflow: hidden;
         }
 
-        .diff-section.hidden {
+        .timer-section.hidden {
             max-height: 0;
             opacity: 0;
             margin-bottom: 0;
             pointer-events: none;
         }
 
-        .diff-section.visible {
-            max-height: 500px;
+        .timer-section.visible {
+            max-height: 600px;
             opacity: 1;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .diff-section-title {
+        .timer-section-title {
             font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             color: var(--text);
             text-align: left;
         }
 
-        .difficulty-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        /* Simulation Info */
+        .sim-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
             margin-bottom: 1.5rem;
+        }
+
+        .sim-info-card {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+        }
+
+        .sim-info-card .info-card-level {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .sim-info-card .info-card-count {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .sim-info-card .info-card-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .sim-info-card:nth-child(1) .info-card-count { color: #4ade80; }
+        .sim-info-card:nth-child(2) .info-card-count { color: #fbbf24; }
+        .sim-info-card:nth-child(3) .info-card-count { color: #f97316; }
+        .sim-info-card:nth-child(4) .info-card-count { color: #f87171; }
+
+        /* Timer Configuration */
+        .timer-config {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
             text-align: left;
         }
 
-        .diff-option {
+        .timer-config-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border);
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
+            gap: 8px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .timer-level-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        .timer-level-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-width: 65px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .timer-level-label.l1 { color: #4ade80; }
+        .timer-level-label.l2 { color: #fbbf24; }
+        .timer-level-label.l3 { color: #f97316; }
+        .timer-level-label.l4 { color: #f87171; }
+
+        .timer-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        .timer-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .diff-option:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
+        .timer-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
         }
 
-        .diff-option input[type="radio"] {
-            display: none;
-        }
-
-        .diff-icon {
-            font-size: 1.5rem;
-        }
-
-        .diff-text {
-            flex: 1;
-        }
-
-        .diff-text h3 {
-            font-size: 1.1rem;
+        .timer-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            color: var(--accent);
+            min-width: 55px;
+            text-align: right;
         }
-
-        .diff-text p {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .radio-custom {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        /* Active State */
-        .diff-option.active.mudah { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
-        .diff-option.active.sedang { border-color: #eab308; background: rgba(234, 179, 8, 0.1); }
-        .diff-option.active.sulit { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-        
-        .diff-option.active.mudah .diff-text h3 { color: #4ade80; }
-        .diff-option.active.sedang .diff-text h3 { color: #fde047; }
-        .diff-option.active.sulit .diff-text h3 { color: #f87171; }
-
-        .diff-option.active.mudah .radio-custom { border-color: #22c55e; }
-        .diff-option.active.sedang .radio-custom { border-color: #eab308; }
-        .diff-option.active.sulit .radio-custom { border-color: #ef4444; }
-
-        .diff-option.active.mudah .radio-custom::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #22c55e; }
-        .diff-option.active.sedang .radio-custom::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #eab308; }
-        .diff-option.active.sulit .radio-custom::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #ef4444; }
 
         /* Sandbox info */
         .sandbox-info {
@@ -334,6 +373,28 @@
             box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
             background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .simulator-container {
+                padding: 1.5rem;
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+            .sim-title {
+                font-size: 2rem;
+            }
+            .mode-cards {
+                flex-direction: column;
+            }
+            .sim-info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .top-nav {
+                top: 10px;
+                left: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -362,8 +423,8 @@
         <div class="mode-cards">
             <div class="mode-card mode-latihan active" data-mode="latihan" id="modeLatihan">
                 <div class="mode-card-icon">📝</div>
-                <div class="mode-card-title">Latihan Soal</div>
-                <div class="mode-card-desc">Kerjakan soal berjenjang per level dengan evaluasi otomatis.</div>
+                <div class="mode-card-title">Simulasi Latihan</div>
+                <div class="mode-card-desc">Kerjakan 10 soal berjenjang dari 4 level dengan batas waktu dan evaluasi akhir.</div>
             </div>
             <div class="mode-card mode-sandbox" data-mode="sandbox" id="modeSandbox">
                 <div class="mode-card-icon">🧪</div>
@@ -372,40 +433,40 @@
             </div>
         </div>
 
-        <!-- Difficulty (shown only in latihan mode) -->
-        <div class="diff-section visible" id="diffSection">
-            <h2 class="diff-section-title">Pilih Tingkat Kesulitan:</h2>
+        <!-- Timer Setting (shown only in latihan mode) -->
+        <div class="timer-section visible" id="timerSection">
+            <h2 class="timer-section-title">ℹ️ Penjelasan Simulasi</h2>
             
-            <div class="difficulty-options">
-                <label class="diff-option mudah active" data-diff="mudah">
-                    <input type="radio" name="difficulty" value="mudah" checked>
-                    <div class="diff-icon">🟢</div>
-                    <div class="diff-text">
-                        <h3>Mudah</h3>
-                        <p>Petunjuk langsung muncul di awal. Cocok untuk pemula sebagai panduan.</p>
-                    </div>
-                    <div class="radio-custom"></div>
-                </label>
-                
-                <label class="diff-option sedang" data-diff="sedang">
-                    <input type="radio" name="difficulty" value="sedang">
-                    <div class="diff-icon">🟡</div>
-                    <div class="diff-text">
-                        <h3>Sedang</h3>
-                        <p>Petunjuk muncul satu per satu saat gagal menjawab tugas.</p>
-                    </div>
-                    <div class="radio-custom"></div>
-                </label>
+            <div class="info-box" style="background: rgba(16, 185, 129, 0.1); border-left-color: #10b981; margin-bottom: 1.5rem;">
+                <div class="info-icon">📝</div>
+                <div>
+                    <strong>Mode Simulasi Latihan</strong><br>
+                    Kamu akan diberikan 10 soal acak dari 4 tingkat kesulitan yang berbeda. Setiap soal dibatasi oleh waktu (Level 1: 3 menit, Level 2: 4 menit, Level 3-4: 5 menit). Susunlah blok sesuai instruksi untuk menyelesaikan tantangan, kumpulkan poin, dan raih evaluasi terbaik!
+                </div>
+            </div>
 
-                <label class="diff-option sulit" data-diff="sulit">
-                    <input type="radio" name="difficulty" value="sulit">
-                    <div class="diff-icon">🔴</div>
-                    <div class="diff-text">
-                        <h3>Sulit</h3>
-                        <p>Mode ujian mandiri tanpa petunjuk sistem, untuk yang mahir.</p>
-                    </div>
-                    <div class="radio-custom"></div>
-                </label>
+            <!-- Composition info -->
+            <div class="sim-info-grid">
+                <div class="sim-info-card">
+                    <div class="info-card-level">Level 1</div>
+                    <div class="info-card-count">2</div>
+                    <div class="info-card-label">soal</div>
+                </div>
+                <div class="sim-info-card">
+                    <div class="info-card-level">Level 2</div>
+                    <div class="info-card-count">2</div>
+                    <div class="info-card-label">soal</div>
+                </div>
+                <div class="sim-info-card">
+                    <div class="info-card-level">Level 3</div>
+                    <div class="info-card-count">3</div>
+                    <div class="info-card-label">soal</div>
+                </div>
+                <div class="sim-info-card">
+                    <div class="info-card-level">Level 4</div>
+                    <div class="info-card-count">3</div>
+                    <div class="info-card-label">soal</div>
+                </div>
             </div>
         </div>
 
@@ -415,7 +476,7 @@
                 <div class="info-icon">🧪</div>
                 <div>
                     <strong>Mode Sandbox</strong><br>
-                    Kamu akan masuk ke workspace bebas dengan semua kategori blok tersedia. Tidak ada soal yang perlu dijawab — cukup eksplorasi, bereksperimen, dan belajar sesukamu!
+                    Kamu akan masuk ke workspace interaktif tanpa batasan waktu ataupun soal. Semua kategori blok logika, matematika, dan variabel tersedia. Mode ini sangat cocok untuk eksplorasi mandiri, mencoba ide kodemu, dan menguji algoritma sesukamu!
                 </div>
             </div>
         </div>
@@ -443,7 +504,7 @@
         });
 
         let selectedMode = 'latihan';
-        const diffSection = document.getElementById('diffSection');
+        const timerSection = document.getElementById('timerSection');
         const sandboxInfo = document.getElementById('sandboxInfo');
         const btnStart = document.getElementById('btnStartSim');
 
@@ -456,16 +517,16 @@
                 selectedMode = card.dataset.mode;
 
                 if (selectedMode === 'sandbox') {
-                    diffSection.classList.remove('visible');
-                    diffSection.classList.add('hidden');
+                    timerSection.classList.remove('visible');
+                    timerSection.classList.add('hidden');
                     sandboxInfo.classList.remove('hidden');
                     sandboxInfo.classList.add('visible');
                     btnStart.textContent = '';
                     btnStart.innerHTML = 'Buka Sandbox 🧪';
                     btnStart.classList.add('sandbox-mode');
                 } else {
-                    diffSection.classList.remove('hidden');
-                    diffSection.classList.add('visible');
+                    timerSection.classList.remove('hidden');
+                    timerSection.classList.add('visible');
                     sandboxInfo.classList.remove('visible');
                     sandboxInfo.classList.add('hidden');
                     btnStart.innerHTML = 'Mulai Simulasi 🚀';
@@ -474,24 +535,12 @@
             });
         });
 
-        // Difficulty selection logic
-        const options = document.querySelectorAll('.diff-option');
-        options.forEach(opt => {
-            opt.addEventListener('click', () => {
-                options.forEach(o => {
-                    o.classList.remove('active');
-                });
-                opt.classList.add('active');
-            });
-        });
-
         // Start button logic
         btnStart.addEventListener('click', () => {
             if (selectedMode === 'sandbox') {
                 window.location.href = 'sandbox.html';
             } else {
-                const selected = document.querySelector('input[name="difficulty"]:checked').value;
-                window.location.href = `level1.html?difficulty=${selected}`;
+                window.location.href = 'simulasi.html';
             }
         });
     </script>
