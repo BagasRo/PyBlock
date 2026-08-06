@@ -14,12 +14,12 @@ class SimulationManager {
         this.isFinished = false;
 
         // Waktu per level (dalam detik)
-        // Level 1: 3 menit, Level 2: 4 menit, Level 3: 5 menit, Level 4: 5 menit
+        // Level 1: 1,5 menit, Level 2: 4 menit, Level 3: 5 menit, Level 4: 6 menit
         this.timeLimits = {
-            1: 3 * 60,
+            1: 90,
             2: 4 * 60,
             3: 5 * 60,
-            4: 5 * 60
+            4: 6 * 60
         };
     }
 

@@ -1107,6 +1107,8 @@ body {
 .diff-card.easy h4 { color: #4ade80; }
 .diff-card.medium { border-color: rgba(234,179,8,0.3); }
 .diff-card.medium h4 { color: #fde047; }
+.diff-card.advanced { border-color: rgba(249,115,22,0.3); }
+.diff-card.advanced h4 { color: #fb923c; }
 .diff-card.hard { border-color: rgba(239,68,68,0.3); }
 .diff-card.hard h4 { color: #f87171; }
 

@@ -108,7 +108,7 @@
                     <div class="code-comparison-panel panel-blockly">
                         <div class="code-comparison-label">🧩 Blockly</div>
                         <div class="block-stack">
-                            <div class="block-mock block-loop">count with <span class="block-field">i</span> from <span class="block-field">1</span> to <span class="block-field">5</span></div>
+                            <div class="block-mock block-loop">count with <span class="block-field">i</span> from <span class="block-field">1</span> to <span class="block-field">5</span> by <span class="block-field">1</span></div>
                             <div class="block-mock block-output block-indent">print <span class="block-field">i</span></div>
                         </div>
                     </div>
@@ -125,6 +125,7 @@
                     <div class="concept-text">
                         <strong>Perhatikan range() di Python!</strong>
                         <p>Di Python, <code style="font-family: 'Fira Code', monospace;">range(1, 6)</code> menghasilkan angka 1 sampai 5 (bukan 6!). Angka terakhir <strong>tidak termasuk</strong>. Blockly menangani konversi ini secara otomatis untukmu.</p>
+                        <p style="margin-top: 0.5rem;">Jika nilai <strong>by = 1</strong>, Python cukup menuliskan <code style="font-family: 'Fira Code', monospace;">range(1, 6)</code> tanpa parameter ketiga. Jika <strong>by ≠ 1</strong>, Python menuliskan <code style="font-family: 'Fira Code', monospace;">range(1, 6, 2)</code> dengan step sebagai argumen ketiga.</p>
                     </div>
                 </div>
             </div>
@@ -222,7 +223,7 @@
                 <div class="code-comparison-panel panel-blockly">
                     <div class="code-comparison-label">🧩 Blok Blockly</div>
                     <div class="block-stack">
-                        <div class="block-mock block-loop">count with <span class="block-field">i</span> from <span class="block-field">1</span> to <span class="block-field">10</span></div>
+                        <div class="block-mock block-loop">count with <span class="block-field">i</span> from <span class="block-field">1</span> to <span class="block-field">10</span> by <span class="block-field">1</span></div>
                         <div class="block-mock block-logic block-indent">if <span class="block-mock block-compare" style="margin:0;"><span class="block-field">i</span> = <span class="block-field">5</span></span></div>
                         <div class="block-mock block-control block-indent" style="margin-left: 40px;">continue</div>
                         <div class="block-mock block-logic block-indent">if <span class="block-mock block-compare" style="margin:0;"><span class="block-field">i</span> = <span class="block-field">8</span></span></div>

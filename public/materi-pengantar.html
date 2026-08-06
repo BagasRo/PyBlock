@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengantar - Materi Python Blockly Simulator</title>
-    <meta name="description" content="Mengenal pemrograman Python menggunakan Blockly. Pelajari pengertian pemrograman, algoritma, tipe data, sejarah Python, cara kerja antarmuka, dan sistem tingkat kesulitan.">
+    <meta name="description" content="Mengenal pemrograman Python menggunakan Blockly. Pelajari pengertian pemrograman, algoritma, tipe data, sejarah Python, cara kerja antarmuka, dan alur latihan simulasi.">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -367,39 +367,125 @@ cout <span class="operator">&lt;&lt;</span> <span class="string">"Halo Dunia"</s
         </div>
 
         <!-- ============================================ -->
-        <!-- E. SISTEM TINGKAT KESULITAN                  -->
+        <!-- E. ALUR LATIHAN SIMULASI                     -->
         <!-- ============================================ -->
         <div class="materi-section">
             <h2 class="materi-section-title">
-                <span class="section-icon">⚡</span> E. Sistem Tingkat Kesulitan
+                <span class="section-icon">⚡</span> E. Alur Latihan Simulasi
             </h2>
             <p>
-                Sebelum memulai simulasi, kamu akan diminta memilih <strong>tingkat kesulitan</strong>. Tingkat ini menentukan seberapa banyak bantuan yang kamu dapatkan saat mengerjakan soal:
+                Ketika kamu memulai <strong>Latihan Simulasi</strong>, kamu akan mengerjakan <strong>10 soal berjenjang</strong> yang disusun dari 4 level berbeda. Setiap level merepresentasikan materi yang semakin kompleks, dan soal disajikan secara <strong>berurutan</strong> dari level terendah ke tertinggi.
             </p>
+
+            <!-- Komposisi Soal -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">1. Komposisi Soal</h3>
+            <p>Setiap simulasi terdiri dari 10 soal dengan komposisi berikut:</p>
 
             <div class="difficulty-cards">
                 <div class="diff-card easy">
                     <div class="diff-emoji">🟢</div>
-                    <h4>Mudah</h4>
-                    <p>Petunjuk langsung dimunculkan di awal sebelum kamu mulai mengerjakan. Cocok untuk pemula yang baru pertama kali belajar agar memiliki panduan terarah saat belajar pemrograman.</p>
+                    <h4>Level 1</h4>
+                    <p><strong>2 soal</strong> — Output, teks, dan input dasar. Fokus pada operasi aritmatika langsung dan penggunaan print serta input sederhana.</p>
                 </div>
                 <div class="diff-card medium">
                     <div class="diff-emoji">🟡</div>
-                    <h4>Sedang</h4>
-                    <p>Petunjuk diberikan secara bertahap satu per satu setiap kali kamu gagal menjawab. Cocok untuk menguji pemahaman dengan mencoba sendiri terlebih dahulu sebelum dibantu.</p>
+                    <h4>Level 2</h4>
+                    <p><strong>2 soal</strong> — Variabel dan operasi data. Mulai menggunakan variabel untuk menyimpan dan mengolah informasi sebelum ditampilkan.</p>
+                </div>
+                <div class="diff-card advanced">
+                    <div class="diff-emoji">🟠</div>
+                    <h4>Level 3</h4>
+                    <p><strong>3 soal</strong> — Percabangan dan logika. Menggunakan struktur if/else untuk membuat keputusan berdasarkan kondisi tertentu.</p>
                 </div>
                 <div class="diff-card hard">
                     <div class="diff-emoji">🔴</div>
-                    <h4>Sulit</h4>
-                    <p>Mode ujian mandiri tanpa petunjuk sistem sama sekali. Kamu harus mengandalkan pemahaman sendiri. Cocok untuk yang ingin benar-benar menguji kemampuannya.</p>
+                    <h4>Level 4</h4>
+                    <p><strong>3 soal</strong> — Perulangan dan kombinasi. Menggunakan loop serta menggabungkan seluruh konsep yang telah dipelajari sebelumnya.</p>
                 </div>
             </div>
+
+            <!-- Sistem Timer -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">2. Sistem Timer</h3>
+            <p>Setiap soal memiliki <strong>batas waktu</strong> yang berbeda sesuai dengan tingkat kesulitannya:</p>
+
+            <table class="operator-table" style="margin-top: 0.75rem;">
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>Batas Waktu</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong style="color: #4ade80;">Level 1</strong></td>
+                        <td>1,5 menit</td>
+                        <td>Soal dasar, waktu cukup untuk berpikir dan menyusun</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: #fbbf24;">Level 2</strong></td>
+                        <td>4 menit</td>
+                        <td>Lebih kompleks, butuh waktu untuk menyusun variabel</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: #f97316;">Level 3</strong></td>
+                        <td>5 menit</td>
+                        <td>Percabangan membutuhkan pertimbangan logika lebih</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: #f87171;">Level 4</strong></td>
+                        <td>6 menit</td>
+                        <td>Soal paling kompleks dengan kombinasi konsep</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box warning" style="margin-top: 1rem;">
+                <div class="concept-icon">⏰</div>
+                <div class="concept-text">
+                    <strong>Perhatikan Timer!</strong>
+                    <p>Jika waktu habis sebelum kamu mengumpulkan jawaban, soal tersebut otomatis dicatat sebagai <strong>tidak terjawab</strong> dan kamu akan lanjut ke soal berikutnya.</p>
+                </div>
+            </div>
+
+            <!-- Mekanisme Pengerjaan -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">3. Mekanisme Pengerjaan</h3>
+            <p>Saat mengerjakan setiap soal, kamu memiliki beberapa opsi:</p>
+
+            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+                <li>✅ <strong>Kumpulkan</strong> — Mengumpulkan jawaban untuk dievaluasi. Jika salah, kamu bisa memperbaiki dan mencoba lagi selama timer belum habis.</li>
+                <li>▶️ <strong>Jalankan</strong> — Menguji coba programmu tanpa mengumpulkan jawaban. Gunakan ini untuk memeriksa output sebelum dikumpulkan.</li>
+                <li>⏭️ <strong>Skip</strong> — Melewati soal jika merasa tidak bisa menjawab. Soal dicatat sebagai dilewati.</li>
+                <li>🗑️ <strong>Bersihkan</strong> — Menghapus semua blok di workspace untuk memulai dari awal.</li>
+            </ul>
+
+            <!-- Petunjuk & Varian -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">4. Petunjuk dan Variasi Soal</h3>
+            <p>
+                Setiap soal dilengkapi dengan <strong>petunjuk</strong> yang ditampilkan di bawah teks soal untuk membantumu berpikir ke arah yang benar. Petunjuk bersifat panduan berpikir, bukan jawaban langsung.
+            </p>
+            <p style="margin-top: 0.75rem;">
+                Selain itu, setiap slot soal memiliki beberapa <strong>varian</strong> yang dipilih secara acak setiap kali simulasi dimuat. Artinya, kamu bisa mendapatkan soal yang berbeda setiap kali mengulangi simulasi — membuat latihan tetap bervariasi dan menantang!
+            </p>
+
+            <!-- Evaluasi Akhir -->
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">5. Evaluasi Akhir</h3>
+            <p>
+                Setelah menyelesaikan seluruh 10 soal, kamu akan melihat <strong>halaman evaluasi</strong> yang menampilkan:
+            </p>
+            <ul style="margin-top: 0.5rem; line-height: 1.8;">
+                <li>📊 <strong>Skor keseluruhan</strong> dalam persentase</li>
+                <li>✅ Jumlah jawaban <strong>benar</strong>, ⏰ <strong>waktu habis</strong>, dan ❌ <strong>belum benar</strong></li>
+                <li>📈 <strong>Breakdown per level</strong> — melihat performa di setiap tingkat</li>
+                <li>📋 <strong>Detail per soal</strong> — status dan waktu pengerjaan setiap soal</li>
+                <li>🕐 <strong>Total waktu pengerjaan</strong> keseluruhan simulasi</li>
+            </ul>
 
             <div class="concept-box" style="margin-top: 1rem;">
                 <div class="concept-icon">💡</div>
                 <div class="concept-text">
-                    <strong>Tips Memilih Kesulitan</strong>
-                    <p>Jika kamu baru pertama kali belajar pemrograman, mulailah dari tingkat <strong>Mudah</strong>. Setelah merasa percaya diri, naikkan ke Sedang, lalu Sulit. Tidak ada yang salah dengan memulai dari awal!</p>
+                    <strong>Tips Simulasi</strong>
+                    <p>Pelajari setiap level materi terlebih dahulu sebelum memulai simulasi. Gunakan tombol <strong>▶️ Jalankan</strong> untuk menguji programmu sebelum mengumpulkan jawaban, dan manfaatkan petunjuk yang diberikan untuk mengarahkan pola pikirmu!</p>
                 </div>
             </div>
         </div>

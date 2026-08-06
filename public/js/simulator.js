@@ -66,7 +66,6 @@ const PythonSimulator = {
         }
 
         outputContent.innerHTML = '';
-        this.addOutput('🚀 Memulai simulasi dengan Pyodide (Lokal)...', 'info');
 
         try {
             if (!this.pyodide) {
@@ -141,12 +140,12 @@ sys.settrace(trace_limit)
             this.addOutput(`✅ Pyodide ${this.pyodide.version} siap!`, 'success');
 
             // === PATCH PENTING untuk fungsi input() ===
-            // Mengganti fungsi input() bawaan Python dengan prompt() dari browser
-            // agar program interaktif dapat berjalan.
+            // Menggunakan customPythonInput dari JS (standalone function)
+            // agar echo input muncul di console output seperti terminal asli.
             this.addOutput('ℹ️ Menyiapkan environment interaktif...', 'info');
             this.pyodide.runPython(`
-from js import prompt
-__builtins__.input = prompt
+from js import customPythonInput
+__builtins__.input = customPythonInput
             `);
             this.addOutput('✅ Environment siap.', 'success');
 
@@ -173,6 +172,11 @@ __builtins__.input = prompt
             line.style.fontFamily = "'Fira Code', monospace";
             line.style.color = "#e0e0e0";
             line.style.paddingLeft = "5px";
+        } else if (type === 'input-echo') {
+            // Tampilan input echo: prompt + nilai input user berwarna cyan
+            line.style.fontFamily = "'Fira Code', monospace";
+            line.style.paddingLeft = "5px";
+            line.innerHTML = `<span style="color:#e0e0e0">${this.escapeHtml(text)}</span>`;
         } else {
             // Tampilan pesan sistem (info/error), timestamp dihilangkan
             const icons = {
@@ -206,7 +210,7 @@ __builtins__.input = prompt
         if (!this.isRunning) return; // Prevent multiple calls
         this.isRunning = false;
         
-        this.addOutput('✨ Simulasi selesai!', 'info');
+
 
         // Panggil evaluasi jika mode submit aktif
         if (this.isSubmit && this.lastStdout !== undefined) {
@@ -243,7 +247,7 @@ __builtins__.input = prompt
 
         let testOutput = "";
 
-        // Simpan fungsi stdout asli
+        // Simpan fungsi asli
         const originalStdoutWrite = window.PythonSimulator.addOutputFromPython;
         
         try {
@@ -258,7 +262,7 @@ __builtins__.input = prompt
             window.mockInputsArray = inputsArray;
             window.mockInputIndex = 0;
             
-            // Timpa fungsi input bawaan Python
+            // Timpa fungsi input bawaan Python dengan mock (tanpa echo)
             this.pyodide.runPython(`
 from js import window
 def mock_input(prompt_text=""):
@@ -280,10 +284,10 @@ __builtins__.input = mock_input
             // Kembalikan stdout aslinya
             window.PythonSimulator.addOutputFromPython = originalStdoutWrite;
             
-            // Kembalikan input aslinya ke prompt browser
+            // Kembalikan input ke customPythonInput (dengan echo ke console)
             this.pyodide.runPython(`
-from js import prompt
-__builtins__.input = prompt
+from js import customPythonInput
+__builtins__.input = customPythonInput
             `);
         }
 
@@ -303,3 +307,28 @@ __builtins__.input = prompt
 };
 
 window.PythonSimulator = PythonSimulator;
+
+/**
+ * Standalone function untuk menggantikan input() Python.
+ * Menampilkan browser prompt, lalu echo prompt+nilai ke console output.
+ * Dibuat sebagai standalone function (bukan method) agar Pyodide
+ * bisa memanggilnya langsung tanpa masalah binding `this`.
+ */
+window.customPythonInput = function(promptText) {
+    if (promptText === undefined || promptText === null) {
+        promptText = "";
+    }
+
+    // Flush stream buffer dulu — jika ada teks print() sebelumnya yang belum di-flush
+    PythonSimulator.flushStreamBuffer();
+    
+    // Tampilkan browser prompt dialog
+    const result = window.prompt(promptText);
+    const inputValue = (result !== null) ? result : "";
+    
+    // Echo prompt + input value ke console output
+    const echoText = promptText + inputValue;
+    PythonSimulator.addOutput(echoText, 'input-echo');
+    
+    return inputValue;
+};
