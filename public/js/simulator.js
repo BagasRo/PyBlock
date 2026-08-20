@@ -215,7 +215,7 @@ __builtins__.input = customPythonInput
         // Panggil evaluasi jika mode submit aktif
         if (this.isSubmit && this.lastStdout !== undefined) {
             if (window.simulationManager) {
-                // Mode Simulasi 10 soal
+                // Mode Simulasi 8 soal (chain-based)
                 window.simulationManager.evaluate(this.lastStdout);
             } else if (window.levelManager) {
                 // Mode Level lama
@@ -326,9 +326,9 @@ window.customPythonInput = function(promptText) {
     const result = window.prompt(promptText);
     const inputValue = (result !== null) ? result : "";
     
-    // Echo prompt + input value ke console output
-    const echoText = promptText + inputValue;
-    PythonSimulator.addOutput(echoText, 'input-echo');
+    // (Echo prompt dan input dinonaktifkan agar tidak ganda di output)
+    // const echoText = promptText + inputValue;
+    // PythonSimulator.addOutput(echoText, 'input-echo');
     
     return inputValue;
 };

@@ -1,11 +1,12 @@
 /**
- * Simulation Manager — Mode Simulasi 10 Soal dengan Timer
- * Mengelola alur simulasi: memuat soal, timer, auto-skip, dan evaluasi akhir.
+ * Simulation Manager — Mode Simulasi 8 Soal Berantai (Chain-Based) dengan Timer
+ * Mengelola alur simulasi: memuat soal berantai per level, timer, auto-skip, dan evaluasi akhir.
+ * Workspace TIDAK dibersihkan antar soal — blok terakumulasi (scaffolding).
  */
 class SimulationManager {
     constructor() {
-        this.allQuestions = [];     // 10 soal yang sudah dipilih & diurutkan
-        this.currentIndex = 0;     // Index soal saat ini (0-9)
+        this.allQuestions = [];     // 8 soal berantai yang sudah dipilih & diurutkan
+        this.currentIndex = 0;     // Index soal saat ini (0-7)
         this.results = [];         // Hasil per soal: { level, status, timeSpent, questionId }
         this.workspace = null;
         this.timerInterval = null;
@@ -14,12 +15,12 @@ class SimulationManager {
         this.isFinished = false;
 
         // Waktu per level (dalam detik)
-        // Level 1: 1,5 menit, Level 2: 4 menit, Level 3: 5 menit, Level 4: 6 menit
+        // Level 1: 2 menit, Level 2: 4 menit, Level 3: 6 menit, Level 4: 7 menit
         this.timeLimits = {
-            1: 90,
+            1: 120,
             2: 4 * 60,
-            3: 5 * 60,
-            4: 6 * 60
+            3: 6 * 60,
+            4: 7 * 60
         };
     }
 
@@ -31,10 +32,10 @@ class SimulationManager {
     }
 
     /**
-     * Memuat soal dari semua level secara URUT (Soal 1-10).
-     * Setiap slot soal bisa memiliki beberapa varian (A, B, dst.)
-     * Sistem memilih 1 varian secara acak per slot.
-     * Komposisi: 2 soal L1, 2 soal L2, 3 soal L3, 3 soal L4 = 10 soal
+     * Memuat soal berantai (chain-based) dari semua level secara URUT.
+     * Setiap level mengembalikan array of chains. Sistem memilih 1 chain
+     * secara acak per level, lalu memuat seluruh soal dalam chain tersebut.
+     * Komposisi: 2 soal per level × 4 level = 8 soal.
      */
     async loadAllQuestions() {
         const levels = [1, 2, 3, 4];
@@ -44,13 +45,15 @@ class SimulationManager {
         for (const level of levels) {
             try {
                 const module = await import(`/js/problems/level${level}.js?v=${Date.now()}`);
-                const questionSlots = module.default(); // Array of slots, each slot = array of variants
+                const chains = module.default(); // Array of chains, each chain = array soal berurutan
 
-                // Iterasi setiap slot secara URUT, pilih 1 varian acak per slot
-                for (const variants of questionSlots) {
-                    const selected = variants[Math.floor(Math.random() * variants.length)];
-                    selected._level = level; // Tandai level asal
-                    this.allQuestions.push(selected);
+                // Pilih 1 chain secara acak per level
+                const selectedChain = chains[Math.floor(Math.random() * chains.length)];
+
+                // Muat semua soal dalam chain tersebut secara berurutan
+                for (const question of selectedChain) {
+                    question._level = level; // Tandai level asal
+                    this.allQuestions.push(question);
                 }
             } catch (error) {
                 console.error(`Gagal memuat soal level ${level}:`, error);
@@ -94,22 +97,16 @@ class SimulationManager {
         this.renderProgress();
         this.renderQuestion(question, level);
 
-        // Bersihkan workspace
-        if (this.workspace) {
+        // Mode chain-based: workspace TIDAK dibersihkan antar soal (kumulatif)
+        // Hanya bersihkan workspace untuk soal pertama (awal sesi)
+        if (this.workspace && this.currentIndex === 0) {
             this.workspace.clear();
-            if (question.initialWorkspace) {
-                try {
-                    Blockly.serialization.workspaces.load(question.initialWorkspace, this.workspace);
-                } catch (e) {
-                    console.error("Gagal memuat blok awal:", e);
-                }
-            }
         }
 
         // Bersihkan output
         const outputContent = document.getElementById('outputContent');
         if (outputContent) {
-            outputContent.innerHTML = `<div class="output-line info"><span class="timestamp">[System]</span> Soal ${this.currentIndex + 1}/10 dimuat. Susun blok dan klik Kumpulkan untuk menjawab.</div>`;
+            outputContent.innerHTML = `<div class="output-line info"><span class="timestamp">[System]</span> Soal ${this.currentIndex + 1}/${this.allQuestions.length} dimuat. Susun blok dan klik Kumpulkan untuk menjawab.</div>`;
         }
 
         // Mulai timer
@@ -177,7 +174,7 @@ class SimulationManager {
     renderQuestion(question, level) {
         const levelTitle = document.getElementById('levelTitle');
         if (levelTitle) {
-            levelTitle.innerHTML = `<span class="sim-level-badge level-${level}">Level ${level}</span> Soal ${this.currentIndex + 1}/10`;
+            levelTitle.innerHTML = `<span class="sim-level-badge level-${level}">Level ${level}</span> Soal ${this.currentIndex + 1}/${this.allQuestions.length}`;
         }
 
         const taskText = document.getElementById('taskText');
@@ -289,46 +286,12 @@ class SimulationManager {
         this.results[this.currentIndex].status = 'timeout';
         this.results[this.currentIndex].timeSpent = timeSpent;
 
-        // Tampilkan notifikasi timeout
-        this.showTimeoutNotification();
+        // Langsung evaluasi, tidak lanjut
+        this.finishSimulation(true, 'timeout');
     }
 
     /**
-     * Tampilkan notifikasi waktu habis lalu pindah soal
-     */
-    showTimeoutNotification() {
-        const modal = document.getElementById('evaluationModal');
-        const title = document.getElementById('evalTitle');
-        const message = document.getElementById('evalMessage');
-        const btn = document.getElementById('evalBtnNext');
-
-        if (modal && title && message && btn) {
-            title.innerHTML = '⏰ Waktu Habis!';
-            title.style.color = '#f59e0b';
-
-            const isLast = this.currentIndex + 1 >= this.allQuestions.length;
-            message.innerHTML = `
-                <div style="background: rgba(245, 158, 11, 0.15); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 0 8px 8px 0; margin-bottom: 1rem; text-align: left; color: rgba(255,255,255,0.9);">
-                    Waktu untuk soal ini telah habis. Soal ini dicatat sebagai <strong>tidak terjawab</strong>.
-                </div>
-                ${isLast ? '<p>Ini adalah soal terakhir. Lihat hasil evaluasi akhir.</p>' : `<p>Lanjut ke soal berikutnya (Soal ${this.currentIndex + 2}/10).</p>`}
-            `;
-            btn.innerHTML = isLast ? '📊 Lihat Hasil Evaluasi' : 'Lanjut ke Soal Berikutnya ➡️';
-            btn.onclick = () => {
-                this.closeModal('evaluationModal');
-                this.currentIndex++;
-                if (isLast) {
-                    this.finishSimulation();
-                } else {
-                    this.loadQuestion();
-                }
-            };
-            this.openModal('evaluationModal');
-        }
-    }
-
-    /**
-     * Lewati soal saat ini (Skip)
+     * Menyerah dari soal saat ini (sebelumnya Skip)
      */
     skipQuestion() {
         if (this.isFinished || this.currentIndex >= this.allQuestions.length) return;
@@ -336,42 +299,11 @@ class SimulationManager {
         this.stopTimer();
         
         const timeSpent = Math.round((Date.now() - this.questionStartTime) / 1000);
-        this.results[this.currentIndex].status = 'skipped';
+        this.results[this.currentIndex].status = 'surrendered';
         this.results[this.currentIndex].timeSpent = timeSpent;
         
-        // Show skip notification
-        this.showSkipNotification();
-    }
-
-    showSkipNotification() {
-        const modal = document.getElementById('evaluationModal');
-        const title = document.getElementById('evalTitle');
-        const message = document.getElementById('evalMessage');
-        const btn = document.getElementById('evalBtnNext');
-
-        if (modal && title && message && btn) {
-            title.innerHTML = '⏭️ Soal Dilewati';
-            title.style.color = '#f59e0b';
-
-            const isLast = this.currentIndex + 1 >= this.allQuestions.length;
-            message.innerHTML = `
-                <div style="background: rgba(245, 158, 11, 0.15); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 0 8px 8px 0; margin-bottom: 1rem; text-align: left; color: rgba(255,255,255,0.9);">
-                    Kamu telah melewati soal ini. Soal dicatat sebagai <strong>tidak terjawab (skipped)</strong>.
-                </div>
-                ${isLast ? '<p>Ini adalah soal terakhir. Lihat hasil evaluasi akhir.</p>' : `<p>Lanjut ke soal berikutnya (Soal ${this.currentIndex + 2}/10).</p>`}
-            `;
-            btn.innerHTML = isLast ? '📊 Lihat Hasil Evaluasi' : 'Lanjut ke Soal Berikutnya ➡️';
-            btn.onclick = () => {
-                this.closeModal('evaluationModal');
-                this.currentIndex++;
-                if (isLast) {
-                    this.finishSimulation();
-                } else {
-                    this.loadQuestion();
-                }
-            };
-            this.openModal('evaluationModal');
-        }
+        // Langsung evaluasi, tidak lanjut
+        this.finishSimulation(true, 'surrendered');
     }
 
     /**
@@ -434,7 +366,7 @@ class SimulationManager {
                     🎉 Kerja bagus! Jawaban kamu tepat.
                 </div>
                 <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Waktu pengerjaan: <strong>${mins}m ${secs}s</strong></p>
-                ${isLast ? '<p>Ini adalah soal terakhir. Lihat hasil evaluasi akhir!</p>' : `<p>Lanjut ke soal berikutnya (Soal ${this.currentIndex + 2}/10).</p>`}
+                ${isLast ? '<p>Ini adalah soal terakhir. Lihat hasil evaluasi akhir!</p>' : `<p>Lanjut ke soal berikutnya (Soal ${this.currentIndex + 2}/${this.allQuestions.length}).</p>`}
             `;
             btn.innerHTML = isLast ? '📊 Lihat Hasil Evaluasi' : 'Lanjut ke Soal Berikutnya ➡️';
             btn.onclick = () => {
@@ -486,11 +418,11 @@ class SimulationManager {
     }
 
     /**
-     * Selesai simulasi — tampilkan hasil evaluasi akhir
+     * Mengakhiri simulasi dan menampilkan hasil evaluasi akhir.
      */
-    finishSimulation() {
-        this.stopTimer();
+    finishSimulation(forced = false, reason = '') {
         this.isFinished = true;
+        this.stopTimer();
 
         // Hitung statistik
         const totalCorrect = this.results.filter(r => r.status === 'correct').length;
@@ -513,13 +445,13 @@ class SimulationManager {
         const totalSecs = totalTimeSpent % 60;
 
         // Render halaman evaluasi
-        this.renderEvaluation(score, totalCorrect, totalTimeout, totalUnanswered, totalQuestions, levelBreakdown, totalMins, totalSecs);
+        this.renderEvaluation(score, totalCorrect, totalTimeout, totalUnanswered, totalQuestions, levelBreakdown, totalMins, totalSecs, forced, reason);
     }
 
     /**
      * Render halaman evaluasi akhir (full-page overlay)
      */
-    renderEvaluation(score, totalCorrect, totalTimeout, totalUnanswered, totalQuestions, levelBreakdown, totalMins, totalSecs) {
+    renderEvaluation(score, totalCorrect, totalTimeout, totalUnanswered, totalQuestions, levelBreakdown, totalMins, totalSecs, forced = false, reason = '') {
         // Sembunyikan container utama
         const mainContainer = document.querySelector('.container');
         const header = document.querySelector('.header');
@@ -609,8 +541,8 @@ class SimulationManager {
                             </thead>
                             <tbody>
                                 ${this.results.map((r, i) => {
-                                    const statusIcon = r.status === 'correct' ? '✅ Benar' : r.status === 'timeout' ? '⏰ Waktu Habis' : r.status === 'skipped' ? '⏭️ Dilewati' : '❌ Belum Benar';
-                                    const statusClass = r.status === 'correct' ? 'status-correct' : r.status === 'timeout' ? 'status-timeout' : 'status-wrong';
+                                    const statusIcon = r.status === 'correct' ? '✅ Benar' : r.status === 'timeout' ? '⏰ Waktu Habis' : r.status === 'surrendered' ? '🏳️ Menyerah' : r.status === 'skipped' ? '⏭️ Dilewati' : '❌ Belum Dijawab';
+                                    const statusClass = r.status === 'correct' ? 'status-correct' : (r.status === 'timeout' || r.status === 'surrendered' || r.status === 'wrong') ? 'status-wrong' : 'status-wrong';
                                     const mins = Math.floor(r.timeSpent / 60);
                                     const secs = r.timeSpent % 60;
                                     const timeStr = r.timeSpent > 0 ? `${mins}m ${secs}s` : '-';
@@ -639,6 +571,7 @@ class SimulationManager {
                         <h3>💪 Tetap Semangat!</h3>
                         <p>Jangan menyerah! Coba pelajari kembali materi dari awal, lalu ulangi simulasi ini. Latihan yang konsisten akan membuahkan hasil.</p>
                     `}
+                    ${forced ? this.getAdviceHTML(reason, this.allQuestions[this.currentIndex]?._level || 1) : ''}
                 </div>
 
                 <div class="eval-actions">
@@ -679,6 +612,24 @@ class SimulationManager {
             modal.classList.remove('active');
             setTimeout(() => modal.style.display = 'none', 300);
         }
+    }
+
+    getAdviceHTML(reason, level) {
+        let title = reason === 'timeout' ? '⏰ Waktu Habis!' : '🏳️ Kamu Menyerah';
+        let adviceText = '';
+        switch(level) {
+            case 1: adviceText = 'Kamu diharuskan untuk mempelajari kembali materi Output dan Input (Print & Input).'; break;
+            case 2: adviceText = 'Kamu diharuskan untuk mempelajari kembali materi Variabel dan Pengelolaan Data.'; break;
+            case 3: adviceText = 'Kamu diharuskan untuk mempelajari kembali materi Percabangan (If/Else).'; break;
+            case 4: adviceText = 'Kamu diharuskan untuk mempelajari kembali materi Perulangan (For/While Loops).'; break;
+            default: adviceText = 'Pelajari kembali materi di menu Pembelajaran.';
+        }
+        return `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; border-radius: 8px; text-align: left;">
+                <h4 style="color: #fca5a5; margin-bottom: 0.5rem; margin-top: 0; font-size: 1.1rem;">${title}</h4>
+                <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.95rem;">Kamu terhenti di Level ${level}. ${adviceText}</p>
+            </div>
+        `;
     }
 }
 
