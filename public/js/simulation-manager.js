@@ -527,6 +527,20 @@ class SimulationManager {
                     </div>
                 </div>
 
+                <div class="eval-message-box ${score >= 80 ? 'excellent' : score >= 50 ? 'good' : 'needs-work'}">
+                    ${score >= 80 ? `
+                        <h3>🏆 Luar Biasa!</h3>
+                        <p>Kamu menunjukkan pemahaman yang sangat baik tentang pemrograman Python! Terus pertahankan dan kembangkan kemampuanmu.</p>
+                    ` : score >= 50 ? `
+                        <h3>👍 Cukup Baik!</h3>
+                        <p>Kamu sudah menguasai beberapa konsep dasar. Coba pelajari kembali materi yang terkait dengan soal yang belum berhasil dijawab.</p>
+                    ` : `
+                        <h3>💪 Tetap Semangat!</h3>
+                        <p>Jangan menyerah! Coba pelajari kembali materi dari awal, lalu ulangi simulasi ini. Latihan yang konsisten akan membuahkan hasil.</p>
+                    `}
+                    ${forced ? this.getAdviceHTML(reason, this.allQuestions[this.currentIndex]?._level || 1) : ''}
+                </div>
+
                 <div class="eval-detail-section">
                     <h2>📋 Detail Per Soal</h2>
                     <div class="eval-table-wrapper">
@@ -558,20 +572,6 @@ class SimulationManager {
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                <div class="eval-message-box ${score >= 80 ? 'excellent' : score >= 50 ? 'good' : 'needs-work'}">
-                    ${score >= 80 ? `
-                        <h3>🏆 Luar Biasa!</h3>
-                        <p>Kamu menunjukkan pemahaman yang sangat baik tentang pemrograman Python! Terus pertahankan dan kembangkan kemampuanmu.</p>
-                    ` : score >= 50 ? `
-                        <h3>👍 Cukup Baik!</h3>
-                        <p>Kamu sudah menguasai beberapa konsep dasar. Coba pelajari kembali materi yang terkait dengan soal yang belum berhasil dijawab.</p>
-                    ` : `
-                        <h3>💪 Tetap Semangat!</h3>
-                        <p>Jangan menyerah! Coba pelajari kembali materi dari awal, lalu ulangi simulasi ini. Latihan yang konsisten akan membuahkan hasil.</p>
-                    `}
-                    ${forced ? this.getAdviceHTML(reason, this.allQuestions[this.currentIndex]?._level || 1) : ''}
                 </div>
 
                 <div class="eval-actions">

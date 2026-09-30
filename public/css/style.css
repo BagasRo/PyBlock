@@ -305,7 +305,7 @@ body {
 .modal-content {
     background: var(--bg-panel);
     width: 700px;
-    max-width: 90%;
+    max-width: 92%;
     max-height: 85vh;
     border-radius: 16px;
     padding: 25px;
@@ -318,6 +318,21 @@ body {
 
 .modal.active .modal-content {
     transform: scale(1);
+}
+
+/* Modal error responsive — isi pesan mudah terbaca di HP */
+#evalMessage pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+#evalMessage {
+    font-size: 1rem;
+    line-height: 1.6;
+    text-align: left;
 }
 
 .modal-header {
@@ -755,13 +770,26 @@ body {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 2rem;
+    /* Sticky nav — tetap terlihat saat halaman di-scroll */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0.6rem 0;
+    background: rgba(26, 26, 46, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .materi-top-nav a {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(30, 41, 59, 0.85);
     border: 1px solid var(--border);
     padding: 8px 16px;
     border-radius: 8px;
@@ -771,10 +799,12 @@ body {
     font-size: 0.9rem;
     backdrop-filter: blur(10px);
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 .materi-top-nav a:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.12);
+    border-color: var(--accent);
     transform: translateY(-2px);
 }
 
@@ -1748,6 +1778,36 @@ body:has(.sim-progress-bar) .header {
 @media (max-width: 768px) {
     .materi-hub-container, .materi-page-wrapper {
         padding: 1rem;
+    }
+
+    /* Sticky nav: sesuaikan margin dengan padding halaman 1rem */
+    .materi-top-nav {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Modal error: lebih compact dan mudah dibaca di HP */
+    .modal-content {
+        max-width: 96%;
+        max-height: 90vh;
+        padding: 16px 14px;
+        border-radius: 12px;
+        margin: 0 8px;
+    }
+
+    #evalMessage pre {
+        font-size: 0.78rem;
+        padding: 8px !important;
+    }
+
+    #evalMessage {
+        font-size: 0.92rem;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1rem;
     }
     
     .materi-hub-title {
