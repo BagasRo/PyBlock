@@ -46,6 +46,36 @@ const BlocklyConfig = {
             sounds: true
         });
 
+        // Berikan ruang scroll ekstra di bagian bawah dan kanan agar blok paling bawah
+        // tidak terpotong dan dialog/mutator memiliki ruang kerja yang leluasa
+        try {
+            const metricsMgr = this.workspace.getMetricsManager();
+            if (metricsMgr) {
+                const origGetScrollMetrics = metricsMgr.getScrollMetrics.bind(metricsMgr);
+                metricsMgr.getScrollMetrics = function(opt_getReal) {
+                    const metrics = origGetScrollMetrics(opt_getReal);
+                    if (metrics) {
+                        metrics.height += 300;
+                        metrics.width += 200;
+                    }
+                    return metrics;
+                };
+            }
+        } catch (e) {
+            console.warn("Gagal set custom scroll metrics:", e);
+        }
+
+        // Auto-resize workspace ketika container berubah ukuran
+        if (window.ResizeObserver) {
+            const ro = new ResizeObserver(() => {
+                if (this.workspace && typeof Blockly !== 'undefined' && Blockly.svgResize) {
+                    Blockly.svgResize(this.workspace);
+                }
+            });
+            const blocklyDiv = document.getElementById('blocklyDiv');
+            if (blocklyDiv) ro.observe(blocklyDiv);
+        }
+
         // Definisikan custom block setelah workspace siap
         this.defineCustomBlocks();
 
@@ -89,6 +119,18 @@ const BlocklyConfig = {
                     }
                 },
                 { "kind": "block", "type": "controls_forEach", "fields": { "VAR": "item" } },
+                {
+                    "kind": "block",
+                    "type": "loop_range",
+                    "fields": { "VAR": "i", "MODE": "START_STOP" },
+                    "inputs": {
+                        "START": { "shadow": { "type": "math_number", "fields": { "NUM": 1 } } },
+                        "STOP": { "shadow": { "type": "math_number", "fields": { "NUM": 6 } } }
+                    }
+                },
+                { "kind": "block", "type": "loop_doWhile", "fields": { "MODE": "WHILE" } },
+                { "kind": "block", "type": "loop_forEachChar", "fields": { "VAR": "k" } },
+                { "kind": "block", "type": "loop_forEachIndex", "fields": { "INDEX": "i", "ITEM": "item" } },
                 { "kind": "block", "type": "controls_flow_statements" }
             ]
         };
@@ -248,6 +290,57 @@ const BlocklyConfig = {
         };
     },
 
+    // Definisi Toolbox berdasarkan blok_tersedia pada data soal (fallback ke level)
+    getToolboxForQuestion: function(blokTersedia, level = 1) {
+        if (!blokTersedia) {
+            return this.getToolboxForLevel(level);
+        }
+        if (blokTersedia.kind === 'categoryToolbox' && Array.isArray(blokTersedia.contents)) {
+            return blokTersedia;
+        }
+
+        const fullToolbox = this.getToolboxForLevel(4);
+        const allCategories = fullToolbox.contents || [];
+
+        if (Array.isArray(blokTersedia)) {
+            const allowedNames = blokTersedia.map(c => String(c).toLowerCase());
+            const filtered = allCategories.filter(cat =>
+                allowedNames.includes(String(cat.name).toLowerCase())
+            );
+            if (filtered.length > 0) {
+                return {
+                    "kind": "categoryToolbox",
+                    "contents": filtered
+                };
+            }
+        }
+
+        if (typeof blokTersedia === 'object' && Array.isArray(blokTersedia.categories)) {
+            const allowedNames = blokTersedia.categories.map(c => String(c).toLowerCase());
+            const blockFilterMap = blokTersedia.blocks || {};
+            const filtered = allCategories
+                .filter(cat => allowedNames.includes(String(cat.name).toLowerCase()))
+                .map(cat => {
+                    const allowedBlocks = blockFilterMap[cat.name];
+                    if (Array.isArray(allowedBlocks) && Array.isArray(cat.contents)) {
+                        return {
+                            ...cat,
+                            contents: cat.contents.filter(b => allowedBlocks.includes(b.type))
+                        };
+                    }
+                    return cat;
+                });
+            if (filtered.length > 0) {
+                return {
+                    "kind": "categoryToolbox",
+                    "contents": filtered
+                };
+            }
+        }
+
+        return this.getToolboxForLevel(level);
+    },
+
     // Toolbox lengkap untuk mode Sandbox (semua kategori)
     getFullToolbox: function() {
         return this.getToolboxForLevel(4);
@@ -271,6 +364,11 @@ const BlocklyConfig = {
                     'colourPrimary': '#5CA65C',
                     'colourSecondary': '#3D853D',
                     'colourTertiary': '#2C632C'
+                },
+                'loop_flow_blocks': {
+                    'colourPrimary': '#DC2626',
+                    'colourSecondary': '#B91C1C',
+                    'colourTertiary': '#991B1B'
                 },
                 'math_blocks': {
                     'colourPrimary': '#5C68A6',
@@ -351,6 +449,56 @@ const BlocklyConfig = {
 
         // Helper untuk kompatibilitas versi Blockly (v10+ menggunakan .forBlock)
         const generator = Blockly.Python.forBlock || Blockly.Python;
+        const loopTypes = new Set([
+            'controls_repeat',
+            'controls_repeat_ext',
+            'controls_whileUntil',
+            'controls_for',
+            'controls_forEach',
+            'loop_range',
+            'loop_doWhile',
+            'loop_forEachChar',
+            'loop_forEachIndex'
+        ]);
+
+        // Daftarkan semua loop kustom ke libraryBlocks resmi Blockly (Blockly v10+)
+        if (typeof Blockly !== 'undefined' && Blockly.libraryBlocks && Blockly.libraryBlocks.loops && Blockly.libraryBlocks.loops.loopTypes) {
+            ['loop_range', 'loop_doWhile', 'loop_forEachChar', 'loop_forEachIndex'].forEach(t => {
+                Blockly.libraryBlocks.loops.loopTypes.add(t);
+            });
+        }
+
+        const defineFlowBlock = function(type, keyword) {
+            Blockly.Blocks[type] = {
+                init: function() {
+                    this.appendDummyInput().appendField(keyword === 'break' ? '⤴ break' : '↪ continue');
+                    this.setPreviousStatement(true, null);
+                    this.setNextStatement(true, null);
+                    this.setStyle('loop_flow_blocks');
+                    this.setColour('#DC2626');
+                    this.setTooltip(keyword === 'break'
+                        ? 'Menghentikan perulangan yang sedang berjalan.'
+                        : 'Melanjutkan ke iterasi berikutnya dalam perulangan.');
+                    this.setOnChange(function() {
+                        let parent = this.getSurroundParent();
+                        let insideLoop = false;
+                        while (parent) {
+                            if (loopTypes.has(parent.type)) {
+                                insideLoop = true;
+                                break;
+                            }
+                            parent = parent.getSurroundParent();
+                        }
+                        if (typeof this.setWarningText === 'function') {
+                            this.setWarningText(insideLoop ? null : 'Blok ini harus berada di dalam perulangan');
+                        }
+                        if (typeof this.setColour === 'function') {
+                            this.setColour(insideLoop ? '#DC2626' : '#EF4444');
+                        }
+                    });
+                }
+            };
+        };
 
         // Block untuk input() -> string
         Blockly.Blocks['python_input'] = {
@@ -360,6 +508,7 @@ const BlocklyConfig = {
                     .appendField('read text');
                 this.setOutput(true, 'String');
                 this.setStyle('io_blocks');
+                this.setOutput(true, ['String', 'Number']);
                 this.setTooltip('Membaca input dari pengguna sebagai teks (string).');
                 this.setHelpUrl('');
             }
@@ -423,6 +572,222 @@ const BlocklyConfig = {
             return [`str(${value})`, g.ORDER_FUNCTION_CALL];
         };
 
+        // Generator controls_for: selalu sertakan step (misal range(1, 6, 1))
+        generator['controls_for'] = function(block, gen) {
+            const g = gen || Blockly.Python;
+            const variableId = block.getFieldValue('VAR');
+            const variable = (typeof g.getVariableName === 'function')
+                ? g.getVariableName(variableId)
+                : (block.getField('VAR') ? block.getField('VAR').getText() : 'i');
+            const from = g.valueToCode(block, 'FROM', g.ORDER_NONE) || '0';
+            const to = g.valueToCode(block, 'TO', g.ORDER_NONE) || '0';
+            const by = g.valueToCode(block, 'BY', g.ORDER_NONE) || '1';
+            const statements = g.statementToCode(block, 'DO') || (g.INDENT || '    ') + 'pass\n';
+
+            if (/^[+-]?\d+$/.test(from) && /^[+-]?\d+$/.test(to) && /^[+-]?\d+$/.test(by)) {
+                const fromNum = Number(from);
+                const toNum = Number(to);
+                const byNum = Math.abs(Number(by)) || 1;
+
+                if (fromNum <= toNum) {
+                    const stopNum = toNum + 1;
+                    return 'for ' + variable + ' in range(' + fromNum + ', ' + stopNum + ', ' + byNum + '):\n' + statements;
+                } else {
+                    const stopNum = toNum - 1;
+                    return 'for ' + variable + ' in range(' + fromNum + ', ' + stopNum + ', -' + byNum + '):\n' + statements;
+                }
+            } else {
+                return 'for ' + variable + ' in range(' + from + ', (' + to + ') + 1, ' + by + '):\n' + statements;
+            }
+        };
+
+        // 1. loop_range: for [var i] in range [mode] do ...
+        Blockly.Blocks['loop_range'] = {
+            init: function() {
+                this.appendDummyInput('HEADER')
+                    .appendField('↻ for')
+                    .appendField(new Blockly.FieldVariable('i'), 'VAR')
+                    .appendField('in range')
+                    .appendField(new Blockly.FieldDropdown([
+                        ['(start, stop)', 'START_STOP'],
+                        ['(stop)', 'STOP'],
+                        ['(start, stop, step)', 'START_STOP_STEP']
+                    ], function(newMode) {
+                        this.getSourceBlock().updateMode(newMode);
+                        return newMode;
+                    }), 'MODE');
+
+                this.appendValueInput('START')
+                    .setCheck('Number')
+                    .appendField('start');
+                this.appendValueInput('STOP')
+                    .setCheck('Number')
+                    .appendField('stop');
+                this.appendValueInput('STEP')
+                    .setCheck('Number')
+                    .appendField('step');
+
+                this.appendStatementInput('DO')
+                    .appendField('do');
+
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setStyle('loop_blocks');
+                this.setTooltip('stop tidak ikut dihitung. Menghasilkan perulangan dengan fungsi range().');
+                this.setHelpUrl('');
+
+                this.updateMode('START_STOP');
+            },
+
+            updateMode: function(mode) {
+                const isStop = (mode === 'STOP');
+                const isStartStopStep = (mode === 'START_STOP_STEP');
+
+                const setVisibleSafe = (input, visible) => {
+                    if (!input) return;
+                    try {
+                        if (typeof input.setVisible === 'function') {
+                            input.setVisible(visible);
+                        } else {
+                            input.visible = visible;
+                        }
+                    } catch (e) {
+                        input.visible = visible;
+                    }
+                };
+
+                setVisibleSafe(this.getInput('START'), !isStop);
+                setVisibleSafe(this.getInput('STOP'), true);
+                setVisibleSafe(this.getInput('STEP'), isStartStopStep);
+
+                if (this.rendered) {
+                    this.render();
+                }
+            },
+
+            saveExtraState: function() {
+                return {
+                    'mode': this.getFieldValue('MODE') || 'START_STOP'
+                };
+            },
+
+            loadExtraState: function(state) {
+                if (state && state.mode) {
+                    this.setFieldValue(state.mode, 'MODE');
+                    this.updateMode(state.mode);
+                }
+            },
+
+            mutationToDom: function() {
+                const container = Blockly.utils.xml.createElement('mutation');
+                container.setAttribute('mode', this.getFieldValue('MODE') || 'START_STOP');
+                return container;
+            },
+
+            domToMutation: function(xmlElement) {
+                const mode = xmlElement.getAttribute('mode') || 'START_STOP';
+                this.setFieldValue(mode, 'MODE');
+                this.updateMode(mode);
+            },
+
+            onchange: function() {
+                const mode = this.getFieldValue('MODE') || 'START_STOP';
+                const startInput = this.getInput('START');
+                if (startInput && ((mode === 'STOP' && startInput.isVisible()) || (mode !== 'STOP' && !startInput.isVisible()))) {
+                    this.updateMode(mode);
+                }
+
+                let warning = null;
+                if (mode === 'START_STOP_STEP') {
+                    const stepBlock = this.getInputTargetBlock('STEP');
+                    if (stepBlock) {
+                        const numField = stepBlock.getField('NUM');
+                        if (numField && Number(numField.getValue()) === 0) {
+                            warning = 'Nilai step tidak boleh bernilai 0!';
+                        }
+                    }
+                }
+                if (typeof this.setWarningText === 'function') {
+                    this.setWarningText(warning);
+                }
+            }
+        };
+
+        // 2. loop_doWhile: do ... [while/until] kondisi
+        Blockly.Blocks['loop_doWhile'] = {
+            init: function() {
+                this.appendDummyInput()
+                    .appendField('↻ do');
+                this.appendStatementInput('DO');
+                this.appendValueInput('CONDITION')
+                    .setCheck('Boolean')
+                    .appendField(new Blockly.FieldDropdown([
+                        ['while', 'WHILE'],
+                        ['until', 'UNTIL']
+                    ]), 'MODE');
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setStyle('loop_blocks');
+                this.setTooltip('Menjalankan isi blok minimal satu kali, lalu mengulang berdasarkan kondisi di akhir.');
+                this.setOnChange(function() {
+                    if (typeof this.setWarningText === 'function') {
+                        this.setWarningText(
+                            this.getInputTargetBlock('CONDITION') ? null : 'Kondisi belum diisi'
+                        );
+                    }
+                });
+                this.setHelpUrl('');
+            }
+        };
+
+        // 3. loop_break & loop_continue (fallback kompatibilitas lama)
+        defineFlowBlock('loop_break', 'break');
+        defineFlowBlock('loop_continue', 'continue');
+
+        // 5. loop_forEachChar: for [var k] in [text] do ...
+        Blockly.Blocks['loop_forEachChar'] = {
+            init: function() {
+                this.appendValueInput('TEXT')
+                    .setCheck('String')
+                    .appendField('↻ for each character')
+                    .appendField(new Blockly.FieldVariable('k'), 'VAR')
+                    .appendField('in text');
+                this.appendStatementInput('DO')
+                    .appendField('do');
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setStyle('loop_blocks');
+                this.setTooltip('Mengulang isi blok untuk setiap karakter (huruf) di dalam teks.');
+                this.setHelpUrl('');
+            }
+        };
+
+        // 6. loop_forEachIndex: for [var i], [var item] in [list] do ...
+        Blockly.Blocks['loop_forEachIndex'] = {
+            init: function() {
+                this.appendValueInput('LIST')
+                    .appendField('↻ for each index')
+                    .appendField(new Blockly.FieldVariable('i'), 'INDEX')
+                    .appendField(',')
+                    .appendField(new Blockly.FieldVariable('item'), 'ITEM')
+                    .appendField('in list');
+                this.appendStatementInput('DO')
+                    .appendField('do');
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setStyle('loop_blocks');
+                this.setTooltip('Mengulang isi blok untuk setiap indeks dan item dalam daftar menggunakan enumerate().');
+                this.setOnChange(function() {
+                    const sameVariable = this.getField('INDEX').getText() === this.getField('ITEM').getText();
+                    if (typeof this.setWarningText === 'function') {
+                        this.setWarningText(sameVariable
+                            ? 'Nama variabel indeks dan item tidak boleh sama'
+                            : null);
+                    }
+                });
+                this.setHelpUrl('');
+            }
+        };
         // Block untuk komentar
         Blockly.Blocks['python_comment'] = {
             init: function() {

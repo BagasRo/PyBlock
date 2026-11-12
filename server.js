@@ -3,8 +3,14 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files dari public folder
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files dari public folder (tanpa cache agresif untuk JS/HTML/CSS agar pembaruan langsung termuat)
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.js') || filePath.endsWith('.html') || filePath.endsWith('.css')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        }
+    }
+}));
 
 // Serve Blockly files dari node_modules
 app.use('/blockly', express.static(path.join(__dirname, 'node_modules/blockly')));
@@ -19,6 +25,11 @@ app.use(express.urlencoded({ extended: true }));
 // Route utama
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Route Panduan Universal
+app.get('/panduan', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'panduan.html'));
 });
 
 // API endpoint untuk menyimpan project

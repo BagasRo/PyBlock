@@ -270,6 +270,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function clearWorkspace(workspace) {
+        if (window.simulationManager && !window.SANDBOX_MODE) {
+            if (confirm('Kembalikan workspace ke kondisi awal soal ini?')) {
+                window.simulationManager.resetCurrentQuestionWorkspace();
+                const code = generateCode(workspace);
+                updateCodeStatus(code);
+            }
+            return;
+        }
         if (confirm('Yakin ingin menghapus semua block?')) {
             workspace.clear();
             PythonCodeHandler.display('');

@@ -104,6 +104,15 @@ execution_counter = 0
 sys.settrace(trace_limit)
 `);
 
+            const activeQuestion = window.simulationManager && window.simulationManager.allQuestions ? window.simulationManager.allQuestions[window.simulationManager.currentIndex] : null;
+            const autoInputs = (isSubmit && activeQuestion && Array.isArray(activeQuestion.uji_kasus) && activeQuestion.uji_kasus[0] && Array.isArray(activeQuestion.uji_kasus[0].input)) ? activeQuestion.uji_kasus[0].input : null;
+            if (autoInputs && autoInputs.length > 0) {
+                window.mockInputsArray = autoInputs;
+                window.mockInputIndex = 0;
+                this.pyodide.runPython("from js import window\ndef submit_auto_input(prompt_text=''):\n    if window.mockInputIndex < len(window.mockInputsArray):\n        val = str(window.mockInputsArray[window.mockInputIndex])\n        window.mockInputIndex += 1\n        return val\n    window.mockInputIndex += 1\n    if window.mockInputIndex > len(window.mockInputsArray) + 3:\n        raise RuntimeError('Program terus meminta input tanpa berhenti (periksa syarat perulangan atau posisi read int)')\n    return '0'\n__builtins__.input = submit_auto_input\n");
+            } else {
+                this.pyodide.runPython("from js import customPythonInput\n__builtins__.input = customPythonInput\n");
+            }
             // Execute user code
             await this.pyodide.runPythonAsync(code);
 
@@ -262,6 +271,8 @@ __builtins__.input = customPythonInput
             window.mockInputsArray = inputsArray;
             window.mockInputIndex = 0;
             
+            // Timpa fungsi input bawaan Python dengan mock (tanpa echo), pastikan sys.stdout dan guard infinite loop aktif
+            this.pyodide.runPython("import sys\nfrom js import window\nclass JSStdoutSilent:\n    def __init__(self, is_error=False):\n        self.is_error = is_error\n    def write(self, text):\n        window.PythonSimulator.addOutputFromPython(text, self.is_error)\n    def flush(self):\n        pass\nsys.stdout = JSStdoutSilent(False)\nsys.stderr = JSStdoutSilent(True)\ndef silent_trace_limit(frame, event, arg):\n    global silent_exec_counter\n    if event == 'line':\n        silent_exec_counter += 1\n        if silent_exec_counter > 50000:\n            raise RuntimeError('Batas maksimum instruksi terlampaui (kemungkinan perulangan tidak pernah berhenti / infinite loop)')\n    return silent_trace_limit\nsilent_exec_counter = 0\nsys.settrace(silent_trace_limit)\n");
             // Timpa fungsi input bawaan Python dengan mock (tanpa echo)
             this.pyodide.runPython(`
 from js import window
@@ -270,14 +281,19 @@ def mock_input(prompt_text=""):
         val = str(window.mockInputsArray[window.mockInputIndex])
         window.mockInputIndex += 1
         return val
-    return ""
+    window.mockInputIndex += 1
+    if window.mockInputIndex > len(window.mockInputsArray) + 3:
+        raise RuntimeError("Program terus meminta input melebihi data uji (periksa syarat berhenti perulangan Anda)")
+    return "0"
 __builtins__.input = mock_input
             `);
 
             // Jalankan kode
             await this.pyodide.runPythonAsync(code);
+            this.pyodide.runPython("sys.settrace(None)");
 
         } catch (error) {
+            try { this.pyodide.runPython("sys.settrace(None)"); } catch (e) {}
             // Abaikan error dalam test atau rekam jika perlu
             testOutput += "\\n[Test Error: " + error.message.split('\\n').pop() + "]";
         } finally {

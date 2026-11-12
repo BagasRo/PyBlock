@@ -14,8 +14,37 @@ const PythonCodeHandler = {
         }
         
         try {
+            this.registerLoopGenerators();
+
             // Use Blockly's built-in Python generator
+            const orphanValueBlocks = [];
+            if (typeof workspace.getTopBlocks === 'function') {
+                if (typeof Blockly !== 'undefined' && Blockly.Events) Blockly.Events.disable();
+                try {
+                    workspace.getTopBlocks(false).forEach(b => {
+                        const isEnabled = typeof b.isEnabled === 'function' ? b.isEnabled() : !b.disabled;
+                        if (b.outputConnection && isEnabled) {
+                            orphanValueBlocks.push(b);
+                            if (typeof b.setEnabled === 'function') b.setEnabled(false);
+                            else if (typeof b.setDisabledReason === 'function') b.setDisabledReason(true, 'orphan_value');
+                        }
+                    });
+                } finally {
+                    if (typeof Blockly !== 'undefined' && Blockly.Events) Blockly.Events.enable();
+                }
+            }
             let code = Blockly.Python.workspaceToCode(workspace);
+            if (orphanValueBlocks.length > 0) {
+                if (typeof Blockly !== 'undefined' && Blockly.Events) Blockly.Events.disable();
+                try {
+                    orphanValueBlocks.forEach(b => {
+                        if (typeof b.setEnabled === 'function') b.setEnabled(true);
+                        else if (typeof b.setDisabledReason === 'function') b.setDisabledReason(false, 'orphan_value');
+                    });
+                } finally {
+                    if (typeof Blockly !== 'undefined' && Blockly.Events) Blockly.Events.enable();
+                }
+            }
             
             // Post-process untuk membersihkan output
             code = this.postProcess(code);
@@ -25,6 +54,165 @@ const PythonCodeHandler = {
             console.error('Error generating Python code:', error);
             return `# Error generating code:\n# ${error.message}`;
         }
+    },
+
+    /**
+     * Register Python generators for the custom loop blocks.
+     */
+    registerLoopGenerators: function() {
+        if (!Blockly.Python) {
+            throw new Error('Generator Python Blockly belum dimuat.');
+        }
+
+        Blockly.Python.INDENT = '    ';
+        const generator = Blockly.Python.forBlock || Blockly.Python;
+        const variableName = function(block, fieldName, gen) {
+            const variableId = block.getFieldValue(fieldName);
+            if (typeof gen.getVariableName === 'function') {
+                return gen.getVariableName(variableId);
+            }
+            const nameDatabase = gen.nameDB_ || gen.variableDB_;
+            return nameDatabase
+                ? nameDatabase.getName(variableId, Blockly.Names.NameType.VARIABLE)
+                : block.getField(fieldName).getText();
+        };
+
+        generator.controls_for = function(block, gen) {
+            const g = gen || Blockly.Python;
+            const variable = variableName(block, 'VAR', g);
+            const from = g.valueToCode(block, 'FROM', g.ORDER_NONE) || '0';
+            const to = g.valueToCode(block, 'TO', g.ORDER_NONE) || '0';
+            const by = g.valueToCode(block, 'BY', g.ORDER_NONE) || '1';
+            const statements = g.statementToCode(block, 'DO') || (g.INDENT || '    ') + 'pass\n';
+
+            // Jika from, to, by berupa angka integer literal
+            if (/^[+-]?\d+$/.test(from) && /^[+-]?\d+$/.test(to) && /^[+-]?\d+$/.test(by)) {
+                const fromNum = Number(from);
+                const toNum = Number(to);
+                const byNum = Math.abs(Number(by)) || 1;
+
+                if (fromNum <= toNum) {
+                    const stopNum = toNum + 1;
+                    return 'for ' + variable + ' in range(' + fromNum + ', ' + stopNum + ', ' + byNum + '):\n' + statements;
+                } else {
+                    const stopNum = toNum - 1;
+                    return 'for ' + variable + ' in range(' + fromNum + ', ' + stopNum + ', -' + byNum + '):\n' + statements;
+                }
+            } else {
+                return 'for ' + variable + ' in range(' + from + ', (' + to + ') + 1, ' + by + '):\n' + statements;
+            }
+        };
+
+        generator.loop_range = function(block, gen) {
+            const g = gen || Blockly.Python;
+            const variable = variableName(block, 'VAR', g);
+            const mode = block.getFieldValue('MODE') || 'START_STOP';
+            const stop = g.valueToCode(block, 'STOP', g.ORDER_NONE) || '0';
+            const statements = g.statementToCode(block, 'DO') || (g.INDENT || '    ') + 'pass\n';
+
+            let rangeArgs = '';
+            if (mode === 'STOP') {
+                rangeArgs = stop;
+            } else if (mode === 'START_STOP') {
+                const start = g.valueToCode(block, 'START', g.ORDER_NONE) || '0';
+                rangeArgs = start + ', ' + stop;
+            } else { // START_STOP_STEP
+                const start = g.valueToCode(block, 'START', g.ORDER_NONE) || '0';
+                const step = g.valueToCode(block, 'STEP', g.ORDER_NONE) || '1';
+                rangeArgs = start + ', ' + stop + ', ' + step;
+            }
+
+            return 'for ' + variable + ' in range(' + rangeArgs + '):\n' + statements;
+        };
+
+        generator.loop_doWhile = function(block, gen) {
+            const g = gen || Blockly.Python;
+            const indent = g.INDENT || '    ';
+            const mode = block.getFieldValue('MODE') || 'WHILE';
+            const condition = g.valueToCode(block, 'CONDITION', g.ORDER_NONE) || (mode === 'WHILE' ? 'False' : 'True');
+            const statements = g.statementToCode(block, 'DO') || (indent + 'pass\n');
+
+            const loopTypesList = new Set([
+                'controls_repeat',
+                'controls_repeat_ext',
+                'controls_whileUntil',
+                'controls_for',
+                'controls_forEach',
+                'loop_range',
+                'loop_doWhile',
+                'loop_forEachChar',
+                'loop_forEachIndex'
+            ]);
+
+            const hasContinue = (function() {
+                const descendants = block.getDescendants(false);
+                return descendants.some(d => {
+                    if (d.type === 'loop_continue' || (d.type === 'controls_flow_statements' && d.getFieldValue('FLOW') === 'CONTINUE')) {
+                        let p = d.getSurroundParent();
+                        while (p) {
+                            if (loopTypesList.has(p.type)) {
+                                return p === block;
+                            }
+                            p = p.getSurroundParent();
+                        }
+                    }
+                    return false;
+                });
+            })();
+
+            const labelComment = '# do-while: isi dijalankan dulu, kondisi dicek di akhir\n';
+
+            if (hasContinue) {
+                // Pola flag: pertama = True / while pertama or (kondisi): / pertama = False
+                const condExpr = (mode === 'WHILE') ? '(' + condition + ')' : 'not (' + condition + ')';
+                return labelComment +
+                    'pertama = True\n' +
+                    'while pertama or ' + condExpr + ':\n' +
+                    indent + 'pertama = False\n' +
+                    statements;
+            } else {
+                // Pola while True: + isi + if not (kondisi): break (until tanpa not)
+                const breakCondition = (mode === 'WHILE')
+                    ? indent + 'if not (' + condition + '):\n' + indent + indent + 'break\n'
+                    : indent + 'if ' + condition + ':\n' + indent + indent + 'break\n';
+
+                return labelComment +
+                    'while True:\n' +
+                    statements +
+                    breakCondition;
+            }
+        };
+
+        generator.controls_flow_statements = function(block) {
+            const flow = block.getFieldValue('FLOW');
+            return (flow === 'CONTINUE' ? 'continue' : 'break') + '\n';
+        };
+
+
+        generator.loop_break = function() {
+            return 'break\n';
+        };
+
+        generator.loop_continue = function() {
+            return 'continue\n';
+        };
+
+        generator.loop_forEachChar = function(block, gen) {
+            const g = gen || Blockly.Python;
+            const variable = variableName(block, 'VAR', g);
+            const text = g.valueToCode(block, 'TEXT', g.ORDER_NONE) || "''";
+            const statements = g.statementToCode(block, 'DO') || (g.INDENT || '    ') + 'pass\n';
+            return 'for ' + variable + ' in ' + text + ':\n' + statements;
+        };
+
+        generator.loop_forEachIndex = function(block, gen) {
+            const g = gen || Blockly.Python;
+            const index = variableName(block, 'INDEX', g);
+            const item = variableName(block, 'ITEM', g);
+            const list = g.valueToCode(block, 'LIST', g.ORDER_NONE) || '[]';
+            const statements = g.statementToCode(block, 'DO') || (g.INDENT || '    ') + 'pass\n';
+            return 'for ' + index + ', ' + item + ' in enumerate(' + list + '):\n' + statements;
+        };
     },
 
     /**

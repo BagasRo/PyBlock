@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Blok & Pemrograman Python — Blockly Simulator</title>
+    <meta name="description" content="Ensiklopedia lengkap fungsi blok visual Blockly dan padanannya dalam bahasa Python.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/guide.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+</head>
+<body class="guide-standalone-page">
+    <div id="guideStandaloneContainer" class="guide-standalone-container">
+        <!-- Header Halaman Standalone -->
+        <header class="guide-header">
+            <div class="guide-header-title">
+                <span class="guide-logo-icon">📖</span>
+                <span>Panduan Blockly & Python</span>
+                <span class="guide-header-badge">Ensiklopedia</span>
+            </div>
+            <div class="guide-header-actions">
+                <button id="guideMobileMenuToggle" class="guide-mobile-menu-toggle" title="Lihat Daftar Blok">
+                    <span>☰</span> <span>Daftar Blok</span>
+                </button>
+                <a class="guide-btn-action" href="/simulasi.html" title="Kembali ke Latihan Soal">
+                    <span>🎮</span> <span>Buka Soal Simulasi</span>
+                </a>
+                <a class="guide-btn-action" href="/sandbox.html" title="Buka Mode Bebas (Sandbox)">
+                    <span>🧪</span> <span>Sandbox</span>
+                </a>
+                <a class="guide-btn-action" href="/" title="Kembali ke Beranda">
+                    <span>🏠</span> <span>Beranda</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Body 2 Kolom (Sidebar Kiri + Konten Kanan) -->
+        <div class="guide-body">
+            <!-- Sidebar Kiri -->
+            <aside class="guide-sidebar" id="guideSidebar">
+                <div class="guide-search-wrapper">
+                    <input type="text" id="guideSearchInput" class="guide-search-input" placeholder="🔍 Cari nama blok atau fungsi..." autocomplete="off">
+                    <button id="guideSearchClear" class="guide-search-clear" title="Bersihkan pencarian">✕</button>
+                </div>
+                <div class="guide-menu-scroll" id="guideMenuScroll">
+                    <!-- Kategori & entri otomatis di-render oleh registry.js -->
+                </div>
+            </aside>
+
+            <!-- Konten Entri Kanan -->
+            <main class="guide-content" id="guideContent">
+                <!-- Entri blok aktif di-render oleh guide.js -->
+            </main>
+        </div>
+    </div>
+
+    <!-- Script Pengendali Panduan (ES Module) -->
+    <script type="module" src="/js/guide/guide.js"></script>
+</body>
+</html>

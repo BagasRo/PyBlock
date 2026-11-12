@@ -28,11 +28,15 @@
     </script>
     
     <!-- Modul Aplikasi (deferred) -->
-    <script src="/js/blockly-config.js" defer></script>
-    <script src="/js/python-generator.js" defer></script>
-    <script src="/js/level-manager.js" defer></script>
+    <script src="/js/blockly-config.js?v=2.5" defer></script>
+    <script src="/js/python-generator.js?v=2.5" defer></script>
+    <script src="/js/level-manager.js?v=2.5" defer></script>
     <script src="/js/simulator.js?v=5.0" defer></script>
-    <script src="/js/main.js" defer></script>
+    <script src="/js/main.js?v=2.5" defer></script>
+
+    <!-- Panduan Ensiklopedia Universal -->
+    <link rel="stylesheet" href="/css/guide.css">
+    <script type="module" src="/js/guide/guide.js"></script>
 </head>
 <body>
     <!-- Particles Background -->
@@ -48,6 +52,9 @@
             </div>
         </div>
         <div class="controls">
+            <button class="btn btn-secondary btn-guide-trigger" id="btnOpenGuide" title="Buka Panduan Blok & Python">
+                <span>📖</span> <span class="btn-text">Panduan</span>
+            </button>
             <a href="simulator.html" class="btn btn-secondary" title="Kembali ke Pilihan Simulasi" style="text-decoration:none; display:flex; align-items:center;">
                 <span>◀️</span> <span class="btn-text">Kembali</span>
             </a>

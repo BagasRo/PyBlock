@@ -6,7 +6,7 @@
     <title>Simulasi - Python Blockly Simulator</title>
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=4.0">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -28,11 +28,15 @@
     </script>
     
     <!-- Modul Aplikasi (deferred) -->
-    <script src="/js/blockly-config.js" defer></script>
-    <script src="/js/python-generator.js" defer></script>
-    <script src="/js/simulation-manager.js" defer></script>
-    <script src="/js/simulator.js?v=6.0" defer></script>
-    <script src="/js/main.js?v=2.0" defer></script>
+    <script src="/js/blockly-config.js?v=4.0" defer></script>
+    <script src="/js/python-generator.js?v=4.0" defer></script>
+    <script src="/js/simulation-manager.js?v=4.2" defer></script>
+    <script src="/js/simulator.js?v=6.2" defer></script>
+    <script src="/js/main.js?v=4.0" defer></script>
+
+    <!-- Panduan Ensiklopedia Universal -->
+    <link rel="stylesheet" href="/css/guide.css">
+    <script type="module" src="/js/guide/guide.js"></script>
 </head>
 <body>
     <!-- Particles Background -->
@@ -41,7 +45,7 @@
     <!-- Simulation Progress Bar -->
     <div class="sim-progress-bar" id="simProgressBar">
         <div class="sim-progress-info">
-            <span class="sim-progress-text" id="simProgressText">Soal 1 dari 8</span>
+            <span class="sim-progress-text" id="simProgressText">Level 1: Soal 1/5</span>
             <div class="sim-timer-container" id="simTimerContainer">
                 <span class="sim-timer-icon">⏱️</span>
                 <span class="sim-timer" id="simTimer">05:00</span>
@@ -66,7 +70,10 @@
             </div>
         </div>
         <div class="controls">
-            <button class="btn btn-secondary" id="btnClear" title="Bersihkan Workspace">
+            <button class="btn btn-secondary btn-guide-trigger" id="btnOpenGuide" title="Buka Panduan Blok & Python">
+                <span>📖</span> <span class="btn-text">Panduan</span>
+            </button>
+            <button class="btn btn-secondary" id="btnClear" title="Kembalikan Workspace ke Kondisi Awal Soal Ini">
                 <span>🗑️</span> <span class="btn-text">Bersihkan</span>
             </button>
             <button class="btn btn-secondary" id="btnSkip" title="Menyerah" style="margin-left: 0.5rem; background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; border: none;">

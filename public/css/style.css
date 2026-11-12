@@ -1260,6 +1260,8 @@ body {
     z-index: 100;
     background: rgba(22, 33, 62, 0.95);
     backdrop-filter: blur(10px);
+    position: sticky;
+    width: 100%;
     padding: 8px 20px 6px;
     border-bottom: 1px solid var(--border);
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
@@ -1401,7 +1403,7 @@ body {
 
 /* Offset header & container when progress bar is present */
 body:has(.sim-progress-bar) .header {
-    margin-top: 75px;
+    margin-top: 0;
 }
 
 /* ===========================================
@@ -1585,6 +1587,7 @@ body:has(.sim-progress-bar) .header {
     font-weight: 700;
 }
 
+.level-badge, .level-badge-sm { white-space: nowrap; }
 .level-badge.level-1, .level-badge-sm.level-1 { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
 .level-badge.level-2, .level-badge-sm.level-2 { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
 .level-badge.level-3, .level-badge-sm.level-3 { background: rgba(249, 115, 22, 0.2); color: #f97316; }
@@ -1771,8 +1774,57 @@ body:has(.sim-progress-bar) .header {
     display: flex;
     gap: 1rem;
     width: 100%;
-    min-height: 600px;
+    min-height: 700px;
+    height: calc(100vh - 200px);
     flex: 1;
+}
+
+/* Mutator bubble & dialog styling */
+.blocklyBubble {
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.55));
+}
+
+.blocklyMutatorBackground {
+    fill: #16213e !important;
+    stroke: var(--accent, #00d4ff) !important;
+    stroke-width: 1.5px !important;
+}
+
+/* Glowing target connection slot (where blocks should be placed) */
+.blocklyHighlightedConnectionPath {
+    fill: none !important;
+    stroke: #fbbf24 !important;
+    stroke-width: 5px !important;
+    filter: drop-shadow(0 0 8px #fbbf24) drop-shadow(0 0 16px rgba(251, 191, 36, 0.8)) !important;
+    animation: connectionPulseGlow 1s ease-in-out infinite !important;
+}
+
+@keyframes connectionPulseGlow {
+    0%, 100% {
+        stroke: #fbbf24;
+        stroke-width: 5px;
+        opacity: 1;
+    }
+    50% {
+        stroke: #00d4ff;
+        stroke-width: 7px;
+        opacity: 0.7;
+    }
+}
+
+/* Glowing mutator gear icon - color highlight only (tanpa transform/scale agar tidak bergeser) */
+@keyframes mutatorIconPulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 6px #fbbf24) drop-shadow(0 0 10px rgba(251, 191, 36, 0.9));
+    }
+    50% {
+        filter: drop-shadow(0 0 10px #38bdf8) drop-shadow(0 0 16px rgba(56, 189, 248, 0.95));
+    }
+}
+
+.mutator-hint-glow {
+    animation: mutatorIconPulse 1.2s ease-in-out infinite !important;
+    cursor: pointer !important;
 }
 
 @media (max-width: 768px) {
@@ -1912,7 +1964,7 @@ body:has(.sim-progress-bar) .header {
 
     /* Reduce header offset for sim progress bar on mobile */
     body:has(.sim-progress-bar) .header {
-        margin-top: 65px;
+        margin-top: 0;
     }
 
     /* --- Task panel mobile --- */
@@ -1957,3 +2009,482 @@ body:has(.sim-progress-bar) .header {
         margin-right: 4px;
     }
 }
+
+/* =========================================================
+   ASSISTANCE SYSTEM — Tips, Bantuan (Help), Guide
+   ========================================================= */
+
+/* --- Animations --- */
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blinkHighlight {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50%      { box-shadow: 0 0 12px 3px rgba(255, 200, 0, 0.7); }
+}
+
+@keyframes blinkBorder {
+    0%, 100% { outline: 2px solid transparent; }
+    50%      { outline: 2px solid #fbbf24; }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.5); }
+}
+
+/* --- Assistance Button Row --- */
+#assistanceContainer {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.assist-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.25);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.assist-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.assist-btn:disabled,
+.assist-btn.assist-btn-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Tips button */
+.assist-btn-tips {
+    border-color: rgba(250, 204, 21, 0.35);
+}
+.assist-btn-tips:hover:not(:disabled) {
+    border-color: rgba(250, 204, 21, 0.7);
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.15);
+}
+
+/* Bantuan (Help) button */
+.assist-btn-help {
+    border-color: rgba(239, 68, 68, 0.35);
+}
+.assist-btn-help:hover:not(:disabled) {
+    border-color: rgba(239, 68, 68, 0.7);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.15);
+}
+
+/* Guide button */
+.assist-btn-guide {
+    border-color: rgba(99, 102, 241, 0.35);
+}
+.assist-btn-guide:hover:not(:disabled) {
+    border-color: rgba(99, 102, 241, 0.7);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+}
+.assist-btn-active {
+    background: rgba(99, 102, 241, 0.2) !important;
+    border-color: rgba(99, 102, 241, 0.7) !important;
+}
+
+/* Badge on tips button */
+.assist-badge {
+    background: rgba(250, 204, 21, 0.2);
+    color: #fbbf24;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+/* Penalty label on help button */
+.assist-penalty {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+/* --- Assistance Panels (Tips / Help content areas) --- */
+.assist-panel {
+    margin-top: 0.65rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+.assist-panel-header {
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-left: 4px solid transparent;
+}
+
+.assist-panel-tips .assist-panel-header {
+    background: rgba(250, 204, 21, 0.1);
+    border-left-color: #fbbf24;
+    color: #fde68a;
+}
+
+.assist-panel-help .assist-panel-header {
+    background: rgba(239, 68, 68, 0.15);
+    border-left-color: #ef4444;
+    color: #fca5a5;
+}
+
+.assist-panel-body {
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* Individual tip items */
+.assist-tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    animation: fadeSlideIn 0.3s ease-out;
+}
+.assist-tip-item:last-child {
+    border-bottom: none;
+}
+
+.tip-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 50%;
+    background: rgba(250, 204, 21, 0.2);
+    color: #fbbf24;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* --- Bantuan Used Label --- */
+.bantuan-used-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+/* --- Bantuan Level Labels --- */
+.bantuan-level-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.bantuan-level-label.level-1 {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+.bantuan-level-label.level-2 {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+/* --- Bantuan Confirmation Modal --- */
+.bantuan-confirm-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeSlideIn 0.2s ease-out;
+}
+
+.bantuan-confirm-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.bantuan-confirm-box h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
+    color: var(--text);
+}
+
+.bantuan-confirm-box p {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+}
+
+.bantuan-confirm-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.bantuan-confirm-actions button {
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-confirm-yes {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: #fff;
+    border-color: transparent !important;
+}
+.btn-confirm-yes:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+.btn-confirm-no {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.8);
+}
+.btn-confirm-no:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* --- Blockly Toolbox Highlight (Level 1 Bantuan) --- */
+/* Applied to Blockly toolbox categories via JS classList */
+.blocklyToolboxCategory.bantuan-highlight-category {
+    animation: blinkHighlight 1s ease-in-out infinite !important;
+    position: relative;
+}
+
+.blocklyToolboxCategory.bantuan-highlight-category::after {
+    content: '👈';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    animation: pulseGlow 1s ease-in-out infinite;
+}
+
+/* --- Level 1 Bantuan: Hint Blink on Flyout Blocks --- */
+@keyframes hintBlinkAnim {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px #fbbf24) drop-shadow(0 0 16px rgba(251, 191, 36, 0.85));
+        opacity: 1;
+    }
+    50% {
+        filter: drop-shadow(0 0 2px #f59e0b) drop-shadow(0 0 5px rgba(245, 158, 11, 0.4));
+        opacity: 0.65;
+    }
+}
+
+.hint-blink {
+    animation: hintBlinkAnim 1s ease-in-out infinite !important;
+}
+
+.hint-blink path.blocklyPath {
+    stroke: #fbbf24 !important;
+    stroke-width: 3.5px !important;
+}
+
+/* Badge on flyout blocks (Level 1) */
+.bantuan-block-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #fbbf24;
+    color: #000;
+    font-size: 10px;
+    font-weight: 800;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: blinkHighlight 1s ease-in-out infinite;
+    box-shadow: 0 2px 6px rgba(251, 191, 36, 0.5);
+}
+
+/* --- Level 2 Bantuan: Blink field borders on inserted blocks --- */
+@keyframes blinkFieldBorder {
+    0%, 100% {
+        stroke: #ef4444 !important;
+        stroke-width: 3px !important;
+        opacity: 1;
+    }
+    50% {
+        stroke: #fbbf24 !important;
+        stroke-width: 2px !important;
+        opacity: 0.5;
+    }
+}
+
+.field-needs-input {
+    animation: blinkFieldBorder 1s ease-in-out infinite !important;
+}
+
+.field-needs-input rect {
+    stroke: #ef4444 !important;
+    stroke-width: 3px !important;
+    animation: blinkFieldBorder 1s ease-in-out infinite !important;
+    rx: 4px;
+    ry: 4px;
+}
+
+.field-needs-input text {
+    fill: #fca5a5 !important;
+    font-weight: bold !important;
+}
+
+/* --- Confirmation penalty amount highlight --- */
+.penalty-amount {
+    color: #fca5a5;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* --- Target Connection Highlighting (Bantuan Opsi 1) --- */
+@keyframes connectionPulseGlow {
+    0% {
+        stroke: #38bdf8 !important;
+        stroke-width: 5px !important;
+        filter: drop-shadow(0 0 4px #38bdf8);
+        opacity: 0.7;
+    }
+    50% {
+        stroke: #facc15 !important;
+        stroke-width: 7px !important;
+        filter: drop-shadow(0 0 10px #facc15) drop-shadow(0 0 16px #38bdf8);
+        opacity: 1;
+    }
+    100% {
+        stroke: #38bdf8 !important;
+        stroke-width: 5px !important;
+        filter: drop-shadow(0 0 4px #38bdf8);
+        opacity: 0.7;
+    }
+}
+
+.blocklyHighlightedConnectionPath {
+    stroke: #38bdf8 !important;
+    stroke-width: 5px !important;
+    fill: none !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    animation: connectionPulseGlow 1.2s ease-in-out infinite !important;
+    pointer-events: none !important;
+}
+
+/* --- Mutator Icon Pulsing & Hint Glow (Soal 6 dsb) - WARNA SAJA TANPA BERGESER --- */
+@keyframes mutatorIconColorPulse {
+    0% {
+        filter: drop-shadow(0 0 4px #f59e0b) drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+    }
+    50% {
+        filter: drop-shadow(0 0 10px #fbbf24) drop-shadow(0 0 18px rgba(245, 158, 11, 0.9));
+    }
+    100% {
+        filter: drop-shadow(0 0 4px #f59e0b) drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+    }
+}
+
+.mutator-hint-glow {
+    animation: mutatorIconColorPulse 1.2s ease-in-out infinite !important;
+    cursor: pointer !important;
+    transform: none !important;
+}
+
+.mutator-hint-glow image,
+.mutator-hint-glow svg,
+.mutator-hint-glow path {
+    filter: drop-shadow(0 0 8px #fbbf24) drop-shadow(0 0 14px #f59e0b) !important;
+    transform: none !important;
+}
+
+/* Sorot blok logic compare saat langkah ubah tanda >= */
+.logic-compare-hint-glow {
+    filter: drop-shadow(0 0 8px #f59e0b) drop-shadow(0 0 16px rgba(245, 158, 11, 0.7)) !important;
+}
+
+/* Style tombol aksi khusus bantuan mutator */
+.btn-mutator-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+}
+
+.btn-mutator-action:hover {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.6);
+}
+
+.btn-mutator-auto {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+}
+
+.btn-mutator-auto:hover {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.6);
+}
