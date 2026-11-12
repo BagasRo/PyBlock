@@ -1,43 +1,83 @@
-# PyBlock
 # PyBlock (Python Blockly Simulator)
 
-PyBlock adalah simulator pemrograman visual berbasis web yang memungkinkan penggunanya untuk belajar dan menulis kode Python menggunakan antarmuka blok (drag-and-drop) yang interaktif. Aplikasi ini mengubah blok-blok logika tersebut menjadi kode Python murni dan langsung mengeksekusinya di dalam browser.
+**PyBlock** adalah platform pembelajaran pemrograman Python interaktif berbasis web untuk pemula. Aplikasi ini menggabungkan antarmuka pemrograman visual blok (*drag-and-drop*) bertenaga Google Blockly dengan eksekusi kode Python langsung di dalam peramban web (*in-browser*) menggunakan WebAssembly (**Pyodide**).
+
+---
 
 ## ✨ Fitur Utama
 
-- **Visual Programming**: Antarmuka berbasis blok yang interaktif menggunakan Google Blockly, memudahkan pemula untuk memahami alur logika (Control, Loops, Logic, Math, I/O).
-- **Real-time Code Generation**: Setiap perubahan pada blok akan secara otomatis memperbarui kode Python di panel samping lengkap dengan *syntax highlighting*.
-- **In-Browser Execution**: Mengeksekusi kode Python secara langsung di sisi klien (browser) menggunakan **Pyodide** (WebAssembly Python engine), sehingga cepat, aman, dan tanpa membebani server.
-- **Interactive I/O**: Mendukung input dinamis menggunakan fungsi `input()` dari Python yang di-*routing* ke dialog browser, serta mencetak output sistem dan *error* di konsol bawaan.
-- **Save & Load Workspace**: Kemampuan untuk menyimpan status susunan blok ke dalam file JSON dan memuatnya kembali.
-- **Export to Python**: Memungkinkan pengguna untuk menyalin atau mengunduh blok visual mereka sebagai file skrip `.py` yang sesungguhnya.
+- 🧩 **Visual Programming**: Menyusun algoritma menggunakan blok visual intuitif (I/O, Variabel, Logika/Percabangan, Perulangan, List, Matematika, dan Teks).
+- 🐍 **Real-time Python Generation**: Blok visual langsung diterjemahkan menjadi kode Python standar secara *real-time* dengan penyorotan sintaks (*syntax highlighting*).
+- ⚡ **In-Browser Execution (Pyodide)**: Mengeksekusi Python secara aman dan cepat langsung di browser pengguna tanpa memerlukan instalasi Python di komputer lokal.
+- 📝 **Mode Latihan Simulasi Berantai**:
+  - Terdiri dari 4 Level bertingkat (Dasar I/O, Percabangan, Perulangan, hingga List).
+  - Setiap level memiliki 5 varian soal cerita berantai.
+  - Dilengkapi batasan waktu (*countdown timer*) dan validasi keberhasilan otomatis (*test cases*).
+  - Sistem penilaian dan evaluasi skor akhir.
+- 🧪 **Mode Sandbox**: Ruang eksperimen bebas tanpa batasan waktu untuk merancang dan mencoba algoritma sendiri.
+- 📖 **Panduan Ensiklopedia Blok & Python**:
+  - Dokumentasi visual lengkap untuk setiap kategori blok.
+  - Disertai contoh kasus nyata, ilustrasi blok, dan padanan sintaks Python-nya.
+  - Dapat diakses melalui modal bantuan di ruang kerja maupun halaman mandiri (`/panduan`).
+- 📚 **Modul Materi Pembelajaran**: Materi bacaan terstruktur dari materi pengantar hingga level mahir.
+- 💾 **Manajemen Workspace**: Fitur simpan/muat proyek via file JSON, tombol reset workspace ke kondisi awal soal, serta ekspor skrip ke file `.py`.
+
+---
 
 ## 🛠️ Teknologi yang Digunakan
 
-- **Backend**: Node.js & Express.js (menyajikan aset statis dan API lokal)
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Libraries Engine**:
-  - Blockly (Pemrograman Visual)
-  - Pyodide (Runtime Python WebAssembly)
+- **Backend**: Node.js & Express.js
+- **Frontend**: HTML5, Modern CSS3, Vanilla JavaScript (ES6+ Modules)
+- **Library & Mesin Eksekusi**:
+  - [Google Blockly](https://developers.google.com/blockly) - Visual Programming Workspace
+  - [Pyodide](https://pyodide.org/) - Python runtime via WebAssembly
+
+---
+
+## 📁 Struktur Direktori
+
+```text
+python-blockly-Tes-Soal/
+├── public/
+│   ├── assets/              # Aset gambar, ikon, dan ilustrasi panduan
+│   ├── css/                 # Stylesheet antarmuka utama dan panduan
+│   ├── js/
+│   │   ├── guide/           # Data & sistem navigasi panduan ensiklopedia
+│   │   ├── problems/        # Bank soal simulasi (Level 1 - 4 & questions.js)
+│   │   ├── blockly-config.js# Konfigurasi custom blocks & toolbox Blockly
+│   │   ├── python-generator.js # Generator blok ke kode Python
+│   │   ├── simulation-manager.js # Logika alur simulasi, timer, & evaluasi
+│   │   └── simulator.js     # Integrasi Pyodide & antarmuka simulator
+│   ├── index.html           # Halaman beranda utama
+│   ├── materi.html          # Menu modul materi
+│   ├── panduan.html         # Halaman panduan ensiklopedia blok
+│   ├── simulator.html       # Pemilihan mode simulasi / latihan
+│   ├── simulasi.html        # Antarmuka pengerjaan simulasi berantai
+│   └── sandbox.html         # Antarmuka eksplorasi bebas (sandbox)
+├── server.js                # Server Express.js lokal
+├── package.json
+└── README.md
+```
+
+---
 
 ## 🚀 Cara Menjalankan Aplikasi
 
-1. Pastikan Anda telah menginstal Node.js di komputer Anda.
-2. *Clone* atau unduh repositori ini.
-3. Buka terminal di dalam direktori proyek (`d:\Coding\Phyton\python-blockly-sim`).
-4. Instal semua dependensi menggunakan NPM:
+1. **Prasyarat**: Pastikan sudah terpasang [Node.js](https://nodejs.org/) di komputer Anda.
+2. **Clone Repositori**:
+   ```bash
+   git clone https://github.com/BagasRo/PyBlock.git
+   cd PyBlock
+   ```
+3. **Instal Dependensi**:
    ```bash
    npm install
    ```
-5. Jalankan server web lokal:
+4. **Jalankan Server**:
    ```bash
    npm start
    # atau
    node server.js
    ```
-6. Buka web browser Anda dan kunjungi URL berikut:
-   ```
-   http://localhost:3000
-   ```
-   
-Selamat mencoba dan belajar Python dengan cara yang menyenangkan!
+5. **Buka di Browser**:
+   Akses `http://localhost:3000` pada peramban web pilihan Anda.
